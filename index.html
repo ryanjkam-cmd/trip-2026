@@ -4566,43 +4566,75 @@ function ActivityDrawer({ a, onClose }) {
           </div>
 
           {/* Directions */}
-          <div className="drawer-section">
-            <div className="drawer-section-h caps">Directions</div>
-            <div className="drawer-map">
-              <MapPlaceholder scale="address" cityName={a.title} />
-              <div className="drawer-address">
-                <Icon.pin />
-                <div>
-                  <div style={{fontWeight:600, fontSize:12.5}}>{addressFor(a)}</div>
-                  <div style={{fontSize:11, color:"var(--ink-3)", marginTop:2}}>~{distanceFor(a)} from your hotel</div>
-                </div>
-              </div>
-              <div className="drawer-dir-actions">
-                <button className="drawer-action-btn"><Icon.pin /> Open in Maps</button>
-                <button className="drawer-action-btn"><Icon.car /> Get directions</button>
+          {(a.mapUrl || addressFor(a)) && (
+            <div className="drawer-section">
+              <div className="drawer-section-h caps">Location</div>
+              <div className="drawer-map">
+                {a.mapUrl && (
+                  <iframe
+                    width="100%"
+                    height="180"
+                    frameBorder="0"
+                    style={{borderRadius:10, display:"block", border:"1px solid var(--line)"}}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(a.mapUrl.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' '))}&output=embed&zoom=14`}
+                    allowFullScreen
+                    loading="lazy"
+                    title="map"
+                  />
+                )}
+                {addressFor(a) && (
+                  <div className="drawer-address">
+                    <Icon.pin />
+                    <div>
+                      <div style={{fontWeight:600, fontSize:12.5}}>{addressFor(a)}</div>
+                      {distanceFor(a) && <div style={{fontSize:11, color:"var(--ink-3)", marginTop:2}}>{distanceFor(a)}</div>}
+                    </div>
+                  </div>
+                )}
+                {a.mapUrl && (
+                  <div className="drawer-dir-actions">
+                    <a className="drawer-action-btn" href={a.mapUrl} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}><Icon.pin /> Open in Maps</a>
+                    <a className="drawer-action-btn" href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressFor(a) || a.title)}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}><Icon.car /> Get directions</a>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          )}
 
           {/* Website / Tickets */}
-          {!isFlight && (
+          {!isFlight && (websiteFor(a) || a.url?.startsWith('./docs/') || (a.status === "booked" && a.conf)) && (
             <div className="drawer-section">
-              <div className="drawer-section-h caps">{isEat ? "Reservation & website" : "Tickets & website"}</div>
+              <div className="drawer-section-h caps">{isEat ? "Reservation & website" : "Booking & links"}</div>
               <div className="drawer-links">
-                <a className="drawer-link" href="#">
-                  <div className="drawer-link-icon"><Icon.ext /></div>
-                  <div style={{minWidth:0, flex:1}}>
-                    <div style={{fontWeight:600, fontSize:13}}>{websiteFor(a)}</div>
-                    <div style={{fontSize:11, color:"var(--ink-3)"}}>{isEat ? "Menu & opening hours" : "Official site · book direct"}</div>
-                  </div>
-                  <Icon.chevR />
-                </a>
-                {a.status === "booked" && a.conf && (
+                {/* Website link */}
+                {websiteFor(a) && (
+                  <a className="drawer-link" href={a.url} target="_blank" rel="noopener noreferrer">
+                    <div className="drawer-link-icon"><Icon.ext /></div>
+                    <div style={{minWidth:0, flex:1}}>
+                      <div style={{fontWeight:600, fontSize:13}}>{websiteFor(a)}</div>
+                      <div style={{fontSize:11, color:"var(--ink-3)"}}>{isEat ? "Menu & reservations" : "Official site · tickets"}</div>
+                    </div>
+                    <Icon.chevR />
+                  </a>
+                )}
+                {/* PDF offline doc */}
+                {a.url?.startsWith('./docs/') && (
+                  <a className="drawer-link" href={a.url} target="_blank" rel="noopener noreferrer">
+                    <div className="drawer-link-icon" style={{background:"oklch(0.92 0.04 235)", color:"oklch(0.4 0.14 235)"}}>📄</div>
+                    <div style={{minWidth:0, flex:1}}>
+                      <div style={{fontWeight:600, fontSize:13}}>Booking confirmation PDF</div>
+                      <div style={{fontSize:11, color:"var(--ink-3)"}}>Offline · works without internet</div>
+                    </div>
+                    <Icon.chevR />
+                  </a>
+                )}
+                {/* Confirmation number */}
+                {a.status === "booked" && a.conf && a.conf !== "NOT BOOKED" && (
                   <div className="drawer-ticket">
                     <div className="drawer-ticket-l">
-                      <div className="caps" style={{fontSize:9.5, color:"rgba(255,255,255,0.7)"}}>{isEat ? "Reservation" : "Ticket"}</div>
+                      <div className="caps" style={{fontSize:9.5, color:"rgba(255,255,255,0.7)"}}>Confirmation</div>
                       <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:14, color:"white", marginTop:4}}>{a.conf}</div>
-                      <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.6)", marginTop:6}}>Tap to show at door</div>
+                      <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.6)", marginTop:6}}>Show at check-in</div>
                     </div>
                     <div className="drawer-ticket-qr"></div>
                   </div>
@@ -4642,32 +4674,109 @@ function ActivityDrawer({ a, onClose }) {
   );
 }
 
-/* helpers for the drawer (mock content) */
+/* helpers for the drawer */
 function longDescription(a) {
+  if (a.desc) return a.desc;
   const map = {
-    "Þingvellir National Park": "UNESCO World Heritage Site where the North American and Eurasian tectonic plates meet — you can walk between continents. Also where Iceland's parliament was founded in 930 AD. Best visited in the morning to avoid bus tours.",
-    "Geysir & Strokkur": "Geothermal area home to Strokkur, which erupts 25-40 meters every 6-10 minutes. The original Geysir (which gave the word \"geyser\" to the world) is mostly dormant. Boardwalks make it accessible in all weather.",
-    "Gullfoss waterfall": "A two-tiered 32m waterfall on the Hvítá river — meltwater from Langjökull glacier. Upper and lower viewing platforms, both worth visiting. Mist makes a raincoat essential. Café and restrooms on site.",
-    "Blue Lagoon — Premium": "Iconic geothermal spa with milky-blue silica-rich water. Premium package includes silica & algae masks, slippers, robe, towel, and a drink. Book a 09:30 slot to avoid afternoon crowds.",
-    "Sólheimajökull glacier hike": "Guided 6-hour hike on Sólheimajökull, a tongue of the Mýrdalsjökull ice cap. Crampons and ice axes provided. Includes safety briefing. You'll see crevasses, moulins, and volcanic ash layers in the ice.",
+    "Blue Lagoon": "Silica-rich geothermal seawater at 99°F, naturally heated by Iceland's volcanic system. The milky-blue color comes from silica, algae, and minerals — it looks photoshopped in real life. Premium package includes silica mask, algae mask, an in-water bar drink, robe, towel, and slippers. Ramp entry makes this the most accessible luxury experience in Iceland. Arrive at your 10am slot early. Janelle: the heat is genuinely therapeutic — soak as long as you like. Greyson: the water really is that color.",
+    "⭐ INTO THE GLACIER — Langjökull": "The only man-made tunnel bored inside a glacier in the world — 500m of ice chambers cut into Langjökull, Iceland's second-largest ice cap. You ride an 8-wheel SuperJeep up the snowfield, then walk through carved rooms and hallways inside the glacier itself. Temperature inside: 32°F — wear your warmest base layer and jacket under the provided coverall. Crampons are provided. Jun 24 12:30pm — allow 3.5 hours total including mountain transport. Greyson: you can touch the volcanic ash layers trapped in the ice.",
+    "⭐ Jökulsárlón Amphibian Boat Tour": "Glacial lagoon where icebergs calve live from Breiðamerkurjökull glacier and drift to the sea. Amphibian boat drives into the water from the shore — flat boarding, seated throughout. Walk-up only Jun–Sep daily 9am–7pm. Greyson: watch for seals resting on the icebergs. After the boat, walk 5 minutes to Diamond Beach — translucent ice chunks wash up on black volcanic sand. One of the most surreal places on Earth.",
+    "Þingvellir National Park": "UNESCO World Heritage Site where the Eurasian and North American tectonic plates are physically pulling apart at 2.5 cm per year — you walk through the rift between two continents. Also the birthplace of Icelandic democracy: the Althing parliament was founded here in 930 AD. Flat boardwalk through the Almannagjá rift. Silfra fissure nearby has the clearest snorkeling water on the planet (Ryan + Greyson optional). Hakið visitor center is accessible for Janelle to rest.",
+    "Geysir & Strokkur": "Strokkur erupts 25–40 meters every 6–10 minutes, reliably and dramatically. The original Geysir (which gave the world the word 'geyser') is mostly dormant but still enormous. Boardwalks make the area fully accessible — you can get within 10 meters of the eruption. Pro tip: watch Strokkur from upwind. The blue bubble that forms a second before eruption is the money shot. Benches available throughout.",
+    "Reynisfjara Black Sand Beach": "Black volcanic sand with hexagonal basalt columns (Reynisdranga sea stacks) rising from the surf. 4-minute flat walk from Hotel Vík. ⚠️ Sneaker waves here are deadly — they hit with zero warning from calm-looking water. Stay 20+ feet from the waterline at all times. No exceptions. Evening golden hour is best for photos. The basalt columns are naturally formed from slow-cooling lava — they look man-made.",
+    "Seljalandsfoss": "Waterfall where you can walk behind the curtain of water — a hollow in the cliff creates a full cave behind the falls. Front viewing is flat and accessible. The walk-behind trail (360 steps) is slippery and uneven — skip it for Janelle, optional for Ryan + Greyson. Mist raincoat strongly advised. Kvernufoss is 20 minutes away and gets 1% of the crowds.",
+    "Skógafoss": "One of Iceland's most dramatic waterfalls — 60m drop, 25m wide. The base is flat and accessible. The staircase to the top (527 steps) is steep — skip it. Rainbow appears almost every morning in summer. The main viewpoint is only 100m walk from the car park. Mist makes a light rain jacket essential. Skógar Museum is walkable from here if you have time.",
+    "Secret Lagoon, Flúðir": "Iceland's oldest swimming pool (1891) surrounded by geothermal springs and a small geyser. Less crowded than Blue Lagoon, fully natural. Water temperature 38–40°C. 20-minute drive from Hella. Ramp entry and accessible facilities. Great therapeutic option for Janelle. €25 per person. Snorkeling in the warm water is an option for Greyson.",
+    "Katla Ice Cave (Ryan + Greyson)": "Natural volcanic ice cave inside Mýrdalsjökull glacier — different from man-made tunnel caves because the black volcanic ash from Katla eruptions creates dramatic dark layers through the ice. Super Jeep to the glacier, crampons and helmets provided. Janelle stays at Hotel Vík (10-min cab ride to a café). 4-hour tour. Book at katlatrack.is — sells out fast.",
+    "Suomenlinna Fortress Island": "UNESCO-listed sea fortress on six islands connected by bridges — 15 minutes by ferry from Market Square. Paved main paths throughout. Built by Sweden in 1748, passed to Russia, then Finland. Greyson: the Vesikko submarine (WWII-era, walk-through) is the highlight. Church has a lighthouse. Café on the island. Buy the ferry ticket at the terminal — no advance booking needed.",
+    "Allas Sea Pool": "Heated outdoor pools (27°C) directly on Helsinki's harbor, with 5 saunas including a wood-burning sauna. The Baltic sea swimming is optional (Greyson: the cold plunge is a rite of passage in Finland). Janelle: the warm pool is therapeutic and has easy water entry. 20-meter heated pool + children's pool. Restaurant and bar on site. Magical on a sunny Helsinki evening.",
+    "Seaplane Harbour (Maritime Museum)": "WWI-era seaplane hangars housing the world's best maritime museum. Three historic vessels you walk through, including the submarine Lembit. Flat concrete floors throughout — best accessibility in Tallinn. Greyson: the flight simulator is legitimate. Café in the hangar. 10-minute walk or tram from Novotel. Go before noon to avoid tour groups.",
+    "Kalev Spa Waterpark": "4 slides (longest is 82m), wave pool, hot tubs, saunas, and a separate therapeutic spa. Janelle: the warm therapeutic pools require a separate wristband — accessible changing facilities. Greyson: the slides are good, wave pool is the best feature. 40-minute tram ride from Old Town or 15-minute taxi. Indoor and outdoor areas. Lockers available.",
+    "Tallinn Old Town + Ramparts": "Medieval old town — the best-preserved in northern Europe. Viru and Harju streets are flat and wheelchair-friendly. The Town Hall Square is completely paved. St. Olaf's Church tower has 232 steps and panoramic views (Ryan + Greyson). Janelle: benches throughout the square, coffee shops at every corner. Don't miss Katariina Käik — a narrow medieval passage with artisan workshops.",
+    "⭐ Wieliczka Salt Mine": "Salt mine in continuous operation since the 13th century — nine levels and 300km of tunnels. The UNESCO highlight is St. Kinga's Chapel: a full-size church (54m long, 18m high) with floor, walls, ceiling, and chandeliers all hand-carved from salt. Call ahead to confirm Janelle's access — standard route includes 800 steps down but there is an elevator option (confirm booking). 2.5-hour guided tour, 64m underground, 55°F year-round.",
+    "Market Square + Cloth Hall": "Rynek Główny — one of the largest medieval town squares in Europe. The Gothic Cloth Hall (Sukiennice) sits in the center, now housing a market of amber, linen, and local crafts. National Museum upstairs. Wawel Royal Castle visible from the south end. Flat stone paving throughout (some cobblestone at edges). St. Mary's Basilica trumpet signal plays every hour from the tower.",
+    "Kazimierz Jewish Quarter": "Bohemian neighborhood and the historic center of Jewish life in Kraków. Flat wide streets with cafes, bookshops, and street art. Schindler's Factory Museum (20-min walk) is one of the most powerful WWII museums in Europe — multimedia, non-linear, Oskar Schindler's actual factory. Old Synagogue (1407) is the oldest in Poland. Budget 3 hours minimum for both.",
+    "Prague Castle + St. Vitus Cathedral": "Largest castle complex in the world by area — 70,000 sq meters. Taxi to the top (steep hill), flat once inside. St. Vitus Cathedral took 600 years to build — the stained glass is extraordinary. Golden Lane: tiny medieval houses where Franz Kafka briefly lived. Greyson: ceremonial guard change on the hour. Allow 3 hours. The vista from the castle over Prague is the best in the city.",
+    "Charles Bridge + Dragon Bridge": "14th-century stone bridge with 30 baroque statues lining both sides. Cobblestone but flat enough for steady walking. Best at dawn or dusk — midday is elbow-to-elbow with tourists. The statue of St. John of Nepomuk (the shiny one) is said to bring good luck if you touch it. Views of Prague Castle upstream and the Old Town downstream. Greyson: find the bridge tower and climb it.",
+    "Old Town + Astronomical Clock": "The Astronomical Clock (Orloj) has been running since 1410. On the hour, the 12 apostles rotate in the windows above — genuinely impressive even now. Prague Old Town Square has the Týn Church's twin Gothic spires, the Baroque St. Nicholas Church, and a year-round Christmas market atmosphere. Flat stone paving. Trdelník pastries are a tourist trap but Greyson will want one anyway.",
+    "Josefov Jewish Quarter": "Best-preserved Jewish quarter in Central Europe — six synagogues and the haunting Old Jewish Cemetery where 100,000 people are buried in 12 layers (running out of space for centuries). The Pinkas Synagogue has 80,000 names of Holocaust victims inscribed on its walls. Allow 2 hours. The cemetery is genuinely emotional — worth it.",
+    "Anne Frank House": "The actual hiding place — the annex where Anne Frank and seven others hid for 761 days (1942–1944). You walk through the real rooms, see the actual bookcase that hid the door, and read pages from her diary. This is the museum that makes history real for a 12-year-old. Book tickets online now at annefrank.org — sells out weeks ahead. Limited daily capacity by design. No photos inside the hiding rooms.",
+    "Rijksmuseum": "The greatest collection of Dutch Golden Age art in the world. Rembrandt's 'The Night Watch' (11 feet tall, in person) and Vermeer's 'The Milkwoman' are the anchors. The building itself is stunning — a massive neo-Gothic palace. Flat floors throughout with excellent accessible facilities. Book timed-entry tickets online. Allow 3 hours minimum — the collection is enormous. Free audio guide included with entry.",
+    "Van Gogh Museum": "The largest Van Gogh collection in the world — over 200 paintings and 500 drawings. Chronological layout showing his progression from dark Dutch interiors to the Arles sunflowers to the final tortured Saint-Rémy works. Flat throughout, excellent accessibility. Book the same day as Anne Frank (they're 10 minutes apart) to minimize travel. The museum café has good Dutch sandwiches.",
+    "NEMO Science Museum": "Five floors of hands-on science exhibits in a ship-shaped building — the best science museum in Europe for kids this age. Greyson: the electricity experiments, the DNA lab, and the rooftop water playground are the highlights. Accessible elevators throughout. Rooftop is free entry and has great harbor views. Allow 3–4 hours — it earns every minute.",
   };
-  return map[a.title] || "Detailed description of this activity goes here. Real production data would include opening hours, accessibility notes, what to bring, time estimates, and visitor tips pulled from your places provider.";
+  if (map[a.title]) return map[a.title];
+  // Type-based fallback
+  if (a.type === "flight") return `${a.meta}. Check your boarding pass for the latest gate and departure time. Arrive at the gate at least 45 minutes before departure.`;
+  if (a.type === "stay") return `${a.meta}. Contact the hotel directly with any accessibility requirements before arrival.`;
+  if (a.type === "transit") return a.meta;
+  return a.meta;
 }
 function addressFor(a) {
+  if (a.addr) return a.addr;
   const map = {
+    "Blue Lagoon": "Norðurljósavegur 9, 240 Grindavík, Iceland",
+    "⭐ INTO THE GLACIER — Langjökull": "Husafell Tourism Center, 311 Borgarnes, Iceland",
+    "⭐ Jökulsárlón Amphibian Boat Tour": "Jökulsárlón, 785 Öræfi, Iceland",
     "Þingvellir National Park": "Bláskógabyggð, 801 Selfoss, Iceland",
     "Geysir & Strokkur": "Haukadalur, 801 Selfoss, Iceland",
-    "Gullfoss waterfall": "Gullfoss, 801 Bláskógabyggð, Iceland",
-    "Blue Lagoon — Premium": "Norðurljósavegur 9, 240 Grindavík, Iceland",
-    "Sólheimajökull glacier hike": "Sólheimajökulsvegur, 871 Vík, Iceland",
+    "Seljalandsfoss": "Rangárþing eystra, 861 Hvolsvöllur, Iceland",
+    "Skógafoss": "Skógar, 861 Hvolsvöllur, Iceland",
+    "Reynisfjara Black Sand Beach": "Reynisfjara, 871 Vík í Mýrdal, Iceland",
+    "Secret Lagoon, Flúðir": "Hveramörk 1, 845 Flúðir, Iceland",
+    "Katla Ice Cave (Ryan + Greyson)": "Sólheimajökulsvegur, 871 Vík, Iceland",
+    "Suomenlinna Fortress Island": "Suomenlinna, 00190 Helsinki, Finland",
+    "Allas Sea Pool": "Katajanokanlaituri 2a, 00160 Helsinki, Finland",
+    "Linnanmäki Amusement Park": "Tivolikuja 1, 00510 Helsinki, Finland",
+    "Seaplane Harbour (Maritime Museum)": "Vesilennokki 23, 10120 Tallinn, Estonia",
+    "Tallinn Old Town + Ramparts": "Raekoja plats, 10146 Tallinn, Estonia",
+    "NOA Chef's Hall — Michelin": "Ranna tee 1, 11911 Tallinn, Estonia",
+    "Kalev Spa Waterpark": "Aia 18, 10111 Tallinn, Estonia",
+    "⭐ Wieliczka Salt Mine": "Park Kingi 10, 32-020 Wieliczka, Poland",
+    "Market Square + Cloth Hall": "Rynek Główny 1, 31-042 Kraków, Poland",
+    "Kazimierz Jewish Quarter": "Szeroka, 31-053 Kraków, Poland",
+    "Wawel Royal Castle + Dragon's Den": "Wawel 5, 31-001 Kraków, Poland",
+    "Prague Castle + St. Vitus Cathedral": "119 08 Prague 1, Czech Republic",
+    "Charles Bridge + Dragon Bridge": "Karlův most, 118 00 Prague 1, Czech Republic",
+    "Old Town + Astronomical Clock": "Staroměstské nám. 1, 110 00 Prague 1, Czech Republic",
+    "Josefov Jewish Quarter": "Maiselova, 110 00 Prague 1, Czech Republic",
+    "Anne Frank House": "Westermarkt 20, 1016 DK Amsterdam, Netherlands",
+    "Rijksmuseum": "Museumstraat 1, 1071 XX Amsterdam, Netherlands",
+    "Van Gogh Museum": "Museumplein 6, 1071 DJ Amsterdam, Netherlands",
+    "NEMO Science Museum": "Oosterdok 2, 1011 VX Amsterdam, Netherlands",
   };
-  return map[a.title] || "Address details · loaded from places API";
+  return map[a.title] || (a.type === "flight" ? "Check airline app for gate info" : a.type === "transit" ? "En route" : "");
 }
 function distanceFor(a) {
-  return ["8 min · 3.2 km", "22 min · 14 km", "1h 12m · 84 km", "35 min · 24 km"][Math.floor(a.title.length % 4)];
+  const map = {
+    "Blue Lagoon": "50 min from KEF · 45 min from Reykjavík",
+    "⭐ INTO THE GLACIER — Langjökull": "2h drive from Reykjavík · SuperJeep from Husafell center",
+    "⭐ Jökulsárlón Amphibian Boat Tour": "2.5h drive from Vík",
+    "Þingvellir National Park": "50 min from Reykjavík",
+    "Geysir & Strokkur": "1h 30m from Reykjavík",
+    "Seljalandsfoss": "2h from Reykjavík · 30 min from Hella",
+    "Skógafoss": "2.5h from Reykjavík · 45 min from Hella",
+    "Reynisfjara Black Sand Beach": "4 min walk from Hotel Vík",
+    "Suomenlinna Fortress Island": "15 min ferry from Market Square",
+    "Allas Sea Pool": "5 min walk from Market Square",
+    "Seaplane Harbour (Maritime Museum)": "15 min walk from Novotel",
+    "Tallinn Old Town + Ramparts": "10 min walk from Novotel",
+    "NOA Chef's Hall — Michelin": "25 min from Old Town · coastal drive",
+    "⭐ Wieliczka Salt Mine": "30 min from Kraków Old Town",
+    "Market Square + Cloth Hall": "5 min walk from AC Hotel",
+    "Anne Frank House": "20 min walk from Rijksmuseum",
+    "Rijksmuseum": "15 min tram from city center",
+    "Van Gogh Museum": "5 min walk from Rijksmuseum",
+    "NEMO Science Museum": "20 min walk from Dam Square",
+  };
+  return map[a.title] || "";
 }
 function websiteFor(a) {
-  return (a.title.toLowerCase().replace(/\s+/g, "").replace(/[^a-z0-9]/g, "").slice(0, 14) || "official") + ".is";
+  if (!a.url || a.url.startsWith('./docs/')) return null;
+  if (a.url.startsWith('http')) {
+    try { return new URL(a.url).hostname.replace('www.', ''); } catch { return a.url; }
+  }
+  return null;
 }
 
 /* ============================================================
