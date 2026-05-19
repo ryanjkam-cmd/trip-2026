@@ -1594,6 +1594,19 @@ const css = `
     font-variant-numeric: tabular-nums;
     font-size: 11.5px;
   }
+  .budget-edit-input {
+    width: 68px;
+    text-align: right;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    padding: 1px 4px;
+    background: oklch(0.96 0.02 235);
+    color: var(--ink);
+    outline: none;
+  }
   .budget-line .of {
     font-family: "JetBrains Mono", monospace;
     color: var(--ink-3); font-size: 11px;
@@ -3587,6 +3600,47 @@ function App() {
   const [selCal, setSelCal] = useState(15);
   const [mode, setMode] = useState("day"); // "day" | "city" | "trip"
   const [openActivity, setOpenActivity] = useState(null);
+
+  // Checklist persistence
+  const [checks, setChecks] = useState(() => {
+    try {
+      const saved = localStorage.getItem('trip_checks');
+      return saved ? JSON.parse(saved) : REMINDERS.reduce((a, r, i) => ({ ...a, [i]: r.done }), {});
+    } catch { return REMINDERS.reduce((a, r, i) => ({ ...a, [i]: r.done }), {}); }
+  });
+  const toggleCheck = (i) => {
+    setChecks(prev => {
+      const next = { ...prev, [i]: !prev[i] };
+      try { localStorage.setItem('trip_checks', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+  const clearChecks = (e) => {
+    e.preventDefault();
+    const reset = REMINDERS.reduce((a, r, i) => ({ ...a, [i]: false }), {});
+    setChecks(reset);
+    try { localStorage.setItem('trip_checks', JSON.stringify(reset)); } catch {}
+  };
+  const doneCount = Object.values(checks).filter(Boolean).length;
+
+  // Budget persistence (tap spent amount to edit on-trip)
+  const [budgetActual, setBudgetActual] = useState(() => {
+    try {
+      const saved = localStorage.getItem('trip_budget');
+      return saved ? JSON.parse(saved) : {};
+    } catch { return {}; }
+  });
+  const [editingBudget, setEditingBudget] = useState(null);
+  const updateBudget = (label, val) => {
+    const num = parseInt(val.replace(/[^0-9]/g, ''), 10);
+    if (isNaN(num)) { setEditingBudget(null); return; }
+    setBudgetActual(prev => {
+      const next = { ...prev, [label]: num };
+      try { localStorage.setItem('trip_budget', JSON.stringify(next)); } catch {}
+      return next;
+    });
+    setEditingBudget(null);
+  };
   const [, forceWeatherRefresh] = React.useState(0);
 
   React.useEffect(() => {
@@ -3676,8 +3730,8 @@ function App() {
     return { total, booked, hold, decide, weatherDays, moveDays };
   }, [allCountryActs, country]);
 
-  // Budget totals
-  const budgetSpent = BUDGET.lines.reduce((s, l) => s + l.spent, 0);
+  // Budget totals (budgetActual overrides per-category spent; editable on-trip)
+  const budgetSpent = BUDGET.lines.reduce((s, l) => s + (budgetActual[l.label] ?? l.spent), 0);
   const budgetPlanned = BUDGET.lines.reduce((s, l) => s + l.planned, 0);
 
   const weather = WEATHER[currentDay.id];
@@ -3962,11 +4016,11 @@ function App() {
               </div>
               <div className="food">
                 {(FOOD[currentCity.id] || []).map((f, i) => (
-                  <div className="food-item" key={i}>
+                  <a className="food-item" key={i} href={f.url} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", color:"inherit", display:"flex", alignItems:"flex-start", gap:10, padding:"10px 0", borderBottom:"1px solid var(--line-1)"}}>
                     <div className="food-thumb" style={{background:`oklch(0.92 0.04 ${f.hue})`, color:`oklch(0.4 0.1 ${f.hue})`}}>
                       {f.name.split(" ").map(w => w[0]).slice(0,2).join("")}
                     </div>
-                    <div style={{minWidth:0}}>
+                    <div style={{minWidth:0, flex:1}}>
                       <div className="food-name">{f.name}</div>
                       <div className="food-meta">
                         <span>{f.cuisine}</span>
@@ -3974,14 +4028,15 @@ function App() {
                         <b>{f.price}</b>
                         <span>·</span>
                         <span>{f.dist}</span>
+                        {f.tier === "quick" && <span style={{background:"oklch(0.9 0.06 145)",color:"oklch(0.35 0.1 145)",borderRadius:4,padding:"1px 5px",fontSize:10,fontWeight:600,letterSpacing:"0.03em"}}>QUICK</span>}
+                        {f.tier === "nice" && <span style={{background:"oklch(0.92 0.04 50)",color:"oklch(0.4 0.1 50)",borderRadius:4,padding:"1px 5px",fontSize:10,fontWeight:600,letterSpacing:"0.03em"}}>NICE</span>}
                       </div>
                       <div className="food-note">{f.note}</div>
                     </div>
-                  <div className="food-actions">
-                    <span className="food-rating"><Icon.star /> {f.rating}</span>
-
-                  </div>
-                </div>
+                    <div className="food-actions">
+                      <span className="food-rating"><Icon.star /> {f.rating}</span>
+                    </div>
+                  </a>
               ))}
             </div>
           </div>
@@ -4076,31 +4131,45 @@ function App() {
               </div>
             </div>
             <div className="budget-bar">
-              {BUDGET.lines.map((l, i) => (
-                <div key={i} style={{width: (l.spent / budgetPlanned * 100) + "%", background: l.color}} title={l.label}></div>
-              ))}
+              {BUDGET.lines.map((l, i) => {
+                const spent = budgetActual[l.label] ?? l.spent;
+                return <div key={i} style={{width: (spent / budgetPlanned * 100) + "%", background: l.color}} title={l.label}></div>;
+              })}
             </div>
-            {BUDGET.lines.map((l, i) => (
-              <div key={i} className="budget-line">
-                <div className="swatch" style={{background: l.color}}></div>
-                <div className="lbl">{l.label}</div>
-                <div className="spent">${l.spent.toLocaleString()}</div>
-                <div className="of">/ ${l.planned.toLocaleString()}</div>
-              </div>
-            ))}
+            {BUDGET.lines.map((l, i) => {
+              const spent = budgetActual[l.label] ?? l.spent;
+              return (
+                <div key={i} className="budget-line">
+                  <div className="swatch" style={{background: l.color}}></div>
+                  <div className="lbl">{l.label}</div>
+                  {editingBudget === l.label ? (
+                    <input
+                      className="budget-edit-input"
+                      defaultValue={spent}
+                      autoFocus
+                      onBlur={e => updateBudget(l.label, e.target.value)}
+                      onKeyDown={e => { if (e.key === 'Enter') updateBudget(l.label, e.target.value); if (e.key === 'Escape') setEditingBudget(null); }}
+                    />
+                  ) : (
+                    <div className="spent" onClick={() => setEditingBudget(l.label)} title="Tap to edit" style={{cursor:'pointer'}}>${spent.toLocaleString()}</div>
+                  )}
+                  <div className="of">/ ${l.planned.toLocaleString()}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* TASKS */}
         <div className="card">
-          <div className="card-h"><span className="lbl">Pre-trip checklist</span><a className="a" href="#">Clear</a></div>
+          <div className="card-h"><span className="lbl">Pre-trip checklist</span><a className="a" href="#" onClick={clearChecks}>Clear</a></div>
           <div className="tasks">
             <div className="tasks-head">
-              <span>{REMINDERS.filter(r=>r.done).length} of {REMINDERS.length} done</span>
+              <span>{doneCount} of {REMINDERS.length} done</span>
             </div>
             <div className="tasks-section-title">Before you go</div>
             {REMINDERS.map((r, i) => (
-              <Task key={i} r={r} />
+              <Task key={i} r={r} index={i} done={checks[i] ?? r.done} onToggle={toggleCheck} />
             ))}
           </div>
         </div>
@@ -4110,10 +4179,9 @@ function App() {
   );
 }
 
-function Task({ r }) {
-  const [done, setDone] = useState(r.done);
+function Task({ r, index, done, onToggle }) {
   return (
-    <button className={"task " + (done ? "done" : "")} onClick={() => setDone(!done)}>
+    <button className={"task " + (done ? "done" : "")} onClick={() => onToggle(index)}>
       <span className="cb">{done && <Icon.check />}</span>
       <span>{r.title}</span>
     </button>
