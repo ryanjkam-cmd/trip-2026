@@ -73,7 +73,7 @@ const { useState, useMemo } = React;
 
 const TRIP = {
   title: "Iceland & Europe — 27 Days",
-  dates: "Jun 21 – Jul 15, 2026",
+  dates: "Jun 21 – Jul 17, 2026",
   travelers: 3,
   countries: [
     {
@@ -178,7 +178,25 @@ const TRIP = {
             { id: "d20", n: 20, date: "Thu, Jul 10", weekday: "Thursday",  title: "Prague Castle" },
             { id: "d21", n: 21, date: "Fri, Jul 11", weekday: "Friday",    title: "Charles Bridge + Josefov" },
             { id: "d22", n: 22, date: "Sat, Jul 12", weekday: "Saturday",  title: "Last Day" },
-            { id: "d23", n: 23, date: "Sun, Jul 13", weekday: "Sunday",    title: "Depart Prague" },
+          ],
+        },
+      ],
+    },
+    {
+      id: "netherlands",
+      name: "Netherlands",
+      flag: "NL",
+      cities: [
+        {
+          id: "amsterdam",
+          name: "Amsterdam",
+          subtitle: "Final City · Days 23–27",
+          days: [
+            { id: "d23", n: 23, date: "Sun, Jul 13", weekday: "Sunday",    title: "Prague → Amsterdam" },
+            { id: "d24", n: 24, date: "Mon, Jul 14", weekday: "Monday",    title: "Rijksmuseum + Canals" },
+            { id: "d25", n: 25, date: "Tue, Jul 15", weekday: "Tuesday",   title: "Anne Frank House" },
+            { id: "d26", n: 26, date: "Wed, Jul 16", weekday: "Wednesday", title: "Last Day" },
+            { id: "d27", n: 27, date: "Thu, Jul 17", weekday: "Thursday",  title: "Depart AMS → SFO" },
           ],
         },
       ],
@@ -192,7 +210,7 @@ const ACTIVITIES = {
     { time: "22:35", end: "08:30", type: "flight", title: "UA398 IAD → KEF (overnight)", meta: "United · Seats 7F/7D/7E · arrive Jun 22", tone: "accent", status: "booked", conf: "C1PEFX", priority: "must", url: "https://www.united.com", mapUrl: null },
   ],
   d2: [
-    { time: "08:30", end: "09:00", type: "transit", title: "Land KEF · Pick up Budget Car", meta: "Budget · Conf #36698256US0 · Expedia 73325672201255", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "https://www.budget.com", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "08:30", end: "09:00", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · check email for conf#", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "https://www.budget.com", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
     { time: "10:00", end: "13:00", type: "do", title: "Blue Lagoon", meta: "Ramp entry · therapeutic for Janelle · LAVA Restaurant lunch", rating: 4.5, reviews: 22104, tags: ["Spa", "Geothermal", "Accessible"], tone: "mint", status: "booked", priority: "must", cost: 270, url: "https://www.bluelagoon.com", mapUrl: "https://maps.google.com/?q=Blue+Lagoon+Iceland&ll=63.8803,-22.4437" },
     { time: "13:00", end: "14:30", type: "eat", title: "LAVA Restaurant", meta: "At Blue Lagoon · tasting menu overlooking the lagoon", rating: 4.4, reviews: 1820, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 180, url: "https://www.bluelagoon.com/restaurants/lava-restaurant", mapUrl: "https://maps.google.com/?q=LAVA+Restaurant+Blue+Lagoon+Iceland" },
     { time: "15:00", end: "16:00", type: "stay", title: "Check in — Reykjavík EDITION", meta: "Jun 22–25 · 3 nights · Check-in 3pm", tone: "muted", status: "booked", conf: "#78962273", priority: "must", cost: 1800, url: "https://www.marriott.com/en-us/hotels/rekvb-the-reykjavik-edition/overview/", mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel+Iceland" },
@@ -206,7 +224,7 @@ const ACTIVITIES = {
   ],
   d4: [
     { time: "09:30", end: "11:30", type: "transit", title: "Drive Reykjavík → Husafell", meta: "~145 km · 2 hrs via Route 1 and 50", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Husafell+Tourism+Center+Iceland" },
-    { time: "12:30", end: "14:30", type: "do", title: "⭐ INTO THE GLACIER — Langjökull", meta: "500m tunnel · flat floors · 8-wheel vehicle · best ice cave for Janelle", rating: 4.9, reviews: 3200, tags: ["Ice Cave", "Accessible", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 550, cancelBy: "Jun 22", weather: true, url: "https://intotheglacier.is", mapUrl: "https://maps.google.com/?q=Into+the+Glacier+Husafell+Iceland&ll=64.5317,-20.8765" },
+    { time: "12:30", end: "14:30", type: "do", title: "⭐ INTO THE GLACIER — Langjökull", meta: "Booked 12:30pm Jun 24 · Voucher in ryanjkam@gmail.com · 8-wheel SuperJeep + 500m tunnel walk", rating: 4.9, reviews: 3200, tags: ["Ice Cave", "Accessible", "Booked"], tone: "mint", status: "booked", conf: "Voucher → ryanjkam@gmail.com", priority: "must", cost: 550, weather: true, url: "https://intotheglacier.is", mapUrl: "https://maps.google.com/?q=Into+the+Glacier+Husafell+Iceland&ll=64.5317,-20.8765" },
     { time: "15:30", end: "16:30", type: "do", title: "Þingvellir National Park", meta: "Flat boardwalk · UNESCO · tectonic rift · 45 min stop", rating: 4.9, reviews: 12400, tags: ["UNESCO", "Nature", "Accessible"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Thingvellir+National+Park+Iceland" },
     { time: "16:45", end: "17:30", type: "do", title: "Geysir & Strokkur", meta: "Flat gravel · erupts every 5–8 min · benches available", rating: 4.7, reviews: 9800, tags: ["Geothermal"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Geysir+Iceland" },
     { time: "20:00", end: "21:30", type: "eat", title: "Dinner in Reykjavík", meta: "Hlemmur Mathöll or EDITION", rating: 4.5, reviews: 1200, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Hlemmur+Matholl+Reykjavik" },
@@ -232,7 +250,7 @@ const ACTIVITIES = {
     { time: "08:00", end: "08:00", type: "transit", title: "Depart Vík 8am sharp", meta: "Long day trip · ~190 km each way · 2.5 hrs", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: null },
     { time: "08:50", end: "09:10", type: "transit", title: "Stop: Kirkjubæjarklaustur", meta: "Gas + coffee + stretch · 50 min from Vík", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Kirkjubaejarklaustur+Iceland" },
     { time: "09:45", end: "10:00", type: "transit", title: "Stop: Skaftafell viewpoint", meta: "90 min from Vík · 10 min stretch · views from car park", tone: "muted", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Skaftafell+Iceland" },
-    { time: "10:30", end: "12:00", type: "do", title: "⭐ Jökulsárlón Amphibian Boat Tour", meta: "40 min on the lagoon · seated · accessible dock · icebergs up close", rating: 4.9, reviews: 6800, tags: ["Boat", "Accessible", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 150, cancelBy: "Jun 26", weather: true, url: "https://icelagoon.is", mapUrl: "https://maps.google.com/?q=Jokulsarlon+Glacier+Lagoon+Iceland&ll=64.0784,-16.2306" },
+    { time: "10:30", end: "12:00", type: "do", title: "⭐ Jökulsárlón Amphibian Boat Tour", meta: "Walk-up · no booking needed · Jun–Sep 9am–7pm · seated · accessible dock · icebergs up close", rating: 4.9, reviews: 6800, tags: ["Boat", "Accessible", "Walk-up"], tone: "mint", status: "booked", priority: "must", cost: 150, weather: true, url: "https://icelagoon.is", mapUrl: "https://maps.google.com/?q=Jokulsarlon+Glacier+Lagoon+Iceland&ll=64.0784,-16.2306" },
     { time: "12:00", end: "13:00", type: "do", title: "Diamond Beach", meta: "5 min flat walk · ice chunks on black sand · no booking needed", rating: 4.8, reviews: 5200, tags: ["Beach", "Free"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Diamond+Beach+Iceland&ll=64.0652,-16.1780" },
     { time: "13:00", end: "14:00", type: "eat", title: "Jökulsárlón Café", meta: "On-site · soup + sandwiches · fuel up before drive back", rating: 4.0, reviews: 480, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 50, url: null, mapUrl: null },
     { time: "16:30", end: "16:30", type: "transit", title: "Return to Vík", meta: "~190 km back · arrive ~6:30–7pm", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: null },
@@ -245,7 +263,7 @@ const ACTIVITIES = {
   d10: [
     { time: "11:00", end: "14:00", type: "transit", title: "Check out Vík → drive KEF", meta: "~190 km · 2.5 hrs · drop Budget car at KEF", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
     { time: "16:30", end: "20:00", type: "flight", title: "Finnair KEF → HEL", meta: "Seats 11E/11D/11F · 116,256 ISK · meals x3 + extra bag", tone: "accent", status: "booked", conf: "7YNJSD", priority: "must", url: "https://www.finnair.com", mapUrl: null },
-    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Helsinki Hotel", meta: "Hotel TBD · request accessible room", tone: "muted", status: "decide", priority: "must", url: "https://www.marriott.com", mapUrl: "https://maps.google.com/?q=Helsinki+Finland" },
+    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Crowne Plaza Helsinki", meta: "Jun 30–Jul 3 · 3 nights · Conf 73422231915860 · Check-in 3pm", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "https://www.ihg.com/crowneplaza/hotels/us/en/helsinki/helcp/hoteldetail", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
   ],
   d11: [
     { time: "09:00", end: "10:30", type: "eat", title: "Old Market Hall (Vanha Kauppahalli)", meta: "Smoked salmon · rye bread · Finnish pastries · flat / benches everywhere", rating: 4.7, reviews: 3800, tags: ["Breakfast", "Market"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Old+Market+Hall+Helsinki&ll=60.1678,24.9524" },
@@ -259,7 +277,7 @@ const ACTIVITIES = {
     { time: "19:00", end: "21:00", type: "transit", title: "Tallink Silja Ferry Helsinki → Tallinn", meta: "2 hrs · fully accessible · Greyson: arcades + shops on board", rating: 4.4, reviews: 7200, tags: ["Ferry", "Accessible"], tone: "accent", status: "decide", priority: "must", cost: 120, url: "https://www.tallinksilja.com", mapUrl: "https://maps.google.com/?q=West+Terminal+Helsinki" },
   ],
   d13: [
-    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Tallinn · Check in Hotel Telegraaf or Hilton", meta: "Hotel Telegraaf (Old Town, accessible) or Hilton Tallinn Park (smoother streets)", tone: "muted", status: "decide", priority: "must", url: "https://www.marriott.com/en-us/hotels/tllak-hotel-telegraaf-autograph-collection/overview/", mapUrl: "https://maps.google.com/?q=Hotel+Telegraaf+Tallinn+Estonia" },
+    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Tallinn · Check in Novotel Tallinn", meta: "Jul 3–6 · 3 nights · Conf 73422280565429 · Modern building · outside cobblestones", tone: "muted", status: "booked", conf: "73422280565429", priority: "must", url: "https://all.accor.com/hotel/1221/index.en.shtml", mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
     { time: "10:00", end: "13:00", type: "do", title: "Seaplane Harbour (Maritime Museum)", meta: "WWI-era hangar · walk-through real submarine · flat floors · Greyson: flight simulator", rating: 4.8, reviews: 4800, tags: ["Museum", "Accessible", "Greyson"], tone: "mint", status: "decide", priority: "must", cost: 46, url: "https://meremuuseum.ee/lennusadam/en/", mapUrl: "https://maps.google.com/?q=Seaplane+Harbour+Tallinn&ll=59.4471,24.7327" },
     { time: "13:30", end: "15:30", type: "do", title: "PROTO Invention Factory", meta: "VR + science experiments · converted submarine factory · 500m from Seaplane Harbour", rating: 4.6, reviews: 1200, tags: ["Greyson", "Interactive"], tone: "mint", status: "decide", priority: "nice", cost: 96, url: "https://www.prototehas.ee/en/", mapUrl: "https://maps.google.com/?q=PROTO+Invention+Factory+Tallinn" },
     { time: "16:00", end: "18:00", type: "do", title: "Telliskivi Creative City", meta: "Former warehouses · street art · indie boutiques · The Brick Coffee Roastery", rating: 4.5, reviews: 2800, tags: ["Street Art", "Coffee"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Telliskivi+Creative+City+Tallinn" },
@@ -274,10 +292,10 @@ const ACTIVITIES = {
   d15: [
     { time: "10:00", end: "11:30", type: "do", title: "Estonian Cooking Class — ToRe Toit", meta: "2.5 hrs · 3-course Estonian meal · Old Town · max 8 people · book ahead", rating: 4.9, reviews: 5000, tags: ["Cooking Class", "Book Ahead"], tone: "mint", status: "decide", priority: "must", cost: 237, url: "https://www.gettyourguide.com/tallinn-l394/", mapUrl: "https://maps.google.com/?q=Old+Town+Tallinn+Estonia" },
     { time: "13:00", end: "14:00", type: "do", title: "Escape Room", meta: "Escape Room Factory or Imaginaris · Greyson: peak 12-year-old activity", rating: 4.6, reviews: 2400, tags: ["Greyson", "Family"], tone: "mint", status: "decide", priority: "nice", cost: 75, url: null, mapUrl: "https://maps.google.com/?q=Escape+Room+Factory+Tallinn" },
-    { time: "17:00", end: "20:00", type: "flight", title: "Tallinn → Kraków (flight TBD)", meta: "~2-3h with connection · LOT via Warsaw (Star Alliance) or Ryanair direct", tone: "accent", status: "decide", priority: "must", url: "https://www.lot.com", mapUrl: "https://maps.google.com/?q=Tallinn+Airport+Estonia" },
+    { time: "15:00", end: "18:10", type: "flight", title: "Finnair TLL → KRK (via HEL)", meta: "AY1018 + AY1163 · 15:00 → 18:10 · Economy Flex · 1 stop via Helsinki · 4h 10m", tone: "accent", status: "booked", conf: "8HJVGP", priority: "must", url: "https://www.finnair.com", mapUrl: "https://maps.google.com/?q=Tallinn+Airport+Estonia" },
   ],
   d16: [
-    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Kraków · Hotel (TBD)", meta: "Central location near Market Square · accessible room", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
+    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Kraków · Check in AC Hotel Kraków", meta: "Jul 6–9 · 3 nights · Conf 72331300 · Near Market Square · Balcony room · Cancel by Jul 5 11:59pm", tone: "muted", status: "booked", conf: "72331300", priority: "must", url: "https://www.marriott.com/en-us/hotels/krkac-ac-hotel-krakow/overview/", mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
     { time: "11:00", end: "13:00", type: "do", title: "Market Square + Cloth Hall", meta: "Rynek Główny · one of Europe's largest medieval squares · cobblestone but flat", rating: 4.8, reviews: 22000, tags: ["History", "Market"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Krakow+Market+Square+Poland&ll=50.0618,19.9371" },
     { time: "14:00", end: "17:00", type: "do", title: "Kazimierz Jewish Quarter", meta: "Bohemian neighborhood · flat streets · Schindler's Factory Museum (one of best WWII museums)", rating: 4.7, reviews: 8600, tags: ["History", "Museum"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Kazimierz+Krakow+Poland" },
     { time: "19:00", end: "21:00", type: "eat", title: "Zapiekanka + Polish Dinner", meta: "Try Senoji Trobele or riverside restaurants · cepelinai for Greyson", rating: 4.5, reviews: 1800, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 80, url: null, mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
@@ -288,7 +306,7 @@ const ACTIVITIES = {
     { time: "19:00", end: "21:00", type: "eat", title: "Lokál Restaurant", meta: "Unfiltered Pilsner Urquell · traditional Czech — book ahead · Greyson: schnitzel", rating: 4.7, reviews: 3200, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Lokal+Restaurant+Prague" },
   ],
   d18: [
-    { time: "09:00", end: "13:00", type: "transit", title: "Kraków → Prague (train ~7h or flight ~1h)", meta: "Train ~€20-40/person · scenic through mountains. Or Ryanair ~€50-100", tone: "accent", status: "decide", priority: "must", url: "https://www.loeuvre-hotels.com", mapUrl: "https://maps.google.com/?q=Krakow+Main+Station+Poland" },
+    { time: "09:00", end: "16:00", type: "transit", title: "RegioJet KRK → PRG (direct bus ~7h)", meta: "RegioJet direct bus · ~7h · comfortable coaches · seat reservation · regiojet.com · NOT BOOKED yet", tone: "accent", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.regiojet.com", mapUrl: "https://maps.google.com/?q=Krakow+Main+Station+Poland" },
     { time: "15:00", end: "16:00", type: "stay", title: "Check in — Almanac X Alcron Prague", meta: "Jul 9–13 · 4 nights · CONFIRMED", tone: "muted", status: "booked", conf: "AmEx 9092094862438", priority: "must", cost: 724, url: "https://almanac-hotels.com", mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague&ll=50.0808,14.4303" },
   ],
   d19: [
@@ -311,12 +329,32 @@ const ACTIVITIES = {
   ],
   d22: [
     { time: "10:00", end: "12:00", type: "do", title: "Last morning — Malá Strana", meta: "Lesser Town · John Lennon Wall · riverside walk · cafes", rating: 4.6, reviews: 7200, tags: ["Walking"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Mala+Strana+Prague" },
-    { time: "13:00", end: "15:00", type: "transit", title: "⚠ Depart Prague — ROUTE TBD", meta: "Option A: Prague → Ljubljana (fly) → depart LJU Jul 15. Option B: Prague → Amsterdam (fly) → depart AMS Jul 17", tone: "accent", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
+    { time: "17:00", end: "18:00", type: "transit", title: "Pack + head to airport", meta: "Vaclav Havel Airport · PRG → AMS departs 18:35 · allow 2h for airport", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
   ],
   d23: [
-    { time: "14:05", end: "15:30", type: "flight", title: "Option A: LH1463 LJU → FRA (Jul 15)", meta: "Seats 15D/15E/15F · Lufthansa · then UA927 FRA→SFO", tone: "accent", status: "booked", conf: "PCM8ZH / CD5ZR8", priority: "must", url: null, mapUrl: null },
-    { time: "17:00", end: "17:00", type: "flight", title: "Option B: UA AMS → SFO (Jul 17)", meta: "178,500 miles + $1,072.08 · ⚠ Cancel whichever option not taken", tone: "accent", status: "booked", conf: "DDHSFM", priority: "must", url: null, mapUrl: null },
-    { time: "17:30", end: "07:50", type: "flight", title: "UA927 FRA → SFO (if Option A)", meta: "Jul 15 · Seats 34A/34C/34B · arrive SFO 7:50pm same day", tone: "accent", status: "booked", conf: "PCM8ZH", priority: "must", url: null, mapUrl: null },
+    { time: "18:35", end: "20:10", type: "flight", title: "KLM PRG → AMS (decision pending)", meta: "KLM nonstop · 6:35pm Prague → 8:10pm Amsterdam · Basic $299 / Standard $491 / Flex $740 for 3 · NOT BOOKED", tone: "accent", status: "decide", priority: "must", url: "https://www.klm.com", mapUrl: null },
+    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Amsterdam Hotel", meta: "4 nights Jul 13–17 · NOT BOOKED · Marriott candidates: Apollo (~$394/nt) · Amsterdam Marriott (~$439/nt)", tone: "muted", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.marriott.com", mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+  ],
+  d24: [
+    { time: "10:00", end: "13:00", type: "do", title: "Rijksmuseum", meta: "Rembrandt + Vermeer · world-class collection · flat floors throughout · book ahead", rating: 4.8, reviews: 28000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.rijksmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Rijksmuseum+Amsterdam" },
+    { time: "14:00", end: "16:00", type: "do", title: "Canal Boat Tour", meta: "Flat boarding · seated · 75 min · Greyson: looks for houseboats · Janelle: therapeutic", rating: 4.7, reviews: 18000, tags: ["Canal", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Canal+Cruise" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Dinner — Jordaan neighborhood", meta: "Amsterdam's most charming neighborhood · sidewalk cafes · Dutch pancakes for Greyson", rating: 4.6, reviews: 2400, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 120, url: null, mapUrl: "https://maps.google.com/?q=Jordaan+Amsterdam" },
+  ],
+  d25: [
+    { time: "09:00", end: "11:30", type: "do", title: "Anne Frank House", meta: "BOOK NOW — sells out weeks ahead · limited capacity · Greyson: most important museum of the trip", rating: 4.9, reviews: 35000, tags: ["History", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.annefrank.org/en/museum/tickets/", mapUrl: "https://maps.google.com/?q=Anne+Frank+House+Amsterdam" },
+    { time: "13:00", end: "15:00", type: "do", title: "Van Gogh Museum", meta: "Largest Van Gogh collection in world · book same day as Anne Frank · flat interior", rating: 4.8, reviews: 22000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 57, url: "https://www.vangoghmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Van+Gogh+Museum+Amsterdam" },
+    { time: "16:00", end: "18:00", type: "do", title: "Vondelpark", meta: "Amsterdam's central park · flat paths · Greyson: skaters + buskers · Janelle: benches everywhere", rating: 4.7, reviews: 8200, tags: ["Park", "Free", "Accessible"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Vondelpark+Amsterdam" },
+    { time: "19:30", end: "22:00", type: "eat", title: "Fine Dining — Amsterdam", meta: "Bord'Eau or Restaurant C (both Michelin) · book ahead · final nice dinner of the trip", rating: 4.8, reviews: 1800, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "nice", cost: 350, url: null, mapUrl: "https://maps.google.com/?q=Bord%27Eau+Amsterdam" },
+  ],
+  d26: [
+    { time: "10:00", end: "12:00", type: "do", title: "Albert Cuyp Market", meta: "Amsterdam's largest street market · fresh stroopwafels · local cheese · Dutch herring (Greyson: try it)", rating: 4.5, reviews: 6200, tags: ["Market", "Free", "Local"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Albert+Cuyp+Market+Amsterdam" },
+    { time: "13:00", end: "15:00", type: "do", title: "NEMO Science Museum", meta: "5 floors · hands-on · Greyson: best science museum in Europe · rooftop views", rating: 4.6, reviews: 9400, tags: ["Greyson", "Interactive", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 60, url: "https://www.nemosciencemuseum.nl/en/", mapUrl: "https://maps.google.com/?q=NEMO+Science+Museum+Amsterdam" },
+    { time: "16:00", end: "18:00", type: "do", title: "Last canals walk — Prinsengracht", meta: "Janelle: bench by the water · Ryan + Greyson: walk the bridges · golden hour is stunning", rating: 4.8, reviews: 12000, tags: ["Canal", "Walking"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Prinsengracht+Amsterdam" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Farewell Dinner — Greyson picks", meta: "His trip, his call. Dutch pancakes (pannenkoeken) or Indo-Dutch rijsttafel · Greyson earns it", rating: 4.5, reviews: 1600, tags: ["Dinner", "Family"], tone: "hot", status: "decide", priority: "must", cost: 130, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+  ],
+  d27: [
+    { time: "10:00", end: "13:00", type: "transit", title: "Hotel → Amsterdam Schiphol (AMS)", meta: "30 min by taxi or tram · allow 3h before departure · Schiphol has excellent lounges", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Airport+Schiphol" },
+    { time: "TBD", end: "TBD", type: "flight", title: "UA969 AMS → SFO (nonstop)", meta: "178,500 miles + $1,072 · United · check-in time TBD · conf DDHSFM", tone: "accent", status: "booked", conf: "DDHSFM", priority: "must", url: "https://www.united.com", mapUrl: null },
   ],
 };
 
@@ -424,6 +462,10 @@ const WEATHER = {
   d21: { hi: 79, lo: 61, summary: "Warm · sunny",    wind: "5 mph",  icon: "sun",   risk: "ok" },
   d22: { hi: 77, lo: 59, summary: "Partly cloudy",   wind: "7 mph",  icon: "cloud", risk: "ok" },
   d23: { hi: 75, lo: 57, summary: "Clear departure", wind: "5 mph",  icon: "sun",   risk: "ok" },
+  d24: { hi: 22, lo: 15, summary: "Partly cloudy",  wind: "12 km/h", icon: "cloud", risk: "ok" },
+  d25: { hi: 21, lo: 14, summary: "Mild · overcast", wind: "15 km/h", icon: "cloud", risk: "ok" },
+  d26: { hi: 23, lo: 15, summary: "Sunny intervals", wind: "10 km/h", icon: "sun",   risk: "ok" },
+  d27: { hi: 21, lo: 13, summary: "Partly sunny",    wind: "14 km/h", icon: "sun",   risk: "ok" },
 };
 
 const GEAR = {
@@ -453,42 +495,46 @@ const GEAR = {
 };
 
 const HOTELS = {
-  reykjavik: { dates: "JUN 22 – 25", name: "Reykjavík EDITION",   phone: "+354 528 1700", addr: "Austurstræti 2, 101 Reykjavík",           conf: "#78962273",          mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel" },
-  hella:     { dates: "JUN 25 – 27", name: "Farmer's Guest House", phone: "Airbnb lockbox", addr: "Meiri-Tunga 1, 851 Hella, Iceland",       conf: "Airbnb — lockbox",   mapUrl: "https://maps.google.com/?q=Meiri+Tunga+1+Hella+Iceland" },
-  vik:       { dates: "JUN 27 – 30", name: "Hotel Vík í Mýrdal",   phone: "+354 487 1480",  addr: "Klettsvegur 1, 870 Vík í Mýrdal",         conf: "#79476041",          mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland" },
-  helsinki:  { dates: "JUL 1 – 3",   name: "Helsinki Hotel (TBD)", phone: "TBD",            addr: "Marriott or Scandic · request accessible", conf: "NOT BOOKED",         mapUrl: "https://maps.google.com/?q=Helsinki+Finland" },
-  tallinn:   { dates: "JUL 3 – 6",   name: "Hotel Telegraaf (TBD)",phone: "+372 600 0600",  addr: "Vene 9, Tallinn · Old Town",              conf: "NOT BOOKED",         mapUrl: "https://maps.google.com/?q=Hotel+Telegraaf+Tallinn+Estonia" },
-  krakow:    { dates: "JUL 6 – 9",   name: "Kraków Hotel (TBD)",   phone: "TBD",            addr: "Near Market Square · accessible room",    conf: "NOT BOOKED",         mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
-  prague:    { dates: "JUL 9 – 13",  name: "Almanac X Alcron",     phone: "+420 222 820 000",addr: "Štěpánská 40, 110 00 Prague 1",           conf: "AmEx 9092094862438", mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague" },
+  reykjavik: { dates: "JUN 22 – 25", name: "Reykjavík EDITION",    phone: "+354 528 1700",  addr: "Austurstræti 2, 101 Reykjavík",          conf: "#78962273",           mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel" },
+  hella:     { dates: "JUN 25 – 27", name: "Farmer's Guest House", phone: "Airbnb lockbox",  addr: "Meiri-Tunga 1, 851 Hella, Iceland",      conf: "Airbnb — lockbox",    mapUrl: "https://maps.google.com/?q=Meiri+Tunga+1+Hella+Iceland" },
+  vik:       { dates: "JUN 27 – 30", name: "Hotel Vík í Mýrdal",   phone: "+354 487 1480",   addr: "Klettsvegur 1, 870 Vík í Mýrdal",        conf: "#79476041",           mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland" },
+  helsinki:  { dates: "JUN 30 – JUL 3", name: "Crowne Plaza Helsinki", phone: "+358 9 2521 0000", addr: "Mannerheimintie 50, 00260 Helsinki", conf: "73422231915860",      mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
+  tallinn:   { dates: "JUL 3 – 6",   name: "Novotel Tallinn",      phone: "+372 669 0000",   addr: "A. Lauteri 3, 10114 Tallinn",            conf: "73422280565429",      mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
+  krakow:    { dates: "JUL 6 – 9",   name: "AC Hotel Kraków",      phone: "+48 12 384 7800", addr: "pl. Szczepański 3, 31-011 Kraków",       conf: "72331300",            mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
+  prague:    { dates: "JUL 9 – 13",  name: "Almanac X Alcron",     phone: "+420 222 820 000",addr: "Štěpánská 40, 110 00 Prague 1",          conf: "ZO-AX1043-36815",     mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague" },
+  amsterdam: { dates: "JUL 13 – 17", name: "Amsterdam Hotel (TBD)", phone: "TBD",            addr: "City Center · Marriott candidates",       conf: "NOT BOOKED",          mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
 };
 
 const FLIGHTS = {
-  iceland: { route: "SFO → IAD → KEF", airline: "United Airlines UA433 + UA398", date: "Sun, Jun 21, 2026", depT: "12:35", arrT: "08:30 +1", depCity: "San Francisco", arrCity: "Keflavík", conf: "C1PEFX" },
-  finland: { route: "KEF → HEL", airline: "Finnair", date: "Tue, Jun 30, 2026", depT: "16:30", arrT: "20:00", depCity: "Keflavík", arrCity: "Helsinki", conf: "7YNJSD" },
-  estonia: { route: "HEL → TLL (ferry)", airline: "Tallink Silja Line", date: "Thu, Jul 3, 2026", depT: "19:00", arrT: "21:00", depCity: "Helsinki", arrCity: "Tallinn", conf: "TBD" },
-  poland:  { route: "TLL → KRK", airline: "LOT or Ryanair (TBD)", date: "Sun, Jul 6, 2026", depT: "17:00", arrT: "20:00", depCity: "Tallinn", arrCity: "Kraków", conf: "NOT BOOKED" },
-  czechia: { route: "KRK → PRG", airline: "Train or Ryanair (TBD)", date: "Wed, Jul 9, 2026", depT: "09:00", arrT: "15:00", depCity: "Kraków", arrCity: "Prague", conf: "NOT BOOKED" },
+  iceland:     { route: "SFO → IAD → KEF", airline: "United Airlines UA433 + UA398", date: "Sun, Jun 21, 2026", depT: "12:35", arrT: "08:30 +1", depCity: "San Francisco", arrCity: "Keflavík", conf: "C1PEFX" },
+  finland:     { route: "KEF → HEL", airline: "Finnair AY994", date: "Tue, Jun 30, 2026", depT: "17:15", arrT: "23:40", depCity: "Keflavík", arrCity: "Helsinki", conf: "7YNJSD" },
+  estonia:     { route: "HEL → TLL (ferry)", airline: "Tallink Silja Line", date: "Fri, Jul 3, 2026", depT: "19:00", arrT: "21:00", depCity: "Helsinki", arrCity: "Tallinn", conf: "NOT BOOKED" },
+  poland:      { route: "TLL → KRK", airline: "Finnair AY1018 + AY1163 via HEL", date: "Mon, Jul 6, 2026", depT: "15:00", arrT: "18:10", depCity: "Tallinn", arrCity: "Kraków", conf: "8HJVGP" },
+  czechia:     { route: "KRK → PRG", airline: "RegioJet Bus (direct, ~7h)", date: "Thu, Jul 9, 2026", depT: "TBD", arrT: "TBD", depCity: "Kraków", arrCity: "Prague", conf: "NOT BOOKED" },
+  netherlands: { route: "PRG → AMS", airline: "KLM (nonstop, decision pending)", date: "Mon, Jul 13, 2026", depT: "18:35", arrT: "20:10", depCity: "Prague", arrCity: "Amsterdam", conf: "NOT BOOKED" },
+  home:        { route: "AMS → SFO", airline: "United UA969 (nonstop)", date: "Thu, Jul 17, 2026", depT: "TBD", arrT: "TBD", depCity: "Amsterdam", arrCity: "San Francisco", conf: "DDHSFM" },
 };
 
 const REMINDERS = [
   { title: "Passports — check 6mo validity (all 3)", done: true },
-  { title: "Book Into the Glacier — intotheglacier.is (Jun 24, 12:30pm)", done: false },
-  { title: "Book Jökulsárlón boat tour — icelagoon.is (Jun 28, 10:30am)", done: false },
-  { title: "Book Katla Ice Cave — katlatrack.is (Jun 29, 9am)", done: false },
-  { title: "Shorten Budget car rental to Jun 30 — Expedia 73325672201255", done: false },
-  { title: "Book Helsinki hotel — 2 nights, accessible room", done: false },
-  { title: "Book Tallinn hotel (Telegraaf or Hilton) — accessible room", done: false },
-  { title: "Book Kraków hotel — 3 nights, central location", done: false },
-  { title: "Reserve NOA Chef's Hall Tallinn — noaresto.ee", done: false },
-  { title: "Resolve dual return: LJU Jul 15 (PCM8ZH) vs AMS Jul 17 (DDHSFM)", done: false },
-  { title: "Notify bank of travel dates (Iceland + 5 EU countries)", done: false },
-  { title: "Download offline maps — Iceland, Helsinki, Tallinn, Kraków, Prague", done: false },
+  { title: "Hertz Iceland rental — verify confirmation email (Pay Later booking)", done: false },
+  { title: "⚠️ CANCEL Courtyard Prague (conf 72354492) — deadline Jul 8", done: false },
+  { title: "⚠️ CANCEL LJU award flight (PCM8ZH / CD5ZR8) — cancel ASAP at united.com", done: false },
+  { title: "Into the Glacier — BOOKED Jun 24 12:30pm (voucher in ryanjkam@gmail.com)", done: true },
+  { title: "Jökulsárlón boat — walk-up only · Jun 28 9am–7pm · no booking needed", done: true },
+  { title: "Book Helsinki → Tallinn ferry Jul 3 — tallink.com (flex ticket)", done: false },
+  { title: "Book PRG → AMS flight Jul 13 — KLM nonstop klm.com (Basic $299 / Flex $740)", done: false },
+  { title: "Book Amsterdam hotel Jul 13–17 — marriott.com (Apollo ~$394/nt or AMS Marriott ~$439/nt)", done: false },
+  { title: "Book RegioJet bus KRK → PRG Jul 9 — regiojet.com (~$17/person)", done: false },
+  { title: "Call Almanac X Alcron — add Greyson to reservation + confirm $100 Amex credit", done: false },
+  { title: "Reserve NOA Chef's Hall Tallinn — noaresto.ee (fills weeks ahead)", done: false },
+  { title: "Reserve Restaurant Salt Tallinn — before Jul 3", done: false },
+  { title: "Book Anne Frank House — annefrank.org (sells out weeks ahead)", done: false },
+  { title: "Notify bank of travel dates — Iceland + FI, EE, PL, CZ, NL", done: false },
+  { title: "Download offline maps — Iceland, Helsinki, Tallinn, Kraków, Prague, Amsterdam", done: false },
   { title: "ISK + Euro cash — pickup at SFO Travelex", done: false },
-  { title: "Email Blue Lagoon re: LAVA Restaurant lunch reservation", done: false },
-  { title: "Email intotheglacier.is re: Janelle mobility accommodation", done: false },
-  { title: "Email Postojna Cave re: mobility if doing Ljubljana route", done: false },
-  { title: "Greyson RSM: confirm no conflicts with Jun 21 departure", done: true },
   { title: "Janelle: pack pain meds + enough for 27 days", done: false },
+  { title: "Greyson RSM: confirmed — no conflict with Jun 21 departure", done: true },
 ];
 
 const BUDGET = {
@@ -511,6 +557,7 @@ const CITY_TINT = {
   tallinn:   "linear-gradient(135deg, #F5EAD9 0%, #F0DEC8 55%, #EDD4B8 100%)",
   krakow:    "linear-gradient(135deg, #EDD9F0 0%, #E4C8F0 55%, #D9C8F5 100%)",
   prague:    "linear-gradient(135deg, #FAF0D9 0%, #F5E4C0 55%, #F0D8A8 100%)",
+  amsterdam: "linear-gradient(135deg, #D9EDF5 0%, #C8D9FA 55%, #D4E4F0 100%)",
 };
 
 const CITY_TINT_STRONG = {
@@ -521,6 +568,7 @@ const CITY_TINT_STRONG = {
   tallinn:   "linear-gradient(135deg, #C88040 0%, #D89050 55%, #B87030 100%)",
   krakow:    "linear-gradient(135deg, #9040B0 0%, #A050C0 55%, #8030A0 100%)",
   prague:    "linear-gradient(135deg, #C8A030 0%, #D8B040 55%, #B89020 100%)",
+  amsterdam: "linear-gradient(135deg, #2060C0 0%, #3070D0 55%, #4080E0 100%)",
 };
 
 const CITY_INK = {
@@ -531,6 +579,7 @@ const CITY_INK = {
   tallinn:   "#5A3010",
   krakow:    "#3A1050",
   prague:    "#5A3A00",
+  amsterdam: "#0A2A5A",
 };
 
 const TRAVELERS = [
@@ -543,42 +592,56 @@ const SHARE_LINK = "ryanjkam-cmd.github.io/trip-2026/";
 
 const FOOD = {
   reykjavik: [
-    { name: "Bæjarins Beztu", cuisine: "Hot dogs", price: "$", rating: 4.6, dist: "0.5 km", note: "Reykjavík institution — Bill Clinton ate here", hue: 25 },
-    { name: "Matur og Drykkur", cuisine: "Heritage cooking", price: "$$$", rating: 4.8, dist: "1.2 km", note: "Cod head, fermented shark — the real Iceland", hue: 35 },
-    { name: "Sandholt Bakery", cuisine: "Pastries · coffee", price: "$", rating: 4.7, dist: "0.4 km", note: "Best morning stop in Reykjavík", hue: 60 },
-    { name: "Hlemmur Mathöll", cuisine: "Food hall", price: "$$", rating: 4.5, dist: "0.8 km", note: "Multiple vendors · open late · casual", hue: 40 },
+    { name: "Bæjarins Beztu Pylsur", cuisine: "Hot dogs", price: "$", tier: "quick", rating: 4.5, dist: "0.5 km", note: "Reykjavík institution — Bill Clinton ate here. Get one with everything (eina með öllu).", hue: 25, url: "https://maps.google.com/?q=Bajarins+Beztu+Pylsur+Reykjavik" },
+    { name: "Sandholt Bakery", cuisine: "Bakery · pastries · coffee", price: "$", tier: "quick", rating: 4.7, dist: "0.4 km", note: "Best morning stop in Reykjavík. Skyr cake. Fresh bread. Long lines but worth it.", hue: 60, url: "https://maps.google.com/?q=Sandholt+Bakery+Reykjavik+Iceland" },
+    { name: "Hlemmur Mathöll", cuisine: "Food hall · multiple vendors", price: "$$", tier: "quick", rating: 4.5, dist: "0.8 km", note: "5+ vendors under one roof. Noodles, burgers, hummus, craft beer. Open late. Good for Greyson.", hue: 40, url: "https://maps.google.com/?q=Hlemmur+Matholl+Reykjavik+Iceland" },
+    { name: "Matur og Drykkur", cuisine: "Heritage Icelandic", price: "$$$", tier: "nice", rating: 4.8, dist: "1.2 km", note: "Cod head, fermented shark, hákarl — the real Iceland. Book ahead. Chef's tasting menu is the move.", hue: 35, url: "https://maps.google.com/?q=Matur+og+Drykkur+Reykjavik+Iceland" },
+    { name: "Grillmarkaðurinn", cuisine: "Icelandic · arctic char · lamb", price: "$$$", tier: "nice", rating: 4.7, dist: "0.7 km", note: "Best lamb chops in Iceland. Lava stone grill. Splurge dinner option. Reserve.", hue: 30, url: "https://maps.google.com/?q=Grillmarkadurinn+Reykjavik+Iceland" },
   ],
   hella: [
-    { name: "Local Café Hella", cuisine: "Café · soup", price: "$", rating: 4.2, dist: "0.3 km", note: "Relaxed · walk-in only", hue: 50 },
-    { name: "Secret Lagoon Café", cuisine: "Light lunch", price: "$", rating: 4.0, dist: "20 km", note: "After Secret Lagoon · simple but good", hue: 55 },
+    { name: "Skál! Kaffi Hella", cuisine: "Café · soup · open sandwich", price: "$", tier: "quick", rating: 4.3, dist: "0.3 km", note: "Village café. Soup of the day, lamb sandwich. Relaxed. Walk-in only.", hue: 50, url: "https://maps.google.com/?q=Kaffi+Hella+Iceland" },
+    { name: "Secret Lagoon Café", cuisine: "Light lunch · soup", price: "$", tier: "quick", rating: 4.0, dist: "20 km", note: "After Secret Lagoon. Simple but solid. Skyr, soup, open sandwiches.", hue: 55, url: "https://maps.google.com/?q=Secret+Lagoon+Fludir+Iceland" },
+    { name: "Árból Restaurant", cuisine: "Icelandic · fish · lamb", price: "$$", tier: "nice", rating: 4.4, dist: "0.5 km", note: "Best sit-down in Hella. Local lamb and fresh fish. Comfortable for a longer dinner.", hue: 45, url: "https://maps.google.com/?q=Arbol+Restaurant+Hella+Iceland" },
   ],
   vik: [
-    { name: "Smiðjan Brugghús", cuisine: "Brewpub · burgers", price: "$$", rating: 4.7, dist: "0.2 km", note: "Vík's brewery — try the stout", hue: 45 },
-    { name: "Halldórskaffi", cuisine: "Café · lamb soup", price: "$$", rating: 4.5, dist: "0.1 km", note: "Walk-in friendly · reliable", hue: 55 },
-    { name: "Black Crust Pizza", cuisine: "Activated charcoal pizza", price: "$$", rating: 4.4, dist: "0.3 km", note: "Surprisingly great", hue: 30 },
+    { name: "Smiðjan Brugghús", cuisine: "Brewpub · burgers · stout", price: "$$", tier: "quick", rating: 4.7, dist: "0.2 km", note: "Vík's brewery. Try the Víkingur stout. Burger + pint = perfect after a beach day.", hue: 45, url: "https://maps.google.com/?q=Smiðjan+Brugghús+Vik+Iceland" },
+    { name: "Halldórskaffi", cuisine: "Café · lamb soup", price: "$$", tier: "quick", rating: 4.5, dist: "0.1 km", note: "Walk-in friendly. Reliable lamb soup. Good for Janelle — relaxed, not rushed.", hue: 55, url: "https://maps.google.com/?q=Halldorskaffi+Vik+Iceland" },
+    { name: "Sudur-Vík Restaurant", cuisine: "Icelandic · seafood · lamb", price: "$$$", tier: "nice", rating: 4.6, dist: "0.3 km", note: "Nicest sit-down in Vík. Fresh Arctic char, lamb, desserts. Panoramic views of the church.", hue: 30, url: "https://maps.google.com/?q=Sudur-Vik+Restaurant+Iceland" },
   ],
   helsinki: [
-    { name: "Allas Sea Pool Café", cuisine: "Light lunch · drinks", price: "$$", rating: 4.5, dist: "0 km", note: "At the pool · stay for lunch", hue: 200 },
-    { name: "Old Market Hall", cuisine: "Finnish market", price: "$", rating: 4.7, dist: "0.5 km", note: "Smoked salmon · rye bread · Finnish pastries", hue: 40 },
-    { name: "Kaffa Roastery", cuisine: "Specialty coffee", price: "$", rating: 4.8, dist: "0.6 km", note: "Best V60 in Helsinki", hue: 35 },
-    { name: "Restaurant Story", cuisine: "New Nordic", price: "$$$", rating: 4.7, dist: "1.0 km", note: "Book ahead · excellent tasting menu", hue: 195 },
+    { name: "Old Market Hall (Vanha Kauppahalli)", cuisine: "Finnish market · smoked salmon · rye", price: "$", tier: "quick", rating: 4.7, dist: "0.5 km", note: "Best market in Helsinki. Smoked salmon open-faced on rye. Finnish pastries. Benches everywhere.", hue: 40, url: "https://maps.google.com/?q=Vanha+Kauppahalli+Helsinki+Finland" },
+    { name: "Kaffa Roastery", cuisine: "Specialty coffee · V60", price: "$", tier: "quick", rating: 4.8, dist: "0.6 km", note: "Best coffee in Helsinki. Ask for the V60. Tiny shop, worth the walk. Pairs with Old Market.", hue: 35, url: "https://maps.google.com/?q=Kaffa+Roastery+Helsinki+Finland" },
+    { name: "Allas Sea Pool Café", cuisine: "Light lunch · drinks · terrace", price: "$$", tier: "quick", rating: 4.5, dist: "0 km", note: "Right at the pool. Stay for lunch after swimming. Wraps, salads, cold drinks. Harbor views.", hue: 200, url: "https://maps.google.com/?q=Allas+Sea+Pool+Helsinki+Finland" },
+    { name: "Restaurant Story", cuisine: "New Nordic · tasting menu", price: "$$$", tier: "nice", rating: 4.7, dist: "1.0 km", note: "Book ahead. Chef Teemu Aura. Seasonal, local ingredients. Helsinki's best tasting menu.", hue: 195, url: "https://maps.google.com/?q=Restaurant+Story+Helsinki+Finland" },
+    { name: "Ravintola Kuurna", cuisine: "Finnish bistro · seasonal", price: "$$", tier: "nice", rating: 4.6, dist: "1.2 km", note: "Cozy Finnish bistro. Short menu, everything good. Near Market Square. Book same-day.", hue: 210, url: "https://maps.google.com/?q=Ravintola+Kuurna+Helsinki+Finland" },
   ],
   tallinn: [
-    { name: "Restaurant Salt", cuisine: "Estonian-Asian fusion", price: "$$$", rating: 4.7, dist: "1.5 km", note: "Ryan: scallop ceviche + okonomiyaki — RESERVE", hue: 195 },
-    { name: "NOA Chef's Hall", cuisine: "Michelin · Nordic", price: "$$$", rating: 4.8, dist: "2.0 km", note: "7-course tasting · RESERVE NOW", hue: 40 },
-    { name: "Rataskaevu 16", cuisine: "Modern Estonian", price: "$$", rating: 4.7, dist: "0.4 km", note: "Game meats · mushrooms · always full", hue: 35 },
-    { name: "The Brick Coffee Roastery", cuisine: "Specialty coffee", price: "$", rating: 4.8, dist: "1.2 km", note: "At Telliskivi · ask for V60", hue: 30 },
+    { name: "Rataskaevu 16", cuisine: "Modern Estonian · game · mushrooms", price: "$$", tier: "quick", rating: 4.7, dist: "0.4 km", note: "Always full — arrive early or book. Wild boar pâté, elk medallion, mushroom dishes. Old Town, actually walkable.", hue: 35, url: "https://maps.google.com/?q=Rataskaevu+16+Tallinn+Estonia" },
+    { name: "The Brick Coffee Roastery", cuisine: "Specialty coffee · pastries", price: "$", tier: "quick", rating: 4.8, dist: "1.2 km", note: "Telliskivi Creative City. Ask for the V60 or a flat white. Best coffee in Tallinn.", hue: 30, url: "https://maps.google.com/?q=The+Brick+Coffee+Tallinn+Estonia" },
+    { name: "F-Hoone", cuisine: "Estonian all-day · brunchy", price: "$$", tier: "quick", rating: 4.5, dist: "1.3 km", note: "Telliskivi. Estonian comfort food, outdoor seating, casual. Good for lunch before or after Seaplane Harbour.", hue: 45, url: "https://maps.google.com/?q=F-Hoone+Tallinn+Estonia" },
+    { name: "Restaurant Salt", cuisine: "Estonian-Asian fusion", price: "$$$", tier: "nice", rating: 4.7, dist: "1.5 km", note: "Ryan: scallop ceviche + okonomiyaki. Near Kadriorg. Unique in Estonia. RESERVE now.", hue: 195, url: "https://maps.google.com/?q=Restaurant+Salt+Tallinn+Estonia" },
+    { name: "NOA Chef's Hall", cuisine: "Michelin · Nordic · 7-course", price: "$$$$", tier: "nice", rating: 4.8, dist: "2.0 km", note: "Coastal views. 7-course tasting menu. One of the best restaurants in the Baltics. Book 2–3 weeks ahead — fills fast.", hue: 40, url: "https://maps.google.com/?q=NOA+Chef%27s+Hall+Tallinn+Estonia" },
   ],
   krakow: [
-    { name: "Stary Port", cuisine: "Polish · pierogi", price: "$$", rating: 4.6, dist: "0.3 km", note: "Best pierogi in Kraków · locals go here", hue: 40 },
-    { name: "Zapiekanka stands", cuisine: "Street food", price: "$", rating: 4.4, dist: "0.6 km", note: "Polish open-faced baguette · Kazimierz · iconic", hue: 50 },
-    { name: "Schindler's Factory café", cuisine: "Museum café", price: "$", rating: 4.2, dist: "1.5 km", note: "Good lunch break during museum visit", hue: 35 },
+    { name: "Zapiekanka (Plac Nowy stands)", cuisine: "Polish street food · open baguette", price: "$", tier: "quick", rating: 4.4, dist: "0.6 km", note: "Kazimierz square. Polish icon. Mushroom + cheese + whatever on a baguette. Greyson: get two. ~3 PLN.", hue: 50, url: "https://maps.google.com/?q=Plac+Nowy+Krakow+Poland" },
+    { name: "Stary Port", cuisine: "Polish · pierogi · bigos", price: "$$", tier: "quick", rating: 4.6, dist: "0.3 km", note: "Best pierogi in Kraków — locals agree. Ruskie, meat, mushroom. Order a mix. No frills, great food.", hue: 40, url: "https://maps.google.com/?q=Stary+Port+Krakow+Poland" },
+    { name: "Café Szafe", cuisine: "Café · brunch · eggs", price: "$", tier: "quick", rating: 4.5, dist: "0.8 km", note: "Casual Kazimierz café. Good coffee, scrambled eggs, generous plates. Greyson-friendly.", hue: 55, url: "https://maps.google.com/?q=Cafe+Szafe+Krakow+Poland" },
+    { name: "Cherubino", cuisine: "Polish · modern · tasting menu", price: "$$$", tier: "nice", rating: 4.8, dist: "0.5 km", note: "Best fine dining in Kraków. Seasonal tasting menu. Quiet, unhurried, beautiful food. Reserve 1 week ahead.", hue: 40, url: "https://maps.google.com/?q=Cherubino+Restaurant+Krakow+Poland" },
+    { name: "Miod Malina", cuisine: "Polish · hearty · traditional", price: "$$", tier: "nice", rating: 4.6, dist: "0.4 km", note: "Żurek soup in bread bowl. Wild boar goulash. Classic Polish in a beautiful cellar room. Reserve.", hue: 35, url: "https://maps.google.com/?q=Miod+Malina+Krakow+Poland" },
   ],
   prague: [
-    { name: "Lokál", cuisine: "Czech · Pilsner Urquell", price: "$$", rating: 4.7, dist: "0.5 km", note: "Unfiltered tank beer · traditional Czech food · book ahead", hue: 45 },
-    { name: "La Degustation Boheme", cuisine: "Michelin · Czech", price: "$$$$", rating: 4.9, dist: "0.8 km", note: "One of Prague's best · reserve weeks ahead", hue: 35 },
-    { name: "Café Savoy", cuisine: "Grand café · pastries", price: "$$", rating: 4.7, dist: "0.6 km", note: "Art nouveau interior · best breakfast in Prague", hue: 50 },
-    { name: "Trdelník stands", cuisine: "Street pastry", price: "$", rating: 4.0, dist: "0.0 km", note: "Greyson will want one immediately · touristy but delicious", hue: 40 },
+    { name: "Lokál Dlouhááá", cuisine: "Czech · unfiltered Pilsner Urquell", price: "$$", tier: "quick", rating: 4.7, dist: "0.5 km", note: "Tank-fresh Pilsner Urquell — the best pint in Prague. Svíčková, goulash, schnitzel. Book ahead.", hue: 45, url: "https://maps.google.com/?q=Lokal+Dlouhaaa+Prague+Czech+Republic" },
+    { name: "Café Savoy", cuisine: "Grand café · pastries · breakfast", price: "$$", tier: "quick", rating: 4.7, dist: "0.6 km", note: "Art nouveau interior. Best breakfast in Prague. Croissants, eggs Benedict, incredible coffee. Go early.", hue: 50, url: "https://maps.google.com/?q=Cafe+Savoy+Prague+Czech+Republic" },
+    { name: "Trdelník stands (Old Town)", cuisine: "Street pastry", price: "$", tier: "quick", rating: 4.0, dist: "0.0 km", note: "Greyson will spot one instantly. Cinnamon-sugar spiral pastry. Touristy but delicious. Eat one.", hue: 40, url: "https://maps.google.com/?q=Old+Town+Square+Prague+Czech+Republic" },
+    { name: "La Degustation Boheme Bourgeoise", cuisine: "Michelin · modern Czech · 6-course", price: "$$$$", tier: "nice", rating: 4.9, dist: "0.8 km", note: "One of Prague's two Michelin-starred restaurants. 6-course tasting. Reserve 2–3 weeks ahead. Worth it.", hue: 35, url: "https://maps.google.com/?q=La+Degustation+Boheme+Bourgeoise+Prague" },
+    { name: "Field Restaurant", cuisine: "Modern Czech · seasonal · tasting", price: "$$$", tier: "nice", rating: 4.8, dist: "0.7 km", note: "Chef Radek Šubrt. Michelin star. Less formal than La Degustation. Book 1 week ahead.", hue: 30, url: "https://maps.google.com/?q=Field+Restaurant+Prague+Czech+Republic" },
+  ],
+  amsterdam: [
+    { name: "Albert Cuyp Market", cuisine: "Street food · Dutch · herring", price: "$", tier: "quick", rating: 4.5, dist: "1.5 km", note: "Amsterdam's best market. Fresh stroopwafels, Dutch herring (Greyson: try haring met uitjes), local cheese. Morning only.", hue: 40, url: "https://maps.google.com/?q=Albert+Cuyp+Market+Amsterdam+Netherlands" },
+    { name: "Broodje Bert", cuisine: "Dutch sandwiches · kroket", price: "$", tier: "quick", rating: 4.4, dist: "1.0 km", note: "Dutch kroket (fried beef ragout) on a white roll. Classic Dutch fast lunch. Order at the counter.", hue: 50, url: "https://maps.google.com/?q=Broodje+Bert+Amsterdam+Netherlands" },
+    { name: "Pancakes Amsterdam", cuisine: "Dutch pancakes (pannenkoeken)", price: "$$", tier: "quick", rating: 4.5, dist: "0.8 km", note: "Greyson's definitive pick. Dutch pancakes are huge and savory/sweet. Near the canals. No reservation needed.", hue: 55, url: "https://maps.google.com/?q=Pancakes+Amsterdam+Netherlands" },
+    { name: "Bord'Eau", cuisine: "French · Michelin · tasting", price: "$$$$", tier: "nice", rating: 4.8, dist: "0.5 km", note: "One of Amsterdam's best. 2 Michelin stars. French technique, Dutch ingredients. Book 2+ weeks ahead.", hue: 200, url: "https://maps.google.com/?q=Bord+Eau+Amsterdam+Netherlands" },
+    { name: "Restaurant C Amsterdam", cuisine: "Modern Dutch · rooftop · views", price: "$$$", tier: "nice", rating: 4.7, dist: "0.7 km", note: "Rooftop restaurant. City views. Michelin-listed. Modern Dutch cuisine. Good for a special last night.", hue: 210, url: "https://maps.google.com/?q=Restaurant+C+Amsterdam+Netherlands" },
   ],
 };
 
@@ -820,6 +883,7 @@ const css = `
   .country-tab .flag.ee { background: linear-gradient(135deg, #0072CE 33%, #000000 33% 66%, #FFFFFF 66%); }
   .country-tab .flag.pl { background: linear-gradient(180deg, #ffffff 50%, #DC143C 50%); }
   .country-tab .flag.cz { background: linear-gradient(135deg, #d7141a 50%, transparent 50%), linear-gradient(180deg, #ffffff 50%, #11457e 50%); }
+  .country-tab .flag.nl { background: linear-gradient(180deg, #AE1C28 33%, #FFFFFF 33% 66%, #21468B 66%); }
   .country-tab .badge {
     background: var(--line);
     color: var(--ink-2);
@@ -997,7 +1061,8 @@ const css = `
     letter-spacing: -0.005em; margin-bottom: 2px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .activity .desc { color: var(--ink-2); font-size: 12.5px; }
+  .activity .desc { color: var(--ink-2); font-size: 12.5px; white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .food-tier-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); margin: 8px 0 4px; padding-left: 2px; }
   .activity .row {
     display: flex; align-items: center; gap: 10px;
     margin-top: 8px;
@@ -3852,7 +3917,6 @@ function App() {
             <div className="card">
               <div className="card-h">
                 <span className="lbl">Eats around {currentCity.name}</span>
-                <a className="a" href="#">More</a>
               </div>
               <div className="food">
                 {(FOOD[currentCity.id] || []).map((f, i) => (
@@ -3891,7 +3955,7 @@ function App() {
 
         {/* CALENDAR */}
         <div className="card">
-          <div className="card-h"><span className="lbl">Calendar</span><a className="a" href="#">Open full</a></div>
+          <div className="card-h"><span className="lbl">Calendar</span></div>
           <div className="cal-head">
             <div className="m">{calMonth}</div>
           </div>
@@ -4286,19 +4350,28 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
             <span style={{fontSize:11, color:"var(--ink-3)"}}>{foodRecs.length} picks</span>
           </div>
           <div className="co-food">
-            {foodRecs.map((f, i) => (
-              <div key={i} className="co-food-item">
-                <div className="co-food-thumb" style={{background: `oklch(0.92 0.04 ${f.hue})`}}>
-                  <span className="caps" style={{color:`oklch(0.4 0.1 ${f.hue})`, fontSize:14}}>{f.name.split(" ").map(w => w[0]).slice(0,2).join("")}</span>
-                </div>
-                <div style={{minWidth:0}}>
-                  <div className="caps" style={{fontSize:12, fontWeight:900}}>{f.name}</div>
-                  <div style={{fontSize:11, color:"var(--ink-3)"}}>{f.cuisine} · <b style={{color:"var(--ink-2)"}}>{f.price}</b> · {f.dist}</div>
-                  <div style={{fontSize:11, color:"var(--ink-2)", marginTop:2}}>{f.note}</div>
-                </div>
-                <div className="co-food-rating"><Icon.star /> {f.rating}</div>
-              </div>
-            ))}
+            {["quick", "nice"].map(tier => {
+              const items = foodRecs.filter(f => f.tier === tier);
+              if (!items.length) return null;
+              return (
+                <React.Fragment key={tier}>
+                  <div style={{fontSize:10, fontWeight:700, textTransform:"uppercase", letterSpacing:"0.08em", color:"var(--ink-3)", margin:"8px 0 4px"}}>{tier === "quick" ? "Quick & Local" : "Nice Restaurants"}</div>
+                  {items.map((f, i) => (
+                    <div key={i} className="co-food-item" style={{cursor: f.url ? "pointer" : "default"}} onClick={() => f.url && window.open(f.url, "_blank")}>
+                      <div className="co-food-thumb" style={{background: `oklch(0.92 0.04 ${f.hue})`}}>
+                        <span className="caps" style={{color:`oklch(0.4 0.1 ${f.hue})`, fontSize:14}}>{f.name.split(" ").map(w => w[0]).slice(0,2).join("")}</span>
+                      </div>
+                      <div style={{minWidth:0, flex:1}}>
+                        <div className="caps" style={{fontSize:12, fontWeight:900}}>{f.name}{f.url && <span style={{marginLeft:4, opacity:0.5, fontSize:10}}>↗</span>}</div>
+                        <div style={{fontSize:11, color:"var(--ink-3)"}}>{f.cuisine} · <b style={{color:"var(--ink-2)"}}>{f.price}</b> · {f.dist}</div>
+                        <div style={{fontSize:11, color:"var(--ink-2)", marginTop:2}}>{f.note}</div>
+                      </div>
+                      <div className="co-food-rating"><Icon.star /> {f.rating}</div>
+                    </div>
+                  ))}
+                </React.Fragment>
+              );
+            })}
           </div>
         </div>
       )}
