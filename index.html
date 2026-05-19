@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iceland + Europe 2026 — Kam Family</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f1117; color: #e8eaf0; min-height: 100vh; }
+
+  header { background: #1a1d27; border-bottom: 1px solid #2a2d3a; padding: 20px 16px 0; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+  header h1 { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+  header p { font-size: 12px; color: #6b7280; margin-top: 2px; }
+  .stats { display: flex; gap: 16px; margin: 12px 0; }
+  .stat { font-size: 12px; }
+  .stat strong { color: #fff; font-size: 14px; display: block; }
+
+  nav { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 0; scrollbar-width: none; margin-top: 4px; }
+  nav::-webkit-scrollbar { display: none; }
+  nav button { flex-shrink: 0; font-size: 13px; font-weight: 500; padding: 8px 14px; background: none; border: none; border-bottom: 2px solid transparent; color: #9ca3af; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+  nav button.active { color: #60a5fa; border-bottom-color: #60a5fa; }
+  nav button:hover:not(.active) { color: #d1d5db; }
+
+  main { padding: 16px; max-width: 680px; margin: 0 auto; }
+
+  .alert { background: #2d1f00; border: 1px solid #f59e0b; border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-text { font-size: 13px; line-height: 1.5; color: #fcd34d; }
+  .alert-text strong { display: block; margin-bottom: 2px; }
+
+  .leg { display: none; }
+  .leg.show { display: block; }
+
+  .leg-header { margin-bottom: 12px; padding-top: 4px; }
+  .leg-header h2 { font-size: 20px; font-weight: 700; color: #fff; }
+  .leg-header p { font-size: 13px; color: #6b7280; margin-top: 2px; }
+
+  .section { margin-bottom: 16px; }
+  .section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: #4b5563; margin-bottom: 8px; }
+
+  .card { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
+  .card-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 12px 14px; border-bottom: 1px solid #2a2d3a; }
+  .card-row:last-child { border-bottom: none; }
+
+  .card-info { flex: 1; min-width: 0; }
+  .card-name { font-size: 14px; font-weight: 600; color: #f3f4f6; line-height: 1.3; }
+  .card-detail { font-size: 12px; color: #6b7280; margin-top: 3px; line-height: 1.4; }
+  .card-conf { font-size: 11px; color: #4b5563; font-family: monospace; margin-top: 4px; }
+  .card-cost { font-size: 11px; color: #9ca3af; margin-top: 3px; }
+  .card-note { font-size: 11px; color: #f59e0b; margin-top: 4px; }
+
+  .badge { flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; margin-top: 2px; }
+  .confirmed { background: #052e16; color: #4ade80; border: 1px solid #166534; }
+  .pending { background: #2d1f00; color: #fbbf24; border: 1px solid #92400e; }
+  .open { background: #1f1f2e; color: #818cf8; border: 1px solid #3730a3; }
+  .warning { background: #2d0f0f; color: #f87171; border: 1px solid #991b1b; }
+  .shorten { background: #2d1f00; color: #fb923c; border: 1px solid #9a3412; }
+
+  .day-block { background: #1a1d27; border: 1px solid #2a2d3a; border-radius: 10px; margin-bottom: 8px; overflow: hidden; }
+  .day-header { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-bottom: 1px solid #2a2d3a; cursor: pointer; }
+  .day-date { font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #4b5563; min-width: 72px; }
+  .day-title { font-size: 14px; font-weight: 600; color: #f3f4f6; flex: 1; }
+  .day-icon { font-size: 16px; }
+  .day-body { padding: 12px 14px; display: none; }
+  .day-body.open { display: block; }
+  .day-item { font-size: 13px; color: #9ca3af; padding: 4px 0; padding-left: 14px; position: relative; line-height: 1.4; }
+  .day-item::before { content: '·'; position: absolute; left: 4px; color: #374151; }
+  .day-item strong { color: #e8eaf0; }
+  .day-item .tag { font-size: 10px; font-weight: 600; text-transform: uppercase; padding: 1px 6px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+  .tag-booked { background: #052e16; color: #4ade80; }
+  .tag-book { background: #2d0f0f; color: #f87171; }
+  .tag-optional { background: #1f1f2e; color: #818cf8; }
+
+  .flight-strip { background: #111827; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; border: 1px solid #1f2937; }
+  .flight-route { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .flight-airport { font-size: 18px; font-weight: 700; color: #fff; }
+  .flight-arrow { font-size: 14px; color: #374151; flex: 1; text-align: center; }
+  .flight-meta { font-size: 12px; color: #6b7280; }
+  .flight-meta span { margin-right: 12px; }
+  .flight-conf { font-size: 11px; color: #374151; font-family: monospace; margin-top: 4px; }
+
+  .open-items { background: #1a1d27; border: 1px solid #3730a3; border-radius: 10px; padding: 14px; margin-bottom: 16px; }
+  .open-items h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #818cf8; margin-bottom: 10px; }
+  .open-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #1f1f2e; }
+  .open-item:last-child { border-bottom: none; }
+  .open-item-num { font-size: 11px; font-weight: 700; color: #374151; min-width: 18px; }
+  .open-item-text { font-size: 13px; color: #9ca3af; line-height: 1.4; }
+  .open-item-text strong { color: #e8eaf0; display: block; }
+
+  .chevron { transition: transform 0.2s; font-size: 12px; color: #4b5563; }
+  .day-header.expanded .chevron { transform: rotate(90deg); }
+
+  @media (max-width: 480px) {
+    header h1 { font-size: 16px; }
+    .stats { gap: 12px; }
+    main { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌍 Kam Family — Iceland + Europe 2026</h1>
+  <p>Jun 21 – Jul 17 · Ryan, Janelle, Greyson</p>
+  <div class="stats">
+    <div class="stat"><strong>27</strong>nights</div>
+    <div class="stat"><strong>7</strong>cities</div>
+    <div class="stat"><strong>3</strong>ice caves</div>
+    <div class="stat"><strong style="color:#fbbf24">⚠ Dual return</strong>resolve</div>
+  </div>
+  <nav>
+    <button class="active" onclick="show('all', this)">All</button>
+    <button onclick="show('iceland', this)">🇮🇸 Iceland</button>
+    <button onclick="show('helsinki', this)">🇫🇮 Helsinki</button>
+    <button onclick="show('tallinn', this)">🇪🇪 Tallinn</button>
+    <button onclick="show('krakow', this)">🇵🇱 Krakow</button>
+    <button onclick="show('prague', this)">🇨🇿 Prague</button>
+    <button onclick="show('exit', this)">✈️ Return</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ALERT -->
+<div class="alert" id="dual-return-alert">
+  <div class="alert-icon">⚠️</div>
+  <div class="alert-text">
+    <strong>Dual return routing — resolve before booking Amsterdam hotel</strong>
+    Option A: LJU→FRA→SFO Jul 15 (Conf PCM8ZH / CD5ZR8). Option B: AMS→SFO Jul 17 (Conf DDHSFM, 178K miles + $1,072). Both booked. Pick one, cancel the other.
+  </div>
+</div>
+
+<!-- OPEN ITEMS -->
+<div class="open-items" id="open-items-block">
+  <h3>Open items · 8 actions needed</h3>
+  <div class="open-item">
+    <div class="open-item-num">1</div>
+    <div class="open-item-text"><strong>Into the Glacier (Jun 24) · ~$550</strong>Book intotheglacier.is · 12:30pm from Husafell. Email re: Janelle mobility accommodation.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">2</div>
+    <div class="open-item-text"><strong>Jokulsarlon boat tour (Jun 28) · ~$150</strong>Book icelagoon.is · 10:30am slot. Fills fast in summer.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">3</div>
+    <div class="open-item-text"><strong>Katla Ice Cave (Jun 29) · ~$290</strong>Book katlatrack.is · Ryan + Greyson only (Janelle stays at hotel). Morning slot.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">4</div>
+    <div class="open-item-text"><strong>Shorten car rental to Jun 30</strong>Modify Expedia 73325672201255 (Budget conf #36698256US0). Est ~$900 savings.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">5</div>
+    <div class="open-item-text"><strong>Helsinki hotel · Jul 1–3 (2 nights)</strong>Marriott or equivalent. Request accessible room.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">6</div>
+    <div class="open-item-text"><strong>Tallinn hotel · ~Jul 3–6 (3 nights)</strong>Hotel Telegraaf (Autograph Collection) or Hilton Tallinn Park. Request accessible room. Note: cobblestone outside — Hilton may be better for Janelle.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">7</div>
+    <div class="open-item-text"><strong>Krakow hotel · ~Jul 6–9 (3 nights)</strong>Central location. Accessible room.</div>
+  </div>
+  <div class="open-item">
+    <div class="open-item-num">8</div>
+    <div class="open-item-text"><strong>Resolve dual return · Amsterdam hotel or Ljubljana (see alert above)</strong>Once decided: cancel the other return flight + book final city hotel.</div>
+  </div>
+</div>
+
+<!-- ===== ICELAND ===== -->
+<div class="leg show" id="leg-iceland">
+  <div class="leg-header">
+    <h2>🇮🇸 Iceland</h2>
+    <p>Jun 21 – Jun 30 · 9 days · Ring Road south</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Flights</div>
+    <div class="flight-strip">
+      <div class="flight-route">
+        <div class="flight-airport">SFO</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">IAD</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">KEF</div>
+      </div>
+      <div class="flight-meta">
+        <span>UA433 Jun 21 12:35pm → 8:42pm</span><br>
+        <span>UA398 Jun 21 10:35pm → Jun 22 8:30am</span><br>
+        <span>Seats 31C/31B/31A → 7F/7D/7E</span>
+      </div>
+      <div class="flight-conf">Conf: C1PEFX</div>
+    </div>
+    <div class="flight-strip">
+      <div class="flight-route">
+        <div class="flight-airport">KEF</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">HEL</div>
+      </div>
+      <div class="flight-meta">
+        <span>Finnair · Jun 30 · Seats 11E/11D/11F</span><br>
+        <span>116,256 ISK (meals x3 + extra bag)</span>
+      </div>
+      <div class="flight-conf">Conf: 7YNJSD</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Car Rental</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Budget Car Rental</div>
+          <div class="card-detail">Jun 22 – Jun 30 (shorten from 17 days)</div>
+          <div class="card-conf">Conf: #36698256US0 · Expedia: 73325672201255</div>
+          <div class="card-cost">$1,689 pay at pickup · ~$900 est savings if shortened</div>
+          <div class="card-note">⚠ Modify to return Jun 30 at KEF</div>
+        </div>
+        <div class="badge shorten">Shorten</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hotels</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Blue Lagoon</div>
+          <div class="card-detail">Jun 22 morning · Check-in after KEF land ~8:30am</div>
+          <div class="card-cost">~$270 · 3 pax · LAVA Restaurant lunch</div>
+        </div>
+        <div class="badge confirmed">Booked</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Reykjavik EDITION</div>
+          <div class="card-detail">Jun 22–25 · 3 nights · Check-in 3pm</div>
+          <div class="card-conf">Conf: #78962273</div>
+          <div class="card-cost">~$1,800</div>
+        </div>
+        <div class="badge confirmed">Booked</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Farmer's Guest House, Hella</div>
+          <div class="card-detail">Jun 25–27 · 2 nights · Meiri-Tunga 1, 851 Hella</div>
+          <div class="card-conf">Airbnb · Keys in lockbox · Check-in 17:00–23:30</div>
+        </div>
+        <div class="badge confirmed">Booked</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Hotel Vik i Myrdal</div>
+          <div class="card-detail">Jun 27–30 · 3 nights · Check-in 4pm</div>
+          <div class="card-conf">Conf: #79476041 · Expedia: 73325125214247</div>
+          <div class="card-cost">$1,980.70</div>
+        </div>
+        <div class="badge confirmed">Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Activities</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">⭐ Into the Glacier — Langjokull Ice Tunnel</div>
+          <div class="card-detail">Jun 24 · 12:30pm from Husafell · ~4 hrs total</div>
+          <div class="card-cost">~$550 · 3 pax · intotheglacier.is</div>
+          <div class="card-note">Best ice cave for Janelle — flat floors, 8-wheel vehicle, own pace. Email info@intotheglacier.is re: mobility.</div>
+        </div>
+        <div class="badge open">Book Now</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">⭐ Jokulsarlon Amphibian Boat Tour</div>
+          <div class="card-detail">Jun 28 · 10:30am · 40 min on the lagoon</div>
+          <div class="card-cost">~$150 · 3 pax · icelagoon.is</div>
+          <div class="card-note">Accessible dock. Also: Diamond Beach across the road (flat, 5 min walk).</div>
+        </div>
+        <div class="badge open">Book Now</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Katla Ice Cave</div>
+          <div class="card-detail">Jun 29 · 9am from Vik · Ryan + Greyson only</div>
+          <div class="card-cost">~$290 · 2 pax · katlatrack.is or trollexpeditions.is</div>
+          <div class="card-note">⚠ Janelle stays at hotel — bumpy Super Jeep + crampons + uneven terrain.</div>
+        </div>
+        <div class="badge open">Book Now</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Secret Lagoon, Fludir</div>
+          <div class="card-detail">Jun 26 (rest day from Hella) · Ramp entry · ~20 min drive</div>
+          <div class="card-cost">~$75 · 3 pax · secretlagoon.is</div>
+        </div>
+        <div class="badge pending">Optional</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Day by Day</div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 21 · Sun</div>
+        <div class="day-title">Depart SFO</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">UA433 SFO 12:35pm → IAD 8:42pm · Seats 31C/31B/31A</div>
+        <div class="day-item">UA398 IAD 10:35pm → KEF overnight</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 22 · Mon</div>
+        <div class="day-title">Arrive → Blue Lagoon → Reykjavik</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">8:30am land KEF. Pick up Budget car.</div>
+        <div class="day-item"><strong>Blue Lagoon</strong> ~10am · 20 min from KEF · Ramp entry, therapeutic for Janelle <span class="tag tag-booked">Booked</span></div>
+        <div class="day-item">LAVA Restaurant lunch</div>
+        <div class="day-item">Drive to Reykjavik ~40 min. Check in EDITION 3pm. Rest.</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 23 · Tue</div>
+        <div class="day-title">Reykjavik City Day</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Morning: City geothermal pool (warm water for Janelle)</div>
+        <div class="day-item">Perlan Museum — elevator, indoor ice cave exhibit, panoramic views</div>
+        <div class="day-item">Lunch: Grandi Mathöll food hall</div>
+        <div class="day-item">PM: Hallgrimskirkja tower (elevator), Laugavegur shopping, Sun Voyager</div>
+        <div class="day-item">Dinner: TIDES at EDITION or Hlemmur Mathöll</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 24 · Wed</div>
+        <div class="day-title">⭐ Ice Cave — Langjokull + Golden Circle</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Drive Reykjavik → Husafell ~2 hrs (9:30am depart)</div>
+        <div class="day-item"><strong>INTO THE GLACIER 12:30pm</strong> — flat floors, 8-wheel vehicle, ~1hr inside <span class="tag tag-book">Book Now</span></div>
+        <div class="day-item">~$550 · 3 pax · intotheglacier.is · Email re: Janelle mobility</div>
+        <div class="day-item">Afternoon: Thingvellir (flat boardwalk, 45 min) → Geysir (flat, erupts every 5-8 min)</div>
+        <div class="day-item">Return Reykjavik for dinner</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 25 · Thu</div>
+        <div class="day-title">Reykjavik → South Coast → Hella</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Check out EDITION. Drive Route 1 south (~190 km, 2.5 hrs + stops)</div>
+        <div class="day-item">Seljalandsfoss — view from front, flat (skip walk-behind, slippery)</div>
+        <div class="day-item">Skogafoss — base view only (skip staircase)</div>
+        <div class="day-item">Check in Farmer's Guest House, Meiri-Tunga 1 · Keys in lockbox · Check-in 17:00+</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 26 · Fri</div>
+        <div class="day-title">Hella Rest Day</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">No driving. Janelle recovery day.</div>
+        <div class="day-item"><strong>Secret Lagoon Fludir</strong> (20 min, ramp entry, ~$75/3pax) <span class="tag tag-optional">Optional</span></div>
+        <div class="day-item">Horse riding for Greyson (flat terrain, beginner friendly)</div>
+        <div class="day-item">Local cafe in Hella</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 27 · Sat</div>
+        <div class="day-title">Hella → Vik</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Drive ~100 km, 1.5 hrs. Short day.</div>
+        <div class="day-item">Check in Hotel Vik i Myrdal (check-in 4pm)</div>
+        <div class="day-item">Reynisfjara Black Sand Beach — 4 min walk, flat · <strong>⚠ Stay back from waves — sneaker waves are deadly</strong></div>
+        <div class="day-item">Dinner at hotel</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 28 · Sun</div>
+        <div class="day-title">⭐ Day Trip — Jokulsarlon Glacier Lagoon</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Depart 8am from Vik. Long day — ~190 km, 2.5 hrs each way.</div>
+        <div class="day-item">Stop 1: Kirkjubæjarklaustur ~8:50am (gas, coffee, stretch)</div>
+        <div class="day-item">Stop 2: Skaftafell parking ~9:45am (viewpoint, 10 min stretch)</div>
+        <div class="day-item"><strong>Jokulsarlon amphibian boat tour 10:30am</strong> — 40 min, seated, accessible dock <span class="tag tag-book">Book Now</span></div>
+        <div class="day-item">Diamond Beach — 5 min flat walk across road from dock (black sand + ice)</div>
+        <div class="day-item">Lunch at Jokulsarlon Cafe</div>
+        <div class="day-item">Return to Vik ~4:30–6pm</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 29 · Mon</div>
+        <div class="day-title">Katla Ice Cave (Ryan + Greyson)</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item"><strong>Katla Ice Cave 9am</strong> — Ryan + Greyson only <span class="tag tag-book">Book Now</span></div>
+        <div class="day-item">katlatrack.is · ~$290 · Super Jeep + crampons · ~3-4 hrs total</div>
+        <div class="day-item">Janelle: sleep in, walk to Black Sand Beach, hotel restaurant</div>
+        <div class="day-item">Afternoon: Dyrhólaey promontory (puffins, Jun = peak season)</div>
+        <div class="day-item">Farewell dinner at Hotel Vik</div>
+      </div>
+    </div>
+
+    <div class="day-block">
+      <div class="day-header" onclick="toggleDay(this)">
+        <div class="day-date">Jun 30 · Tue</div>
+        <div class="day-title">Vik → KEF → Helsinki</div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="day-body">
+        <div class="day-item">Check out Vik 11am. Drive to KEF ~190 km, 2.5 hrs.</div>
+        <div class="day-item">Drop Budget car at KEF (~1:30pm)</div>
+        <div class="day-item"><strong>Finnair #7YNJSD KEF → HEL</strong> · Seats 11E/11D/11F · 116,256 ISK <span class="tag tag-booked">Booked</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HELSINKI ===== -->
+<div class="leg" id="leg-helsinki">
+  <div class="leg-header">
+    <h2>🇫🇮 Helsinki</h2>
+    <p>~Jul 1–3 · 2 nights · Arrival recovery + ferry to Tallinn</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hotel</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Helsinki Hotel</div>
+          <div class="card-detail">~2 nights · Jul 1–3</div>
+          <div class="card-note">Options: Marriott property (Esplanade area, ~$180-250/night) or Scandic Grand Central (~$200-300/night, walkable to Allas Sea Pool). Request accessible room.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Activities</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Allas Sea Pool</div>
+          <div class="card-detail">Jul 2 · Heated outdoor pools (27°C) + 5 saunas, floating in harbor</div>
+          <div class="card-cost">~€18/adult, €10/child</div>
+          <div class="card-note">Therapeutic for Janelle (warm water, sauna for back pain). Greyson: cold Baltic dip. Fully accessible.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Suomenlinna Fortress Island</div>
+          <div class="card-detail">Jul 3 morning · 15 min ferry from Market Square</div>
+          <div class="card-cost">~€5/person round trip (HSL ferry)</div>
+          <div class="card-note">Greyson: tunnels, cannons, WWII submarine Vesikko (you go inside). Janelle: main paved paths + golf cart taxi available. Side trails skip.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Linnanmaki Amusement Park</div>
+          <div class="card-detail">Jul 3 afternoon · Finland's biggest · 40+ rides</div>
+          <div class="card-cost">Free grounds + ~€53 unlimited wristband. Sea Life adjacent (~€20-25).</div>
+          <div class="card-note">Greyson: 8 roller coasters including 1951 wooden coaster. Janelle: Sea Life aquarium while boys ride (verify reopened post-renovation).</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Old Market Hall + Kaffa Roastery</div>
+          <div class="card-detail">Jul 2 morning · Vanha Kauppahalli · smoked salmon, rye bread, Finnish pastries</div>
+          <div class="card-cost">Free to browse · specialty coffee at Kaffa nearby</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transport to Tallinn</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Helsinki → Tallinn Ferry</div>
+          <div class="card-detail">Jul 3 evening (arrive for dinner) or Jul 4 morning</div>
+          <div class="card-cost">~€20-40/person walk-on · Tallink Silja Line or Viking Line</div>
+          <div class="card-note">2-hour crossing. Fully accessible (ramps, elevators, accessible cabins). Greyson: arcades, restaurants, watching the sea.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TALLINN ===== -->
+<div class="leg" id="leg-tallinn">
+  <div class="leg-header">
+    <h2>🇪🇪 Tallinn</h2>
+    <p>~Jul 3–6 · 3–4 nights · Medieval city + water parks + food</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hotel</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Hotel Telegraaf (Autograph Collection) — Recommended</div>
+          <div class="card-detail">5-star · Heart of Old Town · Historic 1878 building, Art Deco · Indoor pool + spa</div>
+          <div class="card-cost">~€200-350/night · Breakfast included</div>
+          <div class="card-note">Accessible rooms available. Note: surrounding streets are cobblestone — manage with good shoes.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Hilton Tallinn Park — Alt if cobblestone is concern</div>
+          <div class="card-detail">Modern · Edge of city center · Indoor pool + jacuzzi + eforea spa</div>
+          <div class="card-cost">~€180-300/night · Able Butcher steakhouse on-site</div>
+          <div class="card-note">Smoother streets than Old Town — better for Janelle if cobblestone is a dealbreaker.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Activities</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Seaplane Harbour (Estonian Maritime Museum)</div>
+          <div class="card-detail">WWI-era seaplane hangar · walk-through submarine · flight simulators · naval games</div>
+          <div class="card-cost">~€15/adult, €8/child · 2-3 hrs</div>
+          <div class="card-note">Flat floors, benches. Greyson: real submarine + flight simulator. Ryan: stunning thin-shell concrete hangar architecture (no pillars).</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">PROTO Invention Factory</div>
+          <div class="card-detail">VR experiences, science experiments, time machine simulations · Noblessner Quarter</div>
+          <div class="card-cost">€32 family ticket · 1.5-2 hrs</div>
+          <div class="card-note">500m from Seaplane Harbour. Converted Tsarist-era submarine factory.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Kalev Spa Waterpark</div>
+          <div class="card-detail">4 slides (up to 82m), wave pool, lazy river, hot tubs, saunas</div>
+          <div class="card-cost">~€15-20/person for 2-3 hrs</div>
+          <div class="card-note">Greyson: slides + wave pool. Janelle: hot tubs + saunas (therapeutic). Modern, accessible. Near Old Town.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">⭐ ToRe Toit Estonian Cooking Class</div>
+          <div class="card-detail">2.5 hrs · Cook 3-course Estonian meal · Old Town · Daily at 12pm · Max 8 people</div>
+          <div class="card-cost">~€59-79/person · 4.9/5 from ~5,000 reviews</div>
+          <div class="card-note">Book well in advance — gettyourguide.com. Sells out in summer.</div>
+        </div>
+        <div class="badge open">Book Ahead</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Old Town Walk + Ramparts</div>
+          <div class="card-detail">Town Hall Square, Alexander Nevsky Cathedral, Hellemann Tower wall ramparts</div>
+          <div class="card-note">Janelle: main streets Viru + Harju are smooth/flat. Skip cobblestone side alleys. Skip Toompea hill (take taxi up if needed). Greyson: medieval walls + tower view (St. Olaf's — 232 steps, Ryan + Greyson only).</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Escape Room</div>
+          <div class="card-detail">Escape Room Factory or Imaginaris · "most creative in Tallinn"</div>
+          <div class="card-cost">~€15-25/person · 1 hour</div>
+          <div class="card-note">Greyson: peak 12-year-old activity. Janelle: mostly seated/standing, low physical demand.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Kadriorg Park + KUMU Art Museum</div>
+          <div class="card-detail">Imperial baroque park, paved paths, Japanese garden · KUMU interactive exhibits</div>
+          <div class="card-note">Janelle's best walking day — flat paved paths, benches, gorgeous scenery. Restaurant Salt right next door (Ryan: Estonian-Asian fusion, scallop ceviche + okonomiyaki).</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Pirita Beach</div>
+          <div class="card-detail">2km sand beach · Jul water temp 64-68°F · Boardwalk flat</div>
+          <div class="card-note">Greyson: swimming. Janelle: beach chair + boardwalk. OR Nomme Adventure Park (zip lines) for Ryan + Greyson while Janelle does spa afternoon.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Restaurants to Reserve</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">NOA Chef's Hall — Michelin</div>
+          <div class="card-detail">7-course tasting menu · Local produce meets global technique · Coastal views</div>
+          <div class="card-cost">~€80-120/person · Book ahead — fills weeks out in summer</div>
+        </div>
+        <div class="badge open">Reserve</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Restaurant Salt</div>
+          <div class="card-detail">Estonian-Asian fusion · scallop ceviche with mango, okonomiyaki with local shrimp · near Kadriorg</div>
+          <div class="card-cost">~€35-55/person · Ryan's restaurant</div>
+        </div>
+        <div class="badge open">Reserve</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Rataskaevu 16</div>
+          <div class="card-detail">Old Town institution · Modern Estonian: game meats, mushrooms, goat cheese</div>
+          <div class="card-cost">~€25-40/person · Always full — book ahead</div>
+        </div>
+        <div class="badge open">Reserve</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Kanuti Ramen · Telliskivi / Om.House · The Brick Coffee Roastery</div>
+          <div class="card-detail">Casual options · salmon ramen, Asian fusion, specialty V60 pourover</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transport to Krakow</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Tallinn → Krakow</div>
+          <div class="card-detail">Flight required · No direct train/bus option · ~2-3h with connection</div>
+          <div class="card-note">Options: LOT Polish via Warsaw (Star Alliance, earns miles) or Ryanair/Wizzair direct if available. Check Google Flights.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== KRAKOW ===== -->
+<div class="leg" id="leg-krakow">
+  <div class="leg-header">
+    <h2>🇵🇱 Krakow</h2>
+    <p>~Jul 6–9 · 3 nights · Medieval city · Wieliczka Salt Mine</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hotel</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Krakow Hotel</div>
+          <div class="card-detail">~3 nights · Jul 6–9 · Central location near Old Town / Market Square</div>
+          <div class="card-note">Old Town has mostly flat, paved streets. Market Square (Rynek Glowny) is cobblestone but manageable for short distances. Request accessible room.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Activities</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">⭐ Wieliczka Salt Mine</div>
+          <div class="card-detail">UNESCO site · 20 min from Krakow · Underground chapels carved entirely from salt</div>
+          <div class="card-cost">~€30/adult, €22/child · Book ahead in July</div>
+          <div class="card-note">Greyson: cathedral-sized underground chambers, statues, salt everything. Accessibility: 800 steps total on standard tour — ask about lift access / upper route for Janelle. Call ahead.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Wawel Royal Castle + Cathedral</div>
+          <div class="card-detail">Hilltop castle complex · Royal Chambers, Dragon's Den</div>
+          <div class="card-note">Greyson: Dragon's Den (cave at base of hill, accessible from Vistula riverbank). Castle: elevator available for main courtyard access. Ryan: Renaissance architecture, Gothic cathedral.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Krakow Old Town + Market Square</div>
+          <div class="card-detail">Rynek Glowny — one of Europe's largest medieval squares · Cloth Hall market</div>
+          <div class="card-note">Janelle: cobblestone but flat. Benches and cafes throughout. Greyson: try zapiekanka (Polish street food) from the food stalls.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Kazimierz Jewish Quarter</div>
+          <div class="card-detail">Bohemian neighborhood · street art, cafes, galleries, Oskar Schindler's Factory Museum</div>
+          <div class="card-note">Mostly flat. Good for exploring on foot at Janelle's pace. Ryan: Schindler's Factory is one of the best WWII museums in Europe (Greyson: interactive exhibits).</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transport to Prague</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Krakow → Prague</div>
+          <div class="card-detail">Train ~7h or FlixBus ~8h (direct) · Or short flight (~1h, Ryanair)</div>
+          <div class="card-cost">Train/bus: ~€20-40/person · Flight: ~€50-100/person</div>
+          <div class="card-note">Train is scenic through mountains. Bus has more direct routes. Flying is fastest — Krakow Airport is small and easy.</div>
+        </div>
+        <div class="badge open">Not Booked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRAGUE ===== -->
+<div class="leg" id="leg-prague">
+  <div class="leg-header">
+    <h2>🇨🇿 Prague</h2>
+    <p>Jul 9–13 · 4 nights · Hotel CONFIRMED</p>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Hotel</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Almanac X Alcron Prague</div>
+          <div class="card-detail">Jul 9–13 · 4 nights</div>
+          <div class="card-conf">AmEx Conf: 9092094862438</div>
+          <div class="card-cost">$723.54</div>
+        </div>
+        <div class="badge confirmed">Booked</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Activities</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Prague Castle + St. Vitus Cathedral</div>
+          <div class="card-detail">World's largest castle complex · Funicular or walk up · Cathedral interior free</div>
+          <div class="card-note">Janelle: take taxi to the castle entrance (avoids steep hill). Once inside, mostly flat courtyard. Greyson: the castle is genuinely massive — feels like a small city.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Charles Bridge + Old Town</div>
+          <div class="card-detail">Medieval stone bridge, 30 baroque statues · Astronomical Clock in Old Town Square</div>
+          <div class="card-note">Janelle: Charles Bridge is cobblestone but manageable and flat. Old Town Square is paved. Greyson: Astronomical Clock performs on the hour — actually cool.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Czech Food Tour / Lokál Restaurant</div>
+          <div class="card-detail">Svíčková (beef sirloin with cream sauce), Czech goulash, Trdelník (street pastry)</div>
+          <div class="card-note">Lokál (unfiltered Pilsner Urquell tank beer, traditional Czech food) — book ahead. Greyson: schnitzel + fresh-squeezed lemonade.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Josefov (Jewish Quarter)</div>
+          <div class="card-detail">Six synagogues + Old Jewish Cemetery · Compact, walkable</div>
+          <div class="card-note">Flat streets, easy for Janelle. One of the best-preserved Jewish quarters in Europe.</div>
+        </div>
+        <div class="badge pending">Plan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Transport Out (Jul 13)</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Prague → Amsterdam or Ljubljana</div>
+          <div class="card-detail">Pending dual return resolution (see alert at top)</div>
+          <div class="card-note">Option A: Prague → Amsterdam ~1h flight. Option B: Prague → Ljubljana ~1.5h flight. Both cities manageable from Prague Airport.</div>
+        </div>
+        <div class="badge warning">Blocked</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RETURN ===== -->
+<div class="leg" id="leg-exit">
+  <div class="leg-header">
+    <h2>✈️ Return Flights</h2>
+    <p>⚠️ Two return tickets booked — resolve before booking final city hotel</p>
+  </div>
+
+  <div class="alert">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-text">
+      <strong>Both are booked. Cancel one.</strong>
+      Option A departs Ljubljana Jul 15. Option B departs Amsterdam Jul 17. These are 2 different cities and dates — pick one and cancel the other.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Option A — Ljubljana exit (Jul 15)</div>
+    <div class="flight-strip">
+      <div class="flight-route">
+        <div class="flight-airport">LJU</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">FRA</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">SFO</div>
+      </div>
+      <div class="flight-meta">
+        <span>LH1463 Jul 15 2:05pm → 3:30pm · Seats 15D/15E/15F</span><br>
+        <span>UA927 Jul 15 5:30pm → 7:50pm · Seats 34A/34C/34B</span>
+      </div>
+      <div class="flight-conf">Conf: PCM8ZH / Lufthansa CD5ZR8</div>
+    </div>
+
+  <div class="section">
+    <div class="section-title">Option B — Amsterdam exit (Jul 17)</div>
+    <div class="flight-strip">
+      <div class="flight-route">
+        <div class="flight-airport">AMS</div>
+        <div class="flight-arrow">──✈──</div>
+        <div class="flight-airport">SFO</div>
+      </div>
+      <div class="flight-meta">
+        <span>UA Jul 17 · 178,500 miles + $1,072.08</span><br>
+        <span>3 Kams</span>
+      </div>
+      <div class="flight-conf">Conf: DDHSFM</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">If Option A (Ljubljana) — add Ljubljana leg</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Ljubljana + Bled + Postojna (~Jul 11–15)</div>
+          <div class="card-detail">Prague → Ljubljana flight · 4 nights · Slovenia as finale</div>
+          <div class="card-note">Postojna Cave: underground train, world's only double-track cave railway. Lake Bled: pletna boat + cream cake. Ljubljana Castle funicular. Janelle-accessible options throughout.</div>
+        </div>
+        <div class="badge open">Pending Decision</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">If Option B (Amsterdam) — add Amsterdam leg</div>
+    <div class="card">
+      <div class="card-row">
+        <div class="card-info">
+          <div class="card-name">Amsterdam (~Jul 13–17)</div>
+          <div class="card-detail">Prague → Amsterdam flight · ~3-4 nights</div>
+          <div class="card-note">Rijksmuseum, canal boats, Anne Frank House (book months ahead), Albert Cuyp Market. Flat city — very accessible for Janelle (mostly paved). Cobblestone on older streets.</div>
+        </div>
+        <div class="badge open">Pending Decision</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+function show(leg, btn) {
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const legs = document.querySelectorAll('.leg');
+  legs.forEach(l => l.classList.remove('show'));
+  const alert = document.getElementById('dual-return-alert');
+  const openItems = document.getElementById('open-items-block');
+
+  if (leg === 'all') {
+    legs.forEach(l => l.classList.add('show'));
+    alert.style.display = 'flex';
+    openItems.style.display = 'block';
+  } else {
+    const target = document.getElementById('leg-' + leg);
+    if (target) target.classList.add('show');
+    alert.style.display = (leg === 'exit') ? 'none' : 'none';
+    openItems.style.display = 'none';
+  }
+}
+
+function toggleDay(header) {
+  header.classList.toggle('expanded');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
