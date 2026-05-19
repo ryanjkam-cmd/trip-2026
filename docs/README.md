@@ -3,7 +3,7 @@
 Drop PDF confirmations here. Naming convention:
 
 ## Flights
-- united_C1PEFX.pdf         — SFO→IAD→KEF (Jun 21)
+- united_BK90WF.pdf          — SFO→IAD→KEF (Jun 21, conf BK90WF)
 - finnair_7YNJSD.pdf         — KEF→HEL (Jun 30)
 - finnair_8HJVGP.pdf         — TLL→KRK (Jul 6)
 - united_DDHSFM.pdf          — AMS→SFO (Jul 17)
@@ -18,8 +18,8 @@ Drop PDF confirmations here. Naming convention:
 - almanac_prague.pdf         — Almanac X Alcron ZO-AX1043-36815
 
 ## Activities
-- into_the_glacier.pdf       — Into the Glacier voucher (Jun 24 12:30pm)
-- blue_lagoon.pdf            — Blue Lagoon (Jun 22)
+- into_the_glacier.pdf       — Into the Glacier (conf ARC-89526296, Jun 24 12:30pm)
+- blue_lagoon.pdf            — Blue Lagoon (conf WBL05587130, Jun 22)
 
 ## Other
-- car_rental_hertz.pdf       — Hertz Hyundai Tucson PHEV AWD
+- car_rental_hertz.pdf       — Hertz Iceland (Expedia 73428089735424, Jun 22–30)
