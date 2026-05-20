@@ -206,154 +206,275 @@ const TRIP = {
 
 const ACTIVITIES = {
   d1: [
+    { time: "07:00", end: "08:30", type: "rest", title: "Wake up · final pack", meta: "1.5h · check passports + docs · confirm car service" },
+    { time: "09:30", end: "10:30", type: "transit", title: "Drive to SFO", meta: "45–60 min · rideshare or park at international terminal" },
+    { time: "10:30", end: "12:00", type: "rest", title: "SFO check-in + security", meta: "1.5h · United international · TSA PreCheck" },
     { time: "12:35", end: "20:42", type: "flight", title: "UA433 SFO → IAD", meta: "United · Seats 31C/31B/31A", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: null },
+    { time: "20:42", end: "22:30", type: "rest", title: "IAD layover · find gate + food", meta: "1.75h · Dulles · grab dinner · terminal A/B · United Club if accessible" },
     { time: "22:35", end: "08:30", type: "flight", title: "UA398 IAD → KEF (overnight)", meta: "United · Seats 7F/7D/7E · arrive Jun 22", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: null },
   ],
   d2: [
-    { time: "08:30", end: "09:00", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · Expedia Itinerary 73428089735424", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "./docs/car_rental_hertz.pdf", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "08:30", end: "09:15", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · Expedia 73428089735424", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "./docs/car_rental_hertz.pdf", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "09:15", end: "09:30", type: "transit", title: "Drive KEF → Blue Lagoon", meta: "12 km · 15 min · Route 41 · blue lava fields" },
     { time: "10:00", end: "13:00", type: "do", title: "Blue Lagoon", meta: "Ramp entry · therapeutic for Janelle · LAVA Restaurant lunch", rating: 4.5, reviews: 22104, tags: ["Spa", "Geothermal", "Accessible"], tone: "mint", status: "booked", conf: "WBL05587130", priority: "must", cost: 270, url: "./docs/blue_lagoon.pdf", mapUrl: "https://maps.google.com/?q=Blue+Lagoon+Iceland&ll=63.8803,-22.4437" },
     { time: "13:00", end: "14:30", type: "eat", title: "LAVA Restaurant", meta: "At Blue Lagoon · tasting menu overlooking the lagoon", rating: 4.4, reviews: 1820, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 180, url: "https://www.bluelagoon.com/restaurants/lava-restaurant", mapUrl: "https://maps.google.com/?q=LAVA+Restaurant+Blue+Lagoon+Iceland" },
+    { time: "14:30", end: "15:15", type: "transit", title: "Drive Blue Lagoon → Reykjavík EDITION", meta: "50 km · 45 min · Route 41 → 49" },
     { time: "15:00", end: "16:00", type: "stay", title: "Check in — Reykjavík EDITION", meta: "Jun 22–25 · 3 nights · Check-in 3pm", tone: "muted", status: "booked", conf: "#78962273", priority: "must", cost: 1800, url: "./docs/edition_reykjavik.pdf", mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel+Iceland" },
+    { time: "16:00", end: "19:00", type: "rest", title: "Jet lag recovery nap", meta: "3h · overnight flight · essential · close blackout curtains · do not skip" },
+    { time: "19:30", end: "21:00", type: "eat", title: "Light dinner near hotel", meta: "Kaffivagninn (harbor, Iceland's oldest restaurant) or hotel bar · low-key first night", tone: "hot", status: "decide", priority: "nice", cost: 80, mapUrl: "https://maps.google.com/?q=Kaffivagninn+Reykjavik" },
   ],
   d3: [
+    { time: "07:30", end: "08:30", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · EDITION breakfast or Braud & Co bakery next door" },
+    { time: "08:45", end: "09:00", type: "transit", title: "Walk to Sundhöll pool", meta: "10 min flat walk from EDITION" },
     { time: "09:00", end: "11:00", type: "do", title: "City Geothermal Pool", meta: "Warm water for Janelle · Greyson loves these · ramp access", rating: 4.6, reviews: 3400, tags: ["Spa", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 45, url: "https://www.visitreykjavik.is", mapUrl: "https://maps.google.com/?q=Sundhöll+Reykjavik" },
-    { time: "11:30", end: "14:00", type: "do", title: "Perlan Museum", meta: "Elevator · indoor ice cave exhibit · panoramic views", rating: 4.7, reviews: 8200, tags: ["Museum", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 45, url: "https://perlan.is/en/", mapUrl: "https://maps.google.com/?q=Perlan+Museum+Reykjavik" },
-    { time: "12:00", end: "13:30", type: "eat", title: "Grandi Mathöll Food Hall", meta: "Reykjavík's best food hall · market stalls · indoor seating", rating: 4.6, reviews: 2800, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 60, url: null, mapUrl: "https://maps.google.com/?q=Grandi+Mathold+Reykjavik" },
-    { time: "15:00", end: "17:00", type: "do", title: "Hallgrímskirkja + Laugavegur", meta: "Elevator to tower · shopping street · Sun Voyager sculpture", rating: 4.8, reviews: 15400, tags: ["Culture", "Architecture"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Hallgrimskirkja+Reykjavik" },
+    { time: "11:15", end: "11:30", type: "transit", title: "Walk/taxi to Grandi harbor area", meta: "10 min · flat along harbor" },
+    { time: "11:30", end: "13:00", type: "eat", title: "Grandi Mathöll Food Hall", meta: "Reykjavík's best food hall · market stalls · indoor seating", rating: 4.6, reviews: 2800, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 60, url: null, mapUrl: "https://maps.google.com/?q=Grandi+Mathold+Reykjavik" },
+    { time: "13:15", end: "13:30", type: "transit", title: "Taxi to Perlan", meta: "10 min · uphill · Janelle: taxi only, skip the walk" },
+    { time: "13:30", end: "15:30", type: "do", title: "Perlan Museum", meta: "Elevator · indoor ice cave exhibit · panoramic views", rating: 4.7, reviews: 8200, tags: ["Museum", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 45, url: "https://perlan.is/en/", mapUrl: "https://maps.google.com/?q=Perlan+Museum+Reykjavik" },
+    { time: "15:45", end: "16:00", type: "transit", title: "Walk/taxi to Hallgrímskirkja", meta: "15 min walk or 5 min taxi" },
+    { time: "16:00", end: "18:00", type: "do", title: "Hallgrímskirkja + Laugavegur", meta: "Elevator to tower · shopping street · Sun Voyager sculpture", rating: 4.8, reviews: 15400, tags: ["Culture", "Architecture"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Hallgrimskirkja+Reykjavik" },
+    { time: "18:00", end: "19:30", type: "rest", title: "Rest + freshen up at hotel", meta: "1.5h · change for dinner · pace yourself — big drive day tomorrow" },
     { time: "19:30", end: "21:30", type: "eat", title: "TIDES at EDITION", meta: "Hotel restaurant · New Nordic · dinner", rating: 4.6, reviews: 940, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 200, url: null, mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel" },
+    { time: "22:00", end: "23:00", type: "do", title: "Alt: Midnight sun walk — Old Harbour", meta: "Sun barely sets in June · 10pm golden light · flat harbor walk · no driving needed · stunning", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Reykjavik+Old+Harbour+Iceland" },
   ],
   d4: [
-    { time: "09:30", end: "11:30", type: "transit", title: "Drive Reykjavík → Husafell", meta: "~145 km · 2 hrs via Route 1 and 50", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Husafell+Tourism+Center+Iceland" },
+    { time: "07:00", end: "08:00", type: "rest", title: "Early wake up · grab breakfast", meta: "1h · long drive day · EDITION breakfast or bakery · pack snacks for car" },
+    { time: "08:30", end: "10:30", type: "transit", title: "Drive Reykjavík → Husafell", meta: "~145 km · 2 hrs via Route 1 and 50 · coffee stop at Borgarnes at 1h", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Husafell+Tourism+Center+Iceland" },
+    { time: "09:30", end: "09:50", type: "eat", title: "Coffee stop — Borgarnes", meta: "20 min · halfway to glacier · Settlement Center café · stretch legs" },
     { time: "12:30", end: "14:30", type: "do", title: "⭐ INTO THE GLACIER — Langjökull", meta: "Booked 12:30pm Jun 24 · Voucher in ryanjkam@gmail.com · 8-wheel SuperJeep + 500m tunnel walk", rating: 4.9, reviews: 3200, tags: ["Ice Cave", "Accessible", "Booked"], tone: "mint", status: "booked", conf: "ARC-89526296", priority: "must", cost: 550, weather: true, url: "./docs/into_the_glacier.pdf", mapUrl: "https://maps.google.com/?q=Into+the+Glacier+Husafell+Iceland&ll=64.5317,-20.8765" },
+    { time: "14:30", end: "15:30", type: "transit", title: "Drive Husafell → Þingvellir", meta: "~80 km · 1h · Route 518" },
     { time: "15:30", end: "16:30", type: "do", title: "Þingvellir National Park", meta: "Flat boardwalk · UNESCO · tectonic rift · 45 min stop", rating: 4.9, reviews: 12400, tags: ["UNESCO", "Nature", "Accessible"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Thingvellir+National+Park+Iceland" },
-    { time: "16:45", end: "17:30", type: "do", title: "Geysir & Strokkur", meta: "Flat gravel · erupts every 5–8 min · benches available", rating: 4.7, reviews: 9800, tags: ["Geothermal"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Geysir+Iceland" },
+    { time: "16:30", end: "17:00", type: "transit", title: "Drive Þingvellir → Geysir", meta: "50 km · 30 min · Route 36" },
+    { time: "17:00", end: "18:00", type: "do", title: "Geysir & Strokkur", meta: "Flat gravel · erupts every 5–8 min · benches available", rating: 4.7, reviews: 9800, tags: ["Geothermal"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Geysir+Iceland" },
+    { time: "18:00", end: "19:45", type: "transit", title: "Drive Geysir → Reykjavík", meta: "~120 km · 1.5 hrs · Route 35 → 1" },
     { time: "20:00", end: "21:30", type: "eat", title: "Dinner in Reykjavík", meta: "Hlemmur Mathöll or EDITION", rating: 4.5, reviews: 1200, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Hlemmur+Matholl+Reykjavik" },
   ],
   d5: [
+    { time: "07:00", end: "07:45", type: "rest", title: "Wake up · pack out", meta: "45 min · checkout day · load car before breakfast" },
     { time: "08:00", end: "08:30", type: "stay", title: "Check out EDITION", meta: "Drive Route 1 south · ~190 km · 2.5 hrs + stops", tone: "muted", status: "booked", priority: "must", url: null, mapUrl: null },
+    { time: "08:30", end: "09:30", type: "transit", title: "Drive Reykjavík → Seljalandsfoss", meta: "~120 km · 1.5 hrs · Route 1 south along coast" },
     { time: "09:30", end: "10:30", type: "do", title: "Seljalandsfoss", meta: "Front view · flat ground · skip walk-behind (slippery)", rating: 4.8, reviews: 7200, tags: ["Waterfall", "Accessible"], tone: "mint", status: "decide", priority: "must", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Seljalandsfoss+Iceland" },
-    { time: "11:30", end: "12:30", type: "do", title: "Skógafoss", meta: "Base view only · flat · skip staircase to top", rating: 4.9, reviews: 9400, tags: ["Waterfall"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Skogafoss+Iceland" },
-    { time: "14:00", end: "17:00", type: "stay", title: "Check in — Farmer's Guest House", meta: "Check-in 17:00–23:30 · keys in lockbox · Meiri-Tunga 1, 851 Hella", tone: "muted", status: "booked", conf: "Airbnb", priority: "must", url: "./docs/farmhouse_hella.pdf", mapUrl: "https://maps.google.com/?q=Meiri+Tunga+1+Hella+Iceland" },
+    { time: "10:30", end: "10:50", type: "transit", title: "Drive to Skógafoss", meta: "30 km · 20 min" },
+    { time: "11:00", end: "12:00", type: "do", title: "Skógafoss", meta: "Base view only · flat · skip staircase to top", rating: 4.9, reviews: 9400, tags: ["Waterfall"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Skogafoss+Iceland" },
+    { time: "12:00", end: "13:00", type: "eat", title: "Lunch near Skógafoss", meta: "Skógar Museum café or food truck · simple · fuel up for afternoon drive", tone: "hot", status: "decide", priority: "nice", cost: 50 },
+    { time: "13:00", end: "14:00", type: "transit", title: "Drive Skógafoss → Farmhouse Hella", meta: "~65 km · 1h · Route 1" },
+    { time: "14:00", end: "17:30", type: "stay", title: "Check in — Farmer's Guest House", meta: "Check-in 17:00–23:30 · keys in lockbox · Meiri-Tunga 1, 851 Hella", tone: "muted", status: "booked", conf: "Airbnb", priority: "must", url: "./docs/farmhouse_hella.pdf", mapUrl: "https://maps.google.com/?q=Meiri+Tunga+1+Hella+Iceland" },
+    { time: "17:30", end: "19:30", type: "rest", title: "Settle in · explore farm grounds", meta: "2h · Greyson: explore outdoors · Janelle: rest · views of Hekla volcano" },
+    { time: "19:30", end: "21:00", type: "eat", title: "Farmhouse dinner or Hella village", meta: "Self-catered or short drive to Hella café · low-key arrival evening", tone: "hot", status: "decide", priority: "nice", cost: 60 },
+    { time: "22:00", end: "23:00", type: "do", title: "Alt: Midnight sun over Hekla volcano", meta: "No light pollution · clear views of Hekla from farm · bring blanket · no driving needed", tone: "mint", isAlt: true, timeNeeded: "1h", priority: "nice" },
   ],
   d6: [
-    { time: "10:00", end: "12:30", type: "do", title: "Secret Lagoon, Flúðir", meta: "20 min drive · ramp entry · ~$25/person · therapeutic for Janelle", rating: 4.6, reviews: 4100, tags: ["Spa", "Accessible", "Optional"], tone: "mint", status: "decide", priority: "nice", cost: 75, url: "https://secretlagoon.is", mapUrl: "https://maps.google.com/?q=Secret+Lagoon+Fludir+Iceland" },
-    { time: "13:00", end: "15:00", type: "do", title: "Horse Riding (Greyson)", meta: "Flat terrain · beginner friendly · local farm", rating: 4.5, reviews: 820, tags: ["Adventure", "Optional"], tone: "mint", status: "decide", priority: "nice", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Horse+riding+Hella+Iceland" },
+    { time: "08:00", end: "09:30", type: "rest", title: "Slow morning · farmhouse breakfast", meta: "1.5h · no schedule pressure · eggs + Skyr + coffee · Greyson: explore barn" },
+    { time: "09:30", end: "10:00", type: "transit", title: "Drive Hella → Secret Lagoon (Flúðir)", meta: "30 km · 25 min" },
+    { time: "10:00", end: "12:30", type: "do", title: "Secret Lagoon, Flúðir", meta: "Ramp entry · ~$25/person · therapeutic for Janelle · less crowded than Blue Lagoon", rating: 4.6, reviews: 4100, tags: ["Spa", "Accessible", "Optional"], tone: "mint", status: "decide", priority: "nice", cost: 75, url: "https://secretlagoon.is", mapUrl: "https://maps.google.com/?q=Secret+Lagoon+Fludir+Iceland" },
+    { time: "12:30", end: "13:00", type: "transit", title: "Drive back to farmhouse", meta: "30 min" },
+    { time: "13:00", end: "14:00", type: "eat", title: "Lunch at farmhouse", meta: "Self-catered · sandwiches + Icelandic dairy · rest day pace" },
+    { time: "14:00", end: "15:30", type: "rest", title: "Afternoon rest", meta: "1.5h · Janelle recovery · Greyson: free time outdoors" },
+    { time: "15:30", end: "17:30", type: "do", title: "Horse Riding (Greyson + Ryan)", meta: "Flat terrain · beginner friendly · local farm · Janelle: watch from fence", rating: 4.5, reviews: 820, tags: ["Adventure", "Optional"], tone: "mint", status: "decide", priority: "nice", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Horse+riding+Hella+Iceland" },
     { time: "19:00", end: "21:00", type: "eat", title: "Dinner in Hella", meta: "Local cafe · low-key rest evening", rating: 4.3, reviews: 300, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Hella+Iceland" },
+    { time: "21:30", end: "22:30", type: "do", title: "Alt: Northern lights watch", meta: "Jun = minimal darkness but auroras possible 11pm–1am · app: Space Weather Live · farmhouse = zero light pollution", tone: "mint", isAlt: true, timeNeeded: "1h", priority: "nice" },
   ],
   d7: [
-    { time: "10:00", end: "11:30", type: "transit", title: "Drive Hella → Vík", meta: "~100 km · 1.5 hrs · short day", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland" },
-    { time: "12:00", end: "13:00", type: "stay", title: "Check in — Hotel Vík í Mýrdal", meta: "Jun 27–30 · 3 nights · Check-in 4pm", tone: "muted", status: "booked", conf: "#79476041", priority: "must", cost: 1981, url: "./docs/hotel_vik.pdf", mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland&ll=63.4185,-19.0056" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · pack out of farmhouse", meta: "1h · return keys to lockbox · load car" },
+    { time: "09:00", end: "09:30", type: "eat", title: "Breakfast before leaving Hella", meta: "Farmhouse leftovers or Fosshotel Hella café · grab coffee for drive" },
+    { time: "10:00", end: "11:30", type: "transit", title: "Drive Hella → Vík", meta: "~100 km · 1.5 hrs · short scenic drive · Route 1", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland" },
+    { time: "12:00", end: "13:00", type: "eat", title: "Lunch in Vík village", meta: "Sudur-Vík restaurant or Strondin café · relax before beach" },
+    { time: "13:00", end: "16:00", type: "rest", title: "Hotel rest · early check-in if ready", meta: "3h · recharge before big driving days ahead · Greyson: explore Vík village" },
     { time: "16:00", end: "17:30", type: "do", title: "Reynisfjara Black Sand Beach", meta: "4 min walk from hotel · flat · ⚠ STAY BACK FROM WAVES — sneaker waves are deadly", rating: 4.7, reviews: 14200, tags: ["Beach", "Must-See"], tone: "mint", status: "decide", priority: "must", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Reynisfjara+Beach+Iceland&ll=63.4030,-19.0567" },
+    { time: "16:00", end: "17:30", type: "stay", title: "Check in — Hotel Vík í Mýrdal", meta: "Jun 27–30 · 3 nights · Check-in 4pm", tone: "muted", status: "booked", conf: "#79476041", priority: "must", cost: 1981, url: "./docs/hotel_vik.pdf", mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland&ll=63.4185,-19.0056" },
     { time: "19:00", end: "21:00", type: "eat", title: "Dinner at Hotel Vík", meta: "In-house restaurant · local fish + lamb", rating: 4.3, reviews: 620, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: "https://www.hotelvik.is", mapUrl: null },
+    { time: "21:30", end: "22:30", type: "do", title: "Alt: Víkurkirkja church at golden hour", meta: "Yellow church on the hill · 15 min uphill walk · panoramic black beach views · photographers' favorite spot", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Vikurkirkja+Church+Vik+Iceland" },
   ],
   d8: [
-    { time: "08:00", end: "08:00", type: "transit", title: "Depart Vík 8am sharp", meta: "Long day trip · ~190 km each way · 2.5 hrs", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: null },
+    { time: "06:30", end: "07:00", type: "rest", title: "Early wake up · dress warm", meta: "30 min · longest day trip · ~6h round trip driving · pack snacks" },
+    { time: "07:00", end: "07:30", type: "eat", title: "Quick breakfast at hotel", meta: "30 min · hotel buffet · pack snacks for car · no lunch stops for 5h" },
+    { time: "08:00", end: "08:50", type: "transit", title: "Depart Vík → Kirkjubæjarklaustur", meta: "50 min · Route 1 east · long flat drive", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: null },
     { time: "08:50", end: "09:10", type: "transit", title: "Stop: Kirkjubæjarklaustur", meta: "Gas + coffee + stretch · 50 min from Vík", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Kirkjubaejarklaustur+Iceland" },
     { time: "09:45", end: "10:00", type: "transit", title: "Stop: Skaftafell viewpoint", meta: "90 min from Vík · 10 min stretch · views from car park", tone: "muted", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Skaftafell+Iceland" },
     { time: "10:30", end: "12:00", type: "do", title: "⭐ Jökulsárlón Amphibian Boat Tour", meta: "Walk-up · no booking needed · Jun–Sep 9am–7pm · seated · accessible dock · icebergs up close", rating: 4.9, reviews: 6800, tags: ["Boat", "Accessible", "Walk-up"], tone: "mint", status: "booked", priority: "must", cost: 150, weather: true, url: null, mapUrl: "https://maps.google.com/?q=Jokulsarlon+Glacier+Lagoon+Iceland&ll=64.0784,-16.2306" },
     { time: "12:00", end: "13:00", type: "do", title: "Diamond Beach", meta: "5 min flat walk · ice chunks on black sand · no booking needed", rating: 4.8, reviews: 5200, tags: ["Beach", "Free"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Diamond+Beach+Iceland&ll=64.0652,-16.1780" },
-    { time: "13:00", end: "14:00", type: "eat", title: "Jökulsárlón Café", meta: "On-site · soup + sandwiches · fuel up before drive back", rating: 4.0, reviews: 480, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 50, url: null, mapUrl: null },
-    { time: "16:30", end: "16:30", type: "transit", title: "Return to Vík", meta: "~190 km back · arrive ~6:30–7pm", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: null },
+    { time: "13:00", end: "14:00", type: "eat", title: "Jökulsárlón Café", meta: "On-site · soup + sandwiches · fuel up before long drive back", rating: 4.0, reviews: 480, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 50, url: null, mapUrl: null },
+    { time: "14:00", end: "16:30", type: "transit", title: "Return drive Jökulsárlón → Vík", meta: "~190 km · 2.5 hrs · Route 1 west" },
+    { time: "18:30", end: "19:30", type: "rest", title: "Rest after long drive", meta: "1h · decompress · Janelle: legs up · tomorrow is Katla cave" },
+    { time: "19:30", end: "21:00", type: "eat", title: "Dinner at Hotel Vík", meta: "Keep it simple after a big driving day", tone: "hot", status: "decide", priority: "nice", mapUrl: null },
   ],
   d9: [
+    { time: "07:30", end: "08:30", type: "rest", title: "Wake up · breakfast before Katla", meta: "1h · hotel buffet · Janelle: plan a rest day at hotel during tour" },
     { time: "09:00", end: "13:00", type: "do", title: "Katla Ice Cave (Ryan + Greyson)", meta: "Super Jeep · crampons · natural volcanic ice · Janelle stays at hotel", rating: 4.8, reviews: 1900, tags: ["Ice Cave", "Adventure", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 290, weather: true, url: "https://katlatrack.is", mapUrl: "https://maps.google.com/?q=Katla+Volcano+Iceland&ll=63.6339,-19.0557" },
+    { time: "13:00", end: "14:00", type: "eat", title: "Lunch back at Vík", meta: "Return from Katla · grab food · regroup with Janelle" },
     { time: "14:00", end: "16:00", type: "do", title: "Dyrhólaey Promontory", meta: "Drive to top · 50m flat walk · puffin viewing — Jun is peak season", rating: 4.7, reviews: 3400, tags: ["Wildlife", "Puffins"], tone: "mint", status: "decide", priority: "nice", weather: true, url: null, mapUrl: "https://maps.google.com/?q=Dyrholaey+Iceland&ll=63.4017,-19.1231" },
-    { time: "19:00", end: "21:00", type: "eat", title: "Farewell Dinner — Hotel Vík", meta: "Last Iceland dinner · celebrate the trip", rating: 4.3, reviews: 620, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: "https://www.hotelvik.is", mapUrl: null },
+    { time: "16:00", end: "19:00", type: "rest", title: "Rest before farewell Iceland dinner", meta: "3h · last Iceland afternoon · Janelle: spa · Greyson: hotel pool" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Farewell Dinner — Hotel Vík", meta: "Last Iceland dinner · celebrate the trip so far", rating: 4.3, reviews: 620, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", url: "https://www.hotelvik.is", mapUrl: null },
+    { time: "21:30", end: "22:30", type: "do", title: "Alt: Final Reynisfjara midnight walk", meta: "Last look at black sand + basalt columns · midnight sun · 5 min from hotel · no cars needed", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Reynisfjara+Beach+Iceland" },
   ],
   d10: [
-    { time: "11:00", end: "14:00", type: "transit", title: "Check out Vík → drive KEF", meta: "~190 km · 2.5 hrs · drop Budget car at KEF", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "07:30", end: "08:30", type: "rest", title: "Wake up · checkout morning", meta: "1h · pack last items · travel day to Helsinki" },
+    { time: "09:00", end: "09:30", type: "eat", title: "Final Icelandic breakfast", meta: "Skyr · rye bread · hotel or grab-and-go · pack snacks for KEF drive" },
+    { time: "11:00", end: "13:30", type: "transit", title: "Check out Vík → drive KEF", meta: "~190 km · 2.5 hrs · drop Hertz car at Keflavik Airport", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "13:30", end: "16:30", type: "rest", title: "KEF airport · check in + lunch", meta: "3h buffer · Keflavik duty-free · grab lunch · clear security · KEF is small, fast" },
     { time: "16:30", end: "20:00", type: "flight", title: "Finnair KEF → HEL", meta: "Seats 11E/11D/11F · 116,256 ISK · meals x3 + extra bag", tone: "accent", status: "booked", conf: "7YNJSD", priority: "must", url: "./docs/finnair_7YNJSD.pdf", mapUrl: null },
-    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Crowne Plaza Helsinki", meta: "Jun 30–Jul 3 · 3 nights · Conf 73422231915860 · Check-in 3pm", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
+    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Crowne Plaza Helsinki", meta: "Jun 30–Jul 3 · 3 nights · Conf 73422231915860", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
   ],
   d11: [
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Crowne Plaza breakfast · first morning of the Baltic leg" },
     { time: "09:00", end: "10:30", type: "eat", title: "Old Market Hall (Vanha Kauppahalli)", meta: "Smoked salmon · rye bread · Finnish pastries · flat / benches everywhere", rating: 4.7, reviews: 3800, tags: ["Breakfast", "Market"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Old+Market+Hall+Helsinki&ll=60.1678,24.9524" },
     { time: "10:30", end: "11:00", type: "eat", title: "Kaffa Roastery", meta: "Best specialty coffee in Helsinki · near Old Market Hall", rating: 4.8, reviews: 1200, tags: ["Coffee"], tone: "hot", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Kaffa+Roastery+Helsinki" },
     { time: "11:00", end: "14:00", type: "do", title: "Allas Sea Pool", meta: "Heated harbor pools 27°C + 5 saunas · therapeutic for Janelle · Greyson: cold Baltic dip", rating: 4.7, reviews: 2400, tags: ["Spa", "Accessible", "Therapeutic"], tone: "mint", status: "decide", priority: "must", cost: 46, url: "https://www.allaspool.fi/en/", mapUrl: "https://maps.google.com/?q=Allas+Sea+Pool+Helsinki&ll=60.1666,24.9541" },
+    { time: "14:00", end: "15:30", type: "rest", title: "Afternoon rest at hotel", meta: "1.5h · Janelle recovery · pace the Baltic cities" },
     { time: "19:00", end: "21:00", type: "eat", title: "Restaurant Story or Ravintola Kuurna", meta: "New Nordic or cozy Finnish bistro · Market Square area", rating: 4.7, reviews: 980, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 180, url: null, mapUrl: "https://maps.google.com/?q=Market+Square+Helsinki" },
+    { time: "21:30", end: "22:30", type: "do", title: "Alt: Senate Square + Helsinki Cathedral", meta: "Neo-classical dome · ramp access · 15 min walk from market · stunning at dusk in long Nordic evening", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Helsinki+Cathedral+Finland" },
   ],
   d12: [
-    { time: "09:30", end: "11:00", type: "do", title: "Suomenlinna Fortress Island", meta: "15 min ferry from Market Square · main paths paved · Greyson: real submarine Vesikko", rating: 4.8, reviews: 9200, tags: ["History", "UNESCO", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 15, url: "https://suomenlinna.fi/en/", mapUrl: "https://maps.google.com/?q=Suomenlinna+Helsinki&ll=60.1454,24.9881" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · ferry departs 19:00 · full day in Helsinki" },
+    { time: "09:20", end: "09:30", type: "transit", title: "Walk to Market Square ferry terminal", meta: "10 min flat walk from Crowne Plaza" },
+    { time: "09:30", end: "11:30", type: "do", title: "Suomenlinna Fortress Island", meta: "15 min ferry from Market Square · main paths paved · Greyson: real submarine Vesikko", rating: 4.8, reviews: 9200, tags: ["History", "UNESCO", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 15, url: "https://suomenlinna.fi/en/", mapUrl: "https://maps.google.com/?q=Suomenlinna+Helsinki&ll=60.1454,24.9881" },
+    { time: "11:30", end: "12:00", type: "transit", title: "Ferry back · walk to lunch", meta: "15 min back to Market Square" },
+    { time: "12:00", end: "13:00", type: "eat", title: "Lunch near Market Square", meta: "Café Regatta or Löyly bar · Finnish lunch · fuel up before Linnanmäki" },
+    { time: "13:20", end: "13:40", type: "transit", title: "Metro to Linnanmäki", meta: "20 min · Metro line 1 + 10 min walk" },
     { time: "13:00", end: "17:00", type: "do", title: "Linnanmäki Amusement Park", meta: "Finland's biggest · 8 roller coasters · free grounds · Greyson: unlimited wristband €53", rating: 4.5, reviews: 5800, tags: ["Greyson", "Amusement Park"], tone: "mint", status: "decide", priority: "nice", cost: 160, url: "https://www.linnanmaki.fi/en/front-page/", mapUrl: "https://maps.google.com/?q=Linnanmaki+Amusement+Park+Helsinki&ll=60.1870,24.9302" },
+    { time: "17:00", end: "18:30", type: "rest", title: "Return to hotel · pack for ferry", meta: "1.5h · overnight bag only · main luggage stays at Crowne Plaza until morning" },
     { time: "19:00", end: "21:00", type: "transit", title: "Tallink Silja Ferry Helsinki → Tallinn", meta: "2 hrs · fully accessible · Greyson: arcades + shops on board", rating: 4.4, reviews: 7200, tags: ["Ferry", "Accessible"], tone: "accent", status: "decide", priority: "must", cost: 120, url: "https://www.tallinksilja.com", mapUrl: "https://maps.google.com/?q=West+Terminal+Helsinki" },
   ],
   d13: [
-    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Tallinn · Check in Novotel Tallinn", meta: "Jul 3–6 · 3 nights · Conf 73422280565429 · Modern building · outside cobblestones", tone: "muted", status: "booked", conf: "73422280565429", priority: "must", url: "./docs/novotel_tallinn.pdf", mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
+    { time: "09:00", end: "09:30", type: "stay", title: "Arrive Tallinn · Check in Novotel", meta: "Jul 3–6 · 3 nights · Conf 73422280565429 · Modern building · cobblestones outside", tone: "muted", status: "booked", conf: "73422280565429", priority: "must", url: "./docs/novotel_tallinn.pdf", mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
+    { time: "09:30", end: "10:00", type: "eat", title: "Breakfast near Novotel", meta: "Kohvik Moon café or Tallinn bakery · first Estonian coffee" },
     { time: "10:00", end: "13:00", type: "do", title: "Seaplane Harbour (Maritime Museum)", meta: "WWI-era hangar · walk-through real submarine · flat floors · Greyson: flight simulator", rating: 4.8, reviews: 4800, tags: ["Museum", "Accessible", "Greyson"], tone: "mint", status: "decide", priority: "must", cost: 46, url: "https://meremuuseum.ee/lennusadam/en/", mapUrl: "https://maps.google.com/?q=Seaplane+Harbour+Tallinn&ll=59.4471,24.7327" },
+    { time: "13:00", end: "13:10", type: "transit", title: "Walk to PROTO", meta: "500m · 5 min flat" },
     { time: "13:30", end: "15:30", type: "do", title: "PROTO Invention Factory", meta: "VR + science experiments · converted submarine factory · 500m from Seaplane Harbour", rating: 4.6, reviews: 1200, tags: ["Greyson", "Interactive"], tone: "mint", status: "decide", priority: "nice", cost: 96, url: "https://www.prototehas.ee/en/", mapUrl: "https://maps.google.com/?q=PROTO+Invention+Factory+Tallinn" },
+    { time: "15:30", end: "16:00", type: "eat", title: "Late lunch — Telliskivi area", meta: "F-Hoone café or street food · Greyson: burgers" },
     { time: "16:00", end: "18:00", type: "do", title: "Telliskivi Creative City", meta: "Former warehouses · street art · indie boutiques · The Brick Coffee Roastery", rating: 4.5, reviews: 2800, tags: ["Street Art", "Coffee"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Telliskivi+Creative+City+Tallinn" },
-    { time: "19:30", end: "22:00", type: "eat", title: "Restaurant Salt or Rataskaevu 16", meta: "Salt: Estonian-Asian fusion near Kadriorg (Ryan: scallop ceviche + okonomiyaki) · Book ahead", rating: 4.7, reviews: 1400, tags: ["Dinner", "Reserve"], tone: "hot", status: "decide", priority: "must", cost: 200, url: null, mapUrl: "https://maps.google.com/?q=Restaurant+Salt+Tallinn" },
+    { time: "18:00", end: "19:30", type: "rest", title: "Rest at hotel before dinner", meta: "1.5h · freshen up · 20 min walk from Telliskivi to Novotel" },
+    { time: "19:30", end: "22:00", type: "eat", title: "Restaurant Salt or Rataskaevu 16", meta: "Salt: Estonian-Asian fusion (Ryan: scallop ceviche + okonomiyaki) · Book ahead", rating: 4.7, reviews: 1400, tags: ["Dinner", "Reserve"], tone: "hot", status: "decide", priority: "must", cost: 200, url: null, mapUrl: "https://maps.google.com/?q=Restaurant+Salt+Tallinn" },
   ],
   d14: [
-    { time: "10:00", end: "13:00", type: "do", title: "Kalev Spa Waterpark", meta: "4 slides (up to 82m) + wave pool + hot tubs + saunas · Janelle: therapeutic spa", rating: 4.5, reviews: 3200, tags: ["Greyson", "Spa", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.kalevspa.ee/en/waterpark/", mapUrl: "https://maps.google.com/?q=Kalev+Spa+Waterpark+Tallinn" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Michelin dinner tonight · pace the day" },
+    { time: "09:45", end: "10:00", type: "transit", title: "Walk to Kalev Spa", meta: "15 min · flat streets" },
+    { time: "10:00", end: "13:00", type: "do", title: "Kalev Spa Waterpark", meta: "4 slides (up to 82m) + wave pool + hot tubs + saunas · Janelle: therapeutic spa section", rating: 4.5, reviews: 3200, tags: ["Greyson", "Spa", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.kalevspa.ee/en/waterpark/", mapUrl: "https://maps.google.com/?q=Kalev+Spa+Waterpark+Tallinn" },
+    { time: "13:00", end: "13:30", type: "eat", title: "Lunch near Kalev Spa", meta: "Von Krahli Aed near Old Town · quick Estonian lunch" },
     { time: "13:30", end: "16:00", type: "do", title: "Tallinn Old Town + Ramparts", meta: "Viru & Harju streets flat · medieval walls · St. Olaf's tower (Ryan + Greyson · 232 steps)", rating: 4.8, reviews: 8400, tags: ["History", "Medieval"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Tallinn+Old+Town+Estonia&ll=59.4370,24.7454" },
-    { time: "16:00", end: "18:00", type: "do", title: "Kadriorg Park + KUMU Art Museum", meta: "Paved paths · best accessibility day · Ryan: baroque + Japanese garden · Restaurant Salt next door", rating: 4.8, reviews: 5600, tags: ["Park", "Accessible"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Kadriorg+Park+Tallinn" },
+    { time: "16:00", end: "18:00", type: "do", title: "Kadriorg Park + KUMU Art Museum", meta: "Paved paths · best accessibility in Tallinn · baroque garden · Restaurant Salt next door", rating: 4.8, reviews: 5600, tags: ["Park", "Accessible"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Kadriorg+Park+Tallinn" },
+    { time: "18:00", end: "19:30", type: "rest", title: "Hotel rest · dress for Michelin", meta: "1.5h · NOA requires 45 min taxi from center · book taxi in advance" },
     { time: "19:30", end: "22:00", type: "eat", title: "NOA Chef's Hall — Michelin", meta: "7-course tasting menu · coastal views · book NOW — fills weeks ahead", rating: 4.8, reviews: 1800, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "must", cost: 480, cancelBy: "Jun 28", url: "http://noaresto.ee", mapUrl: "https://maps.google.com/?q=NOA+Restaurant+Tallinn" },
   ],
   d15: [
-    { time: "10:00", end: "11:30", type: "do", title: "Estonian Cooking Class — ToRe Toit", meta: "2.5 hrs · 3-course Estonian meal · Old Town · max 8 people · book ahead", rating: 4.9, reviews: 5000, tags: ["Cooking Class", "Book Ahead"], tone: "mint", status: "decide", priority: "must", cost: 237, url: "https://www.gettyourguide.com/tallinn-l394/", mapUrl: "https://maps.google.com/?q=Old+Town+Tallinn+Estonia" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · light breakfast", meta: "1h · cooking class includes lunch · keep breakfast light · flight today" },
+    { time: "09:30", end: "09:45", type: "transit", title: "Taxi to Old Town cooking class", meta: "15 min from Novotel" },
+    { time: "10:00", end: "12:30", type: "do", title: "Estonian Cooking Class — ToRe Toit", meta: "2.5 hrs · 3-course Estonian meal · Old Town · max 8 people · book ahead", rating: 4.9, reviews: 5000, tags: ["Cooking Class", "Book Ahead"], tone: "mint", status: "decide", priority: "must", cost: 237, url: "https://www.gettyourguide.com/tallinn-l394/", mapUrl: "https://maps.google.com/?q=Old+Town+Tallinn+Estonia" },
+    { time: "12:30", end: "13:00", type: "rest", title: "Return to hotel · pack for flight", meta: "30 min · flight departs 15:00 · taxi 20 min to airport" },
     { time: "13:00", end: "14:00", type: "do", title: "Escape Room", meta: "Escape Room Factory or Imaginaris · Greyson: peak 12-year-old activity", rating: 4.6, reviews: 2400, tags: ["Greyson", "Family"], tone: "mint", status: "decide", priority: "nice", cost: 75, url: null, mapUrl: "https://maps.google.com/?q=Escape+Room+Factory+Tallinn" },
+    { time: "14:00", end: "14:30", type: "transit", title: "Taxi to Tallinn Airport", meta: "20 min · allow 1h before departure" },
     { time: "15:00", end: "18:10", type: "flight", title: "Finnair TLL → KRK (via HEL)", meta: "AY1018 + AY1163 · 15:00 → 18:10 · Economy Flex · 1 stop via Helsinki · 4h 10m", tone: "accent", status: "booked", conf: "8HJVGP", priority: "must", url: "./docs/finnair_8HJVGP.pdf", mapUrl: "https://maps.google.com/?q=Tallinn+Airport+Estonia" },
+    { time: "18:30", end: "19:30", type: "transit", title: "KRK · Airport transfer to AC Hotel", meta: "30 min taxi from Kraków Airport · check into AC Hotel Rynek" },
+    { time: "19:30", end: "21:00", type: "eat", title: "First dinner Kraków — Market Square", meta: "Miod Malina or Hawełka · outdoor terrace on medieval square", tone: "hot", status: "decide", priority: "nice", cost: 100, mapUrl: "https://maps.google.com/?q=Krakow+Market+Square+Poland" },
   ],
   d16: [
-    { time: "09:00", end: "09:00", type: "stay", title: "Arrive Kraków · Check in AC Hotel Kraków", meta: "Jul 6–9 · 3 nights · Conf 72331300 · Near Market Square · Balcony room · Cancel by Jul 5 11:59pm", tone: "muted", status: "booked", conf: "72331300", priority: "must", url: "./docs/ac_hotel_krakow.pdf", mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · AC Hotel breakfast · first full Kraków day" },
+    { time: "09:00", end: "09:00", type: "stay", title: "AC Hotel Kraków — settled in", meta: "Jul 6–9 · 3 nights · Conf 72331300 · Near Market Square · Cancel by Jul 5 11:59pm", tone: "muted", status: "booked", conf: "72331300", priority: "must", url: "./docs/ac_hotel_krakow.pdf", mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
     { time: "11:00", end: "13:00", type: "do", title: "Market Square + Cloth Hall", meta: "Rynek Główny · one of Europe's largest medieval squares · cobblestone but flat", rating: 4.8, reviews: 22000, tags: ["History", "Market"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Krakow+Market+Square+Poland&ll=50.0618,19.9371" },
+    { time: "13:00", end: "14:00", type: "eat", title: "Lunch on Market Square", meta: "Ed Red or Miod Malina · outdoor terrace · Polish dumplings for everyone" },
     { time: "14:00", end: "17:00", type: "do", title: "Kazimierz Jewish Quarter", meta: "Bohemian neighborhood · flat streets · Schindler's Factory Museum (one of best WWII museums)", rating: 4.7, reviews: 8600, tags: ["History", "Museum"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Kazimierz+Krakow+Poland" },
-    { time: "19:00", end: "21:00", type: "eat", title: "Zapiekanka + Polish Dinner", meta: "Try Senoji Trobele or riverside restaurants · cepelinai for Greyson", rating: 4.5, reviews: 1800, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 80, url: null, mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
+    { time: "17:30", end: "19:00", type: "rest", title: "Rest at hotel before dinner", meta: "1.5h · first full day, pace Janelle" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Polish Dinner — Kraków Old Town", meta: "Senoji Trobele or riverside restaurants · cepelinai for Greyson", rating: 4.5, reviews: 1800, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 80, url: null, mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
+    { time: "21:30", end: "22:30", type: "do", title: "Alt: Wawel Castle riverbank walk at night", meta: "Flat Vistula path · castle illuminated · 10 min from Market Square · no cobblestones at river level", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Wawel+Castle+Krakow" },
   ],
   d17: [
-    { time: "09:30", end: "12:00", type: "do", title: "⭐ Wieliczka Salt Mine", meta: "UNESCO · underground chapels carved from salt · call re: lift access for Janelle (standard = 800 steps)", rating: 4.9, reviews: 28000, tags: ["UNESCO", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 90, url: "https://www.wieliczka-saltmine.com", mapUrl: "https://maps.google.com/?q=Wieliczka+Salt+Mine+Poland&ll=49.9833,20.0553" },
-    { time: "13:00", end: "16:00", type: "do", title: "Wawel Royal Castle + Dragon's Den", meta: "Elevator to castle courtyard · Dragon's Den accessible from riverbank", rating: 4.7, reviews: 14800, tags: ["Castle", "History"], tone: "mint", status: "decide", priority: "nice", cost: 40, url: null, mapUrl: "https://maps.google.com/?q=Wawel+Castle+Krakow&ll=50.0540,19.9353" },
-    { time: "19:00", end: "21:00", type: "eat", title: "Lokál Restaurant", meta: "Unfiltered Pilsner Urquell · traditional Czech — book ahead · Greyson: schnitzel", rating: 4.7, reviews: 3200, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Lokal+Restaurant+Prague" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · early start for Salt Mine", meta: "1h · Salt Mine tour is 2+ hrs underground · comfortable shoes required" },
+    { time: "09:00", end: "09:30", type: "transit", title: "Taxi/bus Kraków → Wieliczka", meta: "15 km · 30 min · taxi or minibus from hotel · ~$25 return" },
+    { time: "09:30", end: "12:00", type: "do", title: "⭐ Wieliczka Salt Mine", meta: "UNESCO · underground chapels carved from salt · call re: lift access for Janelle (800 steps standard)", rating: 4.9, reviews: 28000, tags: ["UNESCO", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 90, url: "https://www.wieliczka-saltmine.com", mapUrl: "https://maps.google.com/?q=Wieliczka+Salt+Mine+Poland&ll=49.9833,20.0553" },
+    { time: "12:00", end: "12:30", type: "transit", title: "Return to Kraków", meta: "30 min · minibus back to hotel" },
+    { time: "12:30", end: "13:30", type: "eat", title: "Lunch — milk bar (bar mleczny)", meta: "Polish cafeteria · pierogis · bigos stew · authentic + cheap · Greyson approved" },
+    { time: "13:30", end: "16:00", type: "do", title: "Wawel Royal Castle + Dragon's Den", meta: "Elevator to castle courtyard · Dragon's Den accessible from riverbank", rating: 4.7, reviews: 14800, tags: ["Castle", "History"], tone: "mint", status: "decide", priority: "nice", cost: 40, url: null, mapUrl: "https://maps.google.com/?q=Wawel+Castle+Krakow&ll=50.0540,19.9353" },
+    { time: "16:00", end: "19:00", type: "rest", title: "Afternoon rest at hotel", meta: "3h · two big activities today · Janelle recovery time" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Dinner near Market Square", meta: "Unfiltered Pilsner Urquell · traditional Polish · Greyson: schnitzel", rating: 4.7, reviews: 3200, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Krakow+Old+Town+Poland" },
   ],
   d18: [
-    { time: "09:00", end: "16:00", type: "transit", title: "RegioJet KRK → PRG (direct bus ~7h)", meta: "RegioJet direct bus · ~7h · comfortable coaches · seat reservation · regiojet.com · NOT BOOKED yet", tone: "accent", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.regiojet.com", mapUrl: "https://maps.google.com/?q=Krakow+Main+Station+Poland" },
+    { time: "07:00", end: "08:00", type: "rest", title: "Early wake up · checkout", meta: "1h · RegioJet departs 09:00 · pack night before" },
+    { time: "08:00", end: "08:30", type: "eat", title: "Quick breakfast · Kraków station", meta: "Grab-and-go · pastry + coffee · Dworzec Główny station café" },
+    { time: "09:00", end: "16:00", type: "transit", title: "RegioJet KRK → PRG (direct bus ~7h)", meta: "RegioJet direct bus · ~7h · comfortable coaches · seat reservation · regiojet.com · NOT BOOKED", tone: "accent", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.regiojet.com", mapUrl: "https://maps.google.com/?q=Krakow+Main+Station+Poland" },
+    { time: "12:30", end: "13:00", type: "rest", title: "Bus rest stop (midway Czech Republic)", meta: "30 min · stretch · vending machines · Greyson: walk around" },
+    { time: "16:00", end: "17:00", type: "transit", title: "Prague Florenc station → Almanac Hotel", meta: "30 min taxi · check into Almanac X Alcron" },
     { time: "15:00", end: "16:00", type: "stay", title: "Check in — Almanac X Alcron Prague", meta: "Jul 9–13 · 4 nights · CONFIRMED", tone: "muted", status: "booked", conf: "AmEx 9092094862438", priority: "must", cost: 724, url: "./docs/almanac_prague.pdf", mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague&ll=50.0808,14.4303" },
+    { time: "17:00", end: "19:00", type: "rest", title: "Settle in · explore Wenceslas Square", meta: "2h · Almanac is right on Wenceslas · Greyson: street food · Janelle: rest" },
+    { time: "19:00", end: "21:00", type: "eat", title: "First Prague dinner — Lokál Dlouhááá", meta: "Best Czech pub · unfiltered Pilsner Urquell · svíčková · Greyson: fried cheese", tone: "hot", status: "decide", priority: "nice", cost: 90, mapUrl: "https://maps.google.com/?q=Lokal+Dlouhaaa+Prague" },
   ],
   d19: [
-    { time: "10:00", end: "13:00", type: "do", title: "Prague Castle + St. Vitus Cathedral", meta: "Taxi to top (skip steep hill for Janelle) · flat courtyard once inside · Greyson: massive castle", rating: 4.8, reviews: 32000, tags: ["Castle", "UNESCO"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Prague+Castle&ll=50.0904,14.4017" },
-    { time: "13:00", end: "14:30", type: "eat", title: "Strelec Restaurant (in the castle)", meta: "Michelin-listed · archer's tower · Chef Igor Jagodic · seasonal Slovenian", rating: 4.7, reviews: 1200, tags: ["Lunch", "Michelin"], tone: "hot", status: "decide", priority: "nice", cost: 300, url: null, mapUrl: null },
-    { time: "15:00", end: "17:00", type: "do", title: "Charles Bridge + Dragon Bridge", meta: "30 baroque statues · cobblestone but flat · photography stop", rating: 4.8, reviews: 28000, tags: ["Architecture", "Icon"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Charles+Bridge+Prague&ll=50.0865,14.4114" },
-    { time: "19:00", end: "21:00", type: "eat", title: "Lokál or Czech Food Tour", meta: "Svíčková (beef sirloin in cream sauce) · Czech goulash · Trdelník · Greyson: schnitzel", rating: 4.6, reviews: 2800, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 120, url: null, mapUrl: "https://maps.google.com/?q=Old+Town+Prague" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · biggest sightseeing day in Prague" },
+    { time: "09:30", end: "09:45", type: "transit", title: "Taxi up to Prague Castle gate", meta: "15 min · skip cobblestone hill for Janelle · taxi drops at castle entrance" },
+    { time: "10:00", end: "13:00", type: "do", title: "Prague Castle + St. Vitus Cathedral", meta: "Taxi to top · flat courtyard once inside · Greyson: biggest castle complex in world", rating: 4.8, reviews: 32000, tags: ["Castle", "UNESCO"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Prague+Castle&ll=50.0904,14.4017" },
+    { time: "13:00", end: "14:30", type: "eat", title: "Strelec Restaurant (in the castle)", meta: "Michelin-listed · archer's tower · Chef Igor Jagodic · seasonal tasting menu", rating: 4.7, reviews: 1200, tags: ["Lunch", "Michelin"], tone: "hot", status: "decide", priority: "nice", cost: 300, url: null, mapUrl: null },
+    { time: "14:30", end: "15:00", type: "transit", title: "Tram down from castle → Charles Bridge", meta: "20 min · tram option for Janelle · Nerudova street if walking" },
+    { time: "15:00", end: "17:00", type: "do", title: "Charles Bridge + Dragon Bridge", meta: "30 baroque statues · cobblestone but flat · photography stop · early morning is less crowded", rating: 4.8, reviews: 28000, tags: ["Architecture", "Icon"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Charles+Bridge+Prague&ll=50.0865,14.4114" },
+    { time: "17:00", end: "19:00", type: "rest", title: "Afternoon rest at hotel", meta: "2h · big walk day · Janelle legs up" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Czech dinner — Old Town", meta: "Svíčková · Czech goulash · Trdelník on the way back · Greyson: schnitzel", rating: 4.6, reviews: 2800, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 120, url: null, mapUrl: "https://maps.google.com/?q=Old+Town+Prague" },
   ],
   d20: [
+    { time: "08:30", end: "09:30", type: "rest", title: "Slow wake up · breakfast", meta: "1h · museum day · lighter pace than yesterday" },
     { time: "10:00", end: "12:00", type: "do", title: "Old Town + Astronomical Clock", meta: "Clock performs on the hour — genuinely impressive · paved, flat", rating: 4.6, reviews: 18000, tags: ["History", "Architecture"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Prague+Astronomical+Clock&ll=50.0870,14.4202" },
     { time: "12:00", end: "14:00", type: "do", title: "Josefov Jewish Quarter", meta: "Six synagogues + Old Jewish Cemetery · flat streets · best-preserved Jewish quarter in Europe", rating: 4.7, reviews: 12000, tags: ["History", "Culture"], tone: "mint", status: "decide", priority: "must", cost: 50, url: null, mapUrl: "https://maps.google.com/?q=Josefov+Prague&ll=50.0900,14.4160" },
+    { time: "14:00", end: "15:00", type: "eat", title: "Lunch — Old Town", meta: "V Zátiší or Café Louvre · Czech cuisine · indoor seating, accessible" },
     { time: "15:00", end: "17:00", type: "do", title: "Wenceslas Square + Vinohrady", meta: "Broad boulevard · cafes · art nouveau architecture · Greyson: bubble tea shops", rating: 4.4, reviews: 6200, tags: ["Walking"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Wenceslas+Square+Prague" },
-    { time: "19:30", end: "22:00", type: "eat", title: "Fine Dining — Prague", meta: "La Degustation Boheme Bourgeoise (Michelin) or Field Restaurant", rating: 4.9, reviews: 2400, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "nice", cost: 400, url: null, mapUrl: "https://maps.google.com/?q=La+Degustation+Prague" },
+    { time: "17:00", end: "19:30", type: "rest", title: "Hotel rest before fine dining", meta: "2.5h · dress up · tonight is the splurge dinner" },
+    { time: "19:30", end: "22:00", type: "eat", title: "Fine Dining — La Degustation or Field", meta: "La Degustation Boheme Bourgeoise (Michelin) or Field Restaurant · book well ahead", rating: 4.9, reviews: 2400, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "nice", cost: 400, url: null, mapUrl: "https://maps.google.com/?q=La+Degustation+Prague" },
   ],
   d21: [
-    { time: "10:00", end: "12:00", type: "do", title: "Vyšehrad Fortress", meta: "Southern Prague · panoramic views · St. Peter & Paul Cathedral · easier than castle", rating: 4.6, reviews: 8200, tags: ["History", "Views"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Vysehrad+Prague&ll=50.0648,14.4192" },
-    { time: "13:00", end: "15:00", type: "eat", title: "Naplavka Farmers Market", meta: "Riverside market · local food · street food · relaxed", rating: 4.5, reviews: 3400, tags: ["Lunch", "Market"], tone: "hot", status: "decide", priority: "nice", cost: 80, url: null, mapUrl: "https://maps.google.com/?q=Naplavka+Prague" },
-    { time: "16:00", end: "18:00", type: "do", title: "Žižkov TV Tower", meta: "Observation deck · views over Prague · giant crawling babies on the outside · Greyson: loves this", rating: 4.4, reviews: 5200, tags: ["Views", "Quirky"], tone: "mint", status: "decide", priority: "nice", cost: 30, url: null, mapUrl: "https://maps.google.com/?q=Zizkov+Television+Tower+Prague" },
-    { time: "20:00", end: "22:00", type: "eat", title: "Final Prague Dinner", meta: "Revisit a favorite or try Café Savoy (grand café, art nouveau)", rating: 4.7, reviews: 4800, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 200, url: null, mapUrl: "https://maps.google.com/?q=Cafe+Savoy+Prague" },
+    { time: "08:30", end: "09:30", type: "rest", title: "Slow morning · hotel breakfast", meta: "1h · Prague flex day · no fixed schedule" },
+    { time: "10:00", end: "12:00", type: "do", title: "Vyšehrad Fortress", meta: "Southern Prague · panoramic views · St. Peter & Paul Cathedral · easier than castle hill", rating: 4.6, reviews: 8200, tags: ["History", "Views"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Vysehrad+Prague&ll=50.0648,14.4192" },
+    { time: "12:00", end: "12:20", type: "transit", title: "Tram to Naplavka riverside", meta: "20 min · tram 17 along river · Janelle: seated" },
+    { time: "12:30", end: "14:30", type: "eat", title: "Naplavka Farmers Market", meta: "Riverside market · local food · street food · relaxed", rating: 4.5, reviews: 3400, tags: ["Lunch", "Market"], tone: "hot", status: "decide", priority: "nice", cost: 80, url: null, mapUrl: "https://maps.google.com/?q=Naplavka+Prague" },
+    { time: "14:30", end: "16:00", type: "rest", title: "Riverside rest + café", meta: "1.5h · Prague riverbank benches · Janelle: sunny terrace · Greyson: nearby skate park" },
+    { time: "16:00", end: "18:00", type: "do", title: "Žižkov TV Tower", meta: "Observation deck · views over Prague · giant crawling babies · Greyson: loves this", rating: 4.4, reviews: 5200, tags: ["Views", "Quirky"], tone: "mint", status: "decide", priority: "nice", cost: 30, url: null, mapUrl: "https://maps.google.com/?q=Zizkov+Television+Tower+Prague" },
+    { time: "20:00", end: "22:00", type: "eat", title: "Final Prague Dinner", meta: "Revisit a favorite or Café Savoy (grand café, art nouveau ceiling)", rating: 4.7, reviews: 4800, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 200, url: null, mapUrl: "https://maps.google.com/?q=Cafe+Savoy+Prague" },
+    { time: "22:30", end: "23:30", type: "do", title: "Alt: Night cruise on the Vltava", meta: "1h boat cruise · Prague Castle illuminated · accessible boarding · Greyson: dramatic from water", tone: "mint", isAlt: true, timeNeeded: "1.5h", priority: "nice", mapUrl: "https://maps.google.com/?q=Vltava+River+Prague" },
   ],
   d22: [
-    { time: "10:00", end: "12:00", type: "do", title: "Last morning — Malá Strana", meta: "Lesser Town · John Lennon Wall · riverside walk · cafes", rating: 4.6, reviews: 7200, tags: ["Walking"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Mala+Strana+Prague" },
-    { time: "17:00", end: "18:00", type: "transit", title: "Pack + head to airport", meta: "Vaclav Havel Airport · PRG → AMS departs 18:35 · allow 2h for airport", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · final Prague morning", meta: "1h · checkout 11am · pack night before · airport 18:35 departure" },
+    { time: "09:00", end: "09:30", type: "eat", title: "Last Prague breakfast", meta: "Café Savoy or Eska · artisan bread + coffee · treat yourself" },
+    { time: "10:00", end: "12:00", type: "do", title: "Last morning — Malá Strana", meta: "Lesser Town · John Lennon Wall · riverside walk · cafes · no cobblestones at river level", rating: 4.6, reviews: 7200, tags: ["Walking"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Mala+Strana+Prague" },
+    { time: "12:00", end: "13:00", type: "rest", title: "Return to hotel · final checkout", meta: "1h · luggage storage at Almanac · flight departs 18:35 · airport by 16:30" },
+    { time: "13:00", end: "16:30", type: "rest", title: "Afternoon buffer — café or hotel lobby", meta: "3.5h · Café Imperial or Obecní dům · Greyson: final Czech ice cream" },
+    { time: "17:00", end: "18:00", type: "transit", title: "Head to Václav Havel Airport", meta: "PRG → AMS departs 18:35 · allow 2h for airport · 30 min taxi from center", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
   ],
   d23: [
-    { time: "18:35", end: "20:10", type: "flight", title: "KLM PRG → AMS (decision pending)", meta: "KLM nonstop · 6:35pm Prague → 8:10pm Amsterdam · Basic $299 / Standard $491 / Flex $740 for 3 · NOT BOOKED", tone: "accent", status: "decide", priority: "must", url: "https://www.klm.com", mapUrl: null },
-    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Amsterdam Hotel", meta: "4 nights Jul 13–17 · NOT BOOKED · Marriott candidates: Apollo (~$394/nt) · Amsterdam Marriott (~$439/nt)", tone: "muted", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.marriott.com", mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+    { time: "18:35", end: "20:10", type: "flight", title: "KLM PRG → AMS", meta: "KLM nonstop · 6:35pm Prague → 8:10pm Amsterdam · NOT BOOKED · Basic $299 / Flex $740 for 3", tone: "accent", status: "decide", priority: "must", url: "https://www.klm.com", mapUrl: null },
+    { time: "20:30", end: "21:15", type: "transit", title: "Schiphol → Amsterdam hotel", meta: "Train or taxi from Schiphol · 15–30 min · Amsterdam Centraal or direct" },
+    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Amsterdam Hotel", meta: "4 nights Jul 13–17 · NOT BOOKED · Marriott Apollo (~$394/nt) · Amsterdam Marriott (~$439/nt)", tone: "muted", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.marriott.com", mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
   ],
   d24: [
-    { time: "10:00", end: "13:00", type: "do", title: "Rijksmuseum", meta: "Rembrandt + Vermeer · world-class collection · flat floors throughout · book ahead", rating: 4.8, reviews: 28000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.rijksmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Rijksmuseum+Amsterdam" },
-    { time: "14:00", end: "16:00", type: "do", title: "Canal Boat Tour", meta: "Flat boarding · seated · 75 min · Greyson: looks for houseboats · Janelle: therapeutic", rating: 4.7, reviews: 18000, tags: ["Canal", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Canal+Cruise" },
+    { time: "08:30", end: "09:30", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Amsterdam day 1 · big museum day" },
+    { time: "09:30", end: "09:50", type: "transit", title: "Tram to Museumplein", meta: "20 min tram or 30 min walk" },
+    { time: "10:00", end: "13:00", type: "do", title: "Rijksmuseum", meta: "Rembrandt + Vermeer · world-class · flat floors throughout · book ahead", rating: 4.8, reviews: 28000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.rijksmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Rijksmuseum+Amsterdam" },
+    { time: "13:00", end: "14:00", type: "eat", title: "Lunch near Museumplein", meta: "Café Cobra · outdoor terrace · Janelle: benches everywhere at Museumplein" },
+    { time: "14:00", end: "16:00", type: "do", title: "Canal Boat Tour", meta: "Flat boarding · seated · 75 min · Greyson: houseboats · Janelle: therapeutic", rating: 4.7, reviews: 18000, tags: ["Canal", "Accessible"], tone: "mint", status: "decide", priority: "must", cost: 90, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Canal+Cruise" },
+    { time: "16:00", end: "19:00", type: "rest", title: "Afternoon rest at hotel", meta: "3h · late-trip fatigue builds · essential · Greyson: nap or hotel" },
     { time: "19:00", end: "21:00", type: "eat", title: "Dinner — Jordaan neighborhood", meta: "Amsterdam's most charming neighborhood · sidewalk cafes · Dutch pancakes for Greyson", rating: 4.6, reviews: 2400, tags: ["Dinner", "Local"], tone: "hot", status: "decide", priority: "nice", cost: 120, url: null, mapUrl: "https://maps.google.com/?q=Jordaan+Amsterdam" },
   ],
   d25: [
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · double museum day · timed entry required for both" },
+    { time: "08:50", end: "09:00", type: "transit", title: "Walk to Anne Frank House", meta: "15 min walk · arrive 5 min before timed entry" },
     { time: "09:00", end: "11:30", type: "do", title: "Anne Frank House", meta: "BOOK NOW — sells out weeks ahead · limited capacity · Greyson: most important museum of the trip", rating: 4.9, reviews: 35000, tags: ["History", "Must Book"], tone: "mint", status: "decide", priority: "must", cost: 60, url: "https://www.annefrank.org/en/museum/tickets/", mapUrl: "https://maps.google.com/?q=Anne+Frank+House+Amsterdam" },
-    { time: "13:00", end: "15:00", type: "do", title: "Van Gogh Museum", meta: "Largest Van Gogh collection in world · book same day as Anne Frank · flat interior", rating: 4.8, reviews: 22000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 57, url: "https://www.vangoghmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Van+Gogh+Museum+Amsterdam" },
-    { time: "16:00", end: "18:00", type: "do", title: "Vondelpark", meta: "Amsterdam's central park · flat paths · Greyson: skaters + buskers · Janelle: benches everywhere", rating: 4.7, reviews: 8200, tags: ["Park", "Free", "Accessible"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Vondelpark+Amsterdam" },
-    { time: "19:30", end: "22:00", type: "eat", title: "Fine Dining — Amsterdam", meta: "Bord'Eau or Restaurant C (both Michelin) · book ahead · final nice dinner of the trip", rating: 4.8, reviews: 1800, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "nice", cost: 350, url: null, mapUrl: "https://maps.google.com/?q=Bord%27Eau+Amsterdam" },
+    { time: "11:30", end: "12:30", type: "eat", title: "Lunch — Café Winkel 43", meta: "Famous apple pie · Jordaan · 5 min from Anne Frank · outdoor terrace" },
+    { time: "13:00", end: "15:00", type: "do", title: "Van Gogh Museum", meta: "Largest Van Gogh collection · book same day as Anne Frank · flat interior", rating: 4.8, reviews: 22000, tags: ["Museum", "Art", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 57, url: "https://www.vangoghmuseum.nl/en", mapUrl: "https://maps.google.com/?q=Van+Gogh+Museum+Amsterdam" },
+    { time: "15:10", end: "15:20", type: "transit", title: "Walk to Vondelpark", meta: "10 min from Van Gogh Museum" },
+    { time: "16:00", end: "18:00", type: "do", title: "Vondelpark", meta: "Flat paths · Greyson: skaters + buskers · Janelle: benches everywhere · summer concerts", rating: 4.7, reviews: 8200, tags: ["Park", "Free", "Accessible"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Vondelpark+Amsterdam" },
+    { time: "18:00", end: "19:30", type: "rest", title: "Rest + dress for final fine dining", meta: "1.5h · last big dinner of the trip" },
+    { time: "19:30", end: "22:00", type: "eat", title: "Fine Dining — Bord'Eau or Restaurant C", meta: "Both Michelin · book ahead · final nice dinner of the trip", rating: 4.8, reviews: 1800, tags: ["Dinner", "Michelin", "Reserve"], tone: "hot", status: "decide", priority: "nice", cost: 350, url: null, mapUrl: "https://maps.google.com/?q=Bord%27Eau+Amsterdam" },
   ],
   d26: [
-    { time: "10:00", end: "12:00", type: "do", title: "Albert Cuyp Market", meta: "Amsterdam's largest street market · fresh stroopwafels · local cheese · Dutch herring (Greyson: try it)", rating: 4.5, reviews: 6200, tags: ["Market", "Free", "Local"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Albert+Cuyp+Market+Amsterdam" },
+    { time: "08:30", end: "09:30", type: "rest", title: "Slow morning · last full day", meta: "1h · Greyson's choice day · no pressure" },
+    { time: "09:30", end: "09:50", type: "transit", title: "Walk to Albert Cuyp Market", meta: "20 min · De Pijp neighborhood · flat streets" },
+    { time: "10:00", end: "12:00", type: "do", title: "Albert Cuyp Market", meta: "Amsterdam's largest street market · stroopwafels · Dutch cheese · herring (Greyson: try it)", rating: 4.5, reviews: 6200, tags: ["Market", "Free", "Local"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Albert+Cuyp+Market+Amsterdam" },
+    { time: "12:00", end: "12:30", type: "eat", title: "Lunch at NEMO rooftop", meta: "Rooftop restaurant · harbor views · surprisingly good · self-service" },
     { time: "13:00", end: "15:00", type: "do", title: "NEMO Science Museum", meta: "5 floors · hands-on · Greyson: best science museum in Europe · rooftop views", rating: 4.6, reviews: 9400, tags: ["Greyson", "Interactive", "Accessible"], tone: "mint", status: "decide", priority: "nice", cost: 60, url: "https://www.nemosciencemuseum.nl/en/", mapUrl: "https://maps.google.com/?q=NEMO+Science+Museum+Amsterdam" },
+    { time: "15:10", end: "15:30", type: "transit", title: "Walk to Prinsengracht", meta: "20 min along harbor" },
     { time: "16:00", end: "18:00", type: "do", title: "Last canals walk — Prinsengracht", meta: "Janelle: bench by the water · Ryan + Greyson: walk the bridges · golden hour is stunning", rating: 4.8, reviews: 12000, tags: ["Canal", "Walking"], tone: "mint", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Prinsengracht+Amsterdam" },
-    { time: "19:00", end: "21:00", type: "eat", title: "Farewell Dinner — Greyson picks", meta: "His trip, his call. Dutch pancakes (pannenkoeken) or Indo-Dutch rijsttafel · Greyson earns it", rating: 4.5, reviews: 1600, tags: ["Dinner", "Family"], tone: "hot", status: "decide", priority: "must", cost: 130, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+    { time: "18:00", end: "19:00", type: "rest", title: "Return to hotel · freshen up", meta: "1h · Greyson picks the restaurant tonight" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Farewell Dinner — Greyson picks", meta: "Dutch pancakes (pannenkoeken) or Indo-Dutch rijsttafel · his trip, his call", rating: 4.5, reviews: 1600, tags: ["Dinner", "Family"], tone: "hot", status: "decide", priority: "must", cost: 130, url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
   ],
   d27: [
+    { time: "08:00", end: "09:00", type: "rest", title: "Wake up · final pack", meta: "1h · check under beds · Greyson: souvenir check · pack carry-on tight" },
+    { time: "09:00", end: "09:30", type: "eat", title: "Last breakfast in Europe", meta: "Hotel breakfast or Café de Bakker · final stroopwafel + strong coffee" },
     { time: "10:00", end: "13:00", type: "transit", title: "Hotel → Amsterdam Schiphol (AMS)", meta: "30 min by taxi or tram · allow 3h before departure · Schiphol has excellent lounges", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Airport+Schiphol" },
+    { time: "13:00", end: "TBD", type: "rest", title: "Schiphol Airport — lounge + browse", meta: "3h+ buffer · Schiphol duty-free is enormous · Greyson: gaming · Janelle: seating everywhere" },
     { time: "TBD", end: "TBD", type: "flight", title: "UA969 AMS → SFO (nonstop)", meta: "178,500 miles + $1,072 · United · check-in time TBD · conf DDHSFM", tone: "accent", status: "booked", conf: "DDHSFM", priority: "must", url: "./docs/united_DDHSFM.pdf", mapUrl: null },
   ],
 };
@@ -3304,7 +3425,27 @@ const css = `
     background: var(--bg);
     border-top: 1px solid var(--line);
   }
-  .drawer-action-btn {
+  .activity.is-rest {
+    opacity: 0.5;
+    pointer-events: none;
+    min-height: 0 !important;
+    padding: 4px 10px !important;
+    gap: 6px !important;
+  }
+  .activity.is-alt {
+    border: 1.5px dashed var(--line) !important;
+    background: var(--surface-2) !important;
+  }
+  .alt-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; margin-top: 4px;
+    border: 1px dashed var(--line);
+    border-radius: 20px;
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+    .drawer-action-btn {
     flex: 1; padding: 8px 12px;
     background: var(--accent); color: #fff;
     border-radius: 8px;
@@ -4450,8 +4591,21 @@ function ActivityCard({ a, onOpen }) {
   const tagTone = a.tone === "mint" ? "mint" : a.tone === "hot" ? "hot" : "lav";
   const statusLabel = { booked: "Booked", hold: "On hold", decide: "Decide" }[a.status] || "";
   const StatusIcon = a.status === "booked" ? Icon.checkSm : a.status === "hold" ? Icon.clock : Icon.q;
+  if (a.type === "rest") {
+    return (
+      <div className="activity is-rest" style={{cursor:"default"}}>
+        <div className="type-dot" style={{borderColor:"var(--ink-3)", flexShrink:0}}></div>
+        <div className="time-strip" style={{minWidth:44}}><b style={{fontSize:11}}>{a.time}</b></div>
+        <div className="info" style={{padding:"2px 0"}}>
+          <div className="title" style={{fontSize:12, fontWeight:500, color:"var(--ink-3)"}}>{a.title}</div>
+          {a.meta && <div className="desc" style={{fontSize:11, color:"var(--ink-3)", opacity:0.8}}>{a.meta}</div>}
+        </div>
+      </div>
+    );
+  }
+  const isAlt = !!a.isAlt;
   return (
-    <div className="activity" onClick={onOpen} style={{cursor:"pointer"}}>
+    <div className={"activity" + (isAlt ? " is-alt" : "")} onClick={onOpen} style={{cursor:"pointer"}}>
       <div className="type-dot" data-tone={a.tone} style={{borderColor: a.tone === "accent" ? "var(--accent)" : a.tone === "mint" ? "oklch(0.65 0.13 165)" : a.tone === "hot" ? "var(--hot)" : "var(--ink-3)"}}></div>
       <div className="time-strip"><b>{a.time}</b><span>{a.end}</span></div>
 
@@ -4499,6 +4653,11 @@ function ActivityCard({ a, onOpen }) {
         )}
       </div>
 
+      {isAlt && a.timeNeeded && (
+        <div style={{paddingLeft:0, marginTop:4, paddingBottom:6}}>
+          <span className="alt-badge">⏱ Alt · {a.timeNeeded}</span>
+        </div>
+      )}
       <div className="actions" onClick={(e) => e.stopPropagation()}>
         <button className="icon-circle" aria-label="Save"><Icon.heart /></button>
         <button className="icon-circle go" aria-label="Open" onClick={onOpen}><Icon.ext /></button>
