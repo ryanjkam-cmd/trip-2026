@@ -3779,7 +3779,6 @@ function App() {
   const [countryId, setCountryId] = useState("iceland");
   const [dayId, setDayId] = useState("d2");
   const [view, setView] = useState("Day");
-  const [selCal, setSelCal] = useState(15);
   const [mode, setMode] = useState("day"); // "day" | "city" | "trip"
   const [openActivity, setOpenActivity] = useState(null);
 
@@ -3872,7 +3871,22 @@ function App() {
   const currentCity = country.cities.find((c) => c.id === currentDay.cityId);
   const activities = ACTIVITIES[currentDay.id] || [];
   const hotel = HOTELS[currentCity.id];
-  const flight = FLIGHTS[country.id];
+
+  // Find flight activity on current day, or next upcoming flight day
+  const dayFlightAct = useMemo(() => {
+    // Check current day first
+    const todayActs = ACTIVITIES[currentDay.id] || [];
+    const todayFlight = todayActs.find(a => a.type === "flight");
+    if (todayFlight) return { act: todayFlight, dayLabel: currentDay.date, isCurrent: true };
+    // Look forward through remaining days in country
+    const currentIdx = allDays.findIndex(d => d.id === currentDay.id);
+    for (let i = currentIdx + 1; i < allDays.length; i++) {
+      const acts = ACTIVITIES[allDays[i].id] || [];
+      const f = acts.find(a => a.type === "flight");
+      if (f) return { act: f, dayLabel: allDays[i].date, isCurrent: false };
+    }
+    return null;
+  }, [currentDay, allDays]);
 
   // Switch country: pick first day
   const handleCountry = (id) => {
@@ -3896,7 +3910,7 @@ function App() {
   // Trip health: aggregate over all activities in current country
   const allCountryActs = useMemo(() => {
     const ids = country.cities.flatMap(c => c.days.map(d => d.id));
-    return ids.flatMap(id => ACTIVITIES[id] || []);
+    return ids.flatMap(id => (ACTIVITIES[id] || []).map(a => ({ ...a, _dayId: id })));
   }, [country]);
   const health = useMemo(() => {
     const total = allCountryActs.length;
@@ -3919,17 +3933,6 @@ function App() {
   const weather = WEATHER[currentDay.id];
   const gear = GEAR[currentDay.id] || [];
   const transport = TRANSPORT[currentDay.id];
-
-  // Build mini calendar June 2026
-  const calMonth = "June 2026";
-  const tripDates = new Set([14, 15, 16, 17, 18, 19, 20, 21]);
-  // June 1 2026 is a Monday -> offset 1 (Sun=0)
-  const calDays = [];
-  // Trailing May days (May 31 is Sun -> show 31)
-  calDays.push({ n: 31, dim: true });
-  for (let i = 1; i <= 30; i++) calDays.push({ n: i, dim: false });
-  // Leading July
-  for (let i = 1; i <= 4; i++) calDays.push({ n: i, dim: true });
 
   return (
     <div className="app" style={{"--city-tint": CITY_TINT[currentCity.id], "--city-tint-strong": CITY_TINT_STRONG[currentCity.id], "--city-ink": CITY_INK[currentCity.id]}}>
@@ -4066,13 +4069,33 @@ function App() {
           })}
         </div>
 
-        <div className="quick">
-          <div className="nav-section-title">Quick links</div>
-          <button className="quick-item"><Icon.flight /> Flights & transit</button>
-          <button className="quick-item"><Icon.bed /> Hotels</button>
-          <button className="quick-item"><Icon.pin /> Map view</button>
-          <button className="quick-item"><Icon.share /> Export PDF</button>
-        </div>
+        {(() => {
+          const unresolved = allCountryActs.filter(a =>
+            (a.status === "decide" || a.status === "hold") && a.priority === "must"
+          );
+          if (!unresolved.length) return null;
+          return (
+            <div className="quick">
+              <div className="nav-section-title" style={{color:"oklch(0.5 0.14 25)"}}>
+                Needs decision · {unresolved.length}
+              </div>
+              {unresolved.map((a, i) => {
+                const day = allDays.find(d => d.id === a._dayId);
+                return (
+                  <button
+                    key={i}
+                    className="quick-item"
+                    onClick={() => { setMode("day"); setDayId(a._dayId); }}
+                    style={{alignItems:"flex-start", flexDirection:"column", gap:2, padding:"7px 10px"}}
+                  >
+                    <span style={{fontWeight:600, fontSize:12, color:"var(--ink)", whiteSpace:"normal", textAlign:"left", lineHeight:1.3}}>{a.title}</span>
+                    <span style={{fontSize:10.5, color:"var(--ink-3)"}}>D{day?.n} · {day?.date}</span>
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
       </aside>
 
       {/* ============ MAIN ============ */}
@@ -4233,50 +4256,58 @@ function App() {
       {/* ============ RIGHT PANEL ============ */}
       <aside className="rightpanel">
 
-        {/* CALENDAR */}
-        <div className="card">
-          <div className="card-h"><span className="lbl">Calendar</span></div>
-          <div className="cal-head">
-            <div className="m">{calMonth}</div>
-          </div>
-          <div className="cal-grid">
-            {["S","M","T","W","T","F","S"].map((w, i) => <div key={i} className="wd">{w}</div>)}
-            {calDays.map((d, i) => {
-              const tripDay = !d.dim && tripDates.has(d.n);
-              const today = !d.dim && d.n === 19;
-              const sel = !d.dim && d.n === selCal;
-              return (
-                <div
-                  key={i}
-                  className={"d " + (d.dim ? "dim " : "") + (tripDay ? "trip " : "") + (today ? "today " : "") + (sel ? "sel " : "")}
-                  onClick={() => !d.dim && setSelCal(d.n)}
-                >{d.n}</div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* FLIGHT */}
-        <div className="card">
-          <div className="card-h"><span className="lbl">Flight info</span><a className="a" href="#">Details</a></div>
-          <div className="flight">
-            <div className="conf"><span>{flight.airline}</span><span className="num">{flight.conf}</span></div>
-            <div style={{fontSize:11.5,color:"var(--ink-3)",marginBottom:4}}>{flight.date}</div>
-            <div className="route">
-              <div className="iata">{flight.route.split(" → ")[0]}</div>
-              <div className="dash"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
-              <div className="iata r">{flight.route.split(" → ")[1]}</div>
+        {/* FLIGHT / NEXT TRANSPORT */}
+        {dayFlightAct ? (
+          <div className="card">
+            <div className="card-h">
+              <span className="lbl">{dayFlightAct.isCurrent ? "Today's flight" : "Next flight"}</span>
+              {dayFlightAct.act.url?.startsWith('./docs/') && (
+                <a className="a" href={dayFlightAct.act.url} target="_blank" rel="noopener noreferrer">PDF</a>
+              )}
             </div>
-            <div className="city-line">
-              <span>{flight.depCity}</span>
-              <span className="r">{flight.arrCity}</span>
-            </div>
-            <div className="time-line">
-              <span><b>{flight.depT}</b><span>Departs</span></span>
-              <span className="r"><b>{flight.arrT}</b><span>Arrives</span></span>
+            <div className="flight">
+              <div className="conf">
+                <span style={{fontSize:11.5,color:"var(--ink-2)"}}>{dayFlightAct.act.meta?.split(' · ')[0]}</span>
+                <span className="num">{dayFlightAct.act.conf}</span>
+              </div>
+              {!dayFlightAct.isCurrent && (
+                <div style={{fontSize:11,color:"var(--ink-3)",marginBottom:6,fontStyle:"italic"}}>{dayFlightAct.dayLabel}</div>
+              )}
+              <div className="route">
+                <div className="iata">{(dayFlightAct.act.title.match(/([A-Z]{3})\s*→/) || [])[1] || "—"}</div>
+                <div className="dash"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg></div>
+                <div className="iata r">{(dayFlightAct.act.title.match(/→\s*([A-Z]{3})/) || [])[1] || "—"}</div>
+              </div>
+              <div className="time-line">
+                <span><b>{dayFlightAct.act.time}</b><span>Departs</span></span>
+                <span className="r"><b>{dayFlightAct.act.end}</b><span>Arrives</span></span>
+              </div>
+              {dayFlightAct.act.status === "booked" && (
+                <div style={{marginTop:8,padding:"6px 10px",background:"oklch(0.95 0.03 145)",borderRadius:8,fontSize:11.5,color:"oklch(0.35 0.1 145)",fontWeight:600}}>✓ Booked · {dayFlightAct.act.conf}</div>
+              )}
             </div>
           </div>
-        </div>
+        ) : TRANSPORT[currentDay.id] ? (
+          <div className="card">
+            <div className="card-h"><span className="lbl">Today's drive</span></div>
+            <div className="flight">
+              <div className="conf"><span>{TRANSPORT[currentDay.id].from} → {TRANSPORT[currentDay.id].to}</span></div>
+              <div className="route">
+                <div className="iata" style={{fontSize:13}}>{TRANSPORT[currentDay.id].from}</div>
+                <div className="dash"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+                <div className="iata r" style={{fontSize:13}}>{TRANSPORT[currentDay.id].to}</div>
+              </div>
+              <div className="time-line">
+                <span><b>{TRANSPORT[currentDay.id].dep}</b><span>Depart</span></span>
+                <span className="r"><b>{TRANSPORT[currentDay.id].distance}</b><span>{TRANSPORT[currentDay.id].duration}</span></span>
+              </div>
+              <div style={{marginTop:8,fontSize:11.5,color:"var(--ink-3)"}}>
+                <div>Route: {TRANSPORT[currentDay.id].route}</div>
+                {TRANSPORT[currentDay.id].fuel && <div style={{marginTop:2}}>⛽ {TRANSPORT[currentDay.id].fuel}</div>}
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {/* HOTEL */}
         <div className="card">
@@ -4293,11 +4324,64 @@ function App() {
               <span>Confirmation</span>
               <b>{hotel.conf}</b>
             </div>
-            <div className="hotel-map">
-              <div className="pin"><Icon.bed /></div>
+            {hotel.mapUrl && (
+              <div style={{borderRadius:10, overflow:"hidden", marginTop:10, border:"1px solid var(--line)"}}>
+                <iframe
+                  width="100%"
+                  height="150"
+                  frameBorder="0"
+                  style={{display:"block"}}
+                  src={`https://maps.google.com/maps?q=${encodeURIComponent(hotel.name + ', ' + hotel.addr)}&output=embed&zoom=15`}
+                  allowFullScreen
+                  loading="lazy"
+                  title="hotel map"
+                />
+              </div>
+            )}
+            <div style={{display:"flex", gap:8, marginTop:10}}>
+              {hotel.mapUrl && (
+                <a href={hotel.mapUrl} target="_blank" rel="noopener noreferrer"
+                   style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:6,padding:"8px 0",background:"var(--accent)",color:"var(--accent-ink)",borderRadius:8,fontSize:12,fontWeight:600,textDecoration:"none"}}>
+                  <Icon.pin /> Maps
+                </a>
+              )}
             </div>
           </div>
         </div>
+
+        {/* TRANSPORT MAP — shows on driving days */}
+        {TRANSPORT[currentDay.id] && (() => {
+          const t = TRANSPORT[currentDay.id];
+          const transitAct = (ACTIVITIES[currentDay.id] || []).find(a => a.type === "transit" && a.mapUrl);
+          const mapQ = transitAct?.mapUrl?.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' ');
+          return (
+            <div className="card">
+              <div className="card-h"><span className="lbl">Route map</span>
+                {transitAct?.mapUrl && <a className="a" href={transitAct.mapUrl} target="_blank" rel="noopener noreferrer">Open</a>}
+              </div>
+              {mapQ && (
+                <div style={{borderRadius:10, overflow:"hidden", border:"1px solid var(--line)"}}>
+                  <iframe
+                    width="100%"
+                    height="150"
+                    frameBorder="0"
+                    style={{display:"block"}}
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQ)}&output=embed&zoom=12`}
+                    allowFullScreen
+                    loading="lazy"
+                    title="route map"
+                  />
+                </div>
+              )}
+              <div style={{marginTop:8, fontSize:11.5, color:"var(--ink-2)"}}>
+                <b>{t.from} → {t.to}</b>
+                <span style={{color:"var(--ink-3)", marginLeft:8}}>{t.distance} · {t.duration}</span>
+              </div>
+              {t.fuel && <div style={{fontSize:11, color:"var(--ink-3)", marginTop:4}}>⛽ {t.fuel}</div>}
+              {t.parking && <div style={{fontSize:11, color:"var(--ink-3)", marginTop:2}}>🅿 {t.parking}</div>}
+            </div>
+          );
+        })()}
 
         {/* BUDGET */}
         <div className="card">
