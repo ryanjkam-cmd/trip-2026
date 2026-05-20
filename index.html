@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=1440" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Iceland Trip · Travel Planner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3588,7 +3588,189 @@ const css = `
 
   /* Hide the now-unused old health strip + title band (safety) */
   .titleband, .health-strip { display: none !important; }
+
+  /* ============================================================
+     MOBILE RESPONSIVE — max-width: 768px
+  ============================================================ */
+  @media (max-width: 768px) {
+    .app {
+      display: block;
+    }
+
+    /* Topbar: hide breadcrumb, keep brand + actions */
+    .topbar {
+      padding: 0 14px;
+      gap: 12px;
+    }
+    .breadcrumb { display: none; }
+
+    /* Left nav: horizontal scroll strip at top */
+    .leftnav {
+      display: flex;
+      flex-direction: row;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 8px 12px;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      gap: 6px;
+      width: 100%;
+      position: static;
+      height: auto;
+    }
+    .leftnav .nav-section { margin-bottom: 0; display: inline-flex; gap: 4px; }
+    .leftnav .nav-section-title { display: none; }
+    .leftnav .city-block { display: inline-flex; gap: 4px; margin-bottom: 0; }
+    .leftnav .city-item {
+      display: inline-flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex: none;
+    }
+    .leftnav .city-item .sub { display: none; }
+    .leftnav .days { display: none; }
+    .leftnav .quick { display: none; }
+
+    /* Country tabs: horizontal scroll */
+    .country-tabs {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      white-space: nowrap;
+      padding: 10px 12px 0;
+    }
+    .country-tab { flex: none; }
+
+    /* Main content: full width, reduced padding */
+    .main { padding: 16px 14px 32px; overflow: visible; }
+
+    /* Hero module: reduce padding/font sizes */
+    .hero-module { margin: 12px 10px; }
+    .hm-top { min-height: 180px; }
+    .hm-title { font-size: clamp(22px, 6vw, 36px) !important; }
+    .hm-pretitle { font-size: 10px !important; }
+    .hm-meta { flex-wrap: wrap; gap: 4px; }
+
+    /* Day column picker: horizontal scroll */
+    .day-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .day-head .right { display: flex; overflow-x: auto; width: 100%; gap: 6px; }
+
+    /* Right panel: below main content, full width, stacked cards */
+    .rightpanel {
+      width: 100%;
+      position: static;
+      height: auto;
+      border-left: none;
+      border-top: 1px solid var(--line);
+      padding: 16px 14px 24px;
+    }
+
+    /* Activity drawer: full width on mobile */
+    .activity-drawer {
+      width: 100vw;
+      right: 0;
+      max-width: 100vw;
+    }
+
+    /* Activity cards: adjust grid for smaller screens */
+    .activity {
+      grid-template-columns: 72px 1fr auto;
+      gap: 10px;
+    }
+
+    /* Food section: full width stack */
+    .food-section { width: 100%; }
+
+    /* Timeline: reduce time column */
+    .timeline { grid-template-columns: 46px 1fr; }
+
+    /* HM stats: wrap */
+    .hm-stats { flex-wrap: wrap; gap: 12px; }
+  }
 `;
+
+/* ============================================================
+   ICAL EXPORT
+============================================================ */
+const DAY_DATES = [
+  "20260621","20260622","20260623","20260624","20260625",
+  "20260626","20260627","20260628","20260629","20260630",
+  "20260701","20260702","20260703","20260704","20260705",
+  "20260706","20260707","20260708","20260709","20260710",
+  "20260711","20260712","20260713","20260714","20260715",
+  "20260716","20260717"
+];
+
+function generateICS() {
+  const lines = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//KamFamilyTrip2026//EN",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+  ];
+
+  Object.keys(ACTIVITIES).forEach(dayId => {
+    const idx = parseInt(dayId.replace("d",""), 10) - 1;
+    const dateStr = DAY_DATES[idx];
+    if (!dateStr) return;
+
+    (ACTIVITIES[dayId] || []).forEach(a => {
+      // Skip TBD times and pure transit with no real time
+      if (!a.time || a.time === "TBD") return;
+      if (a.type === "transit" && !a.end) return;
+
+      const startTime = a.time.replace(":", "") + "00";
+      const endTime = (a.end || a.time).replace(":", "") + "00";
+      const dtStart = `${dateStr}T${startTime}`;
+      const dtEnd = `${dateStr}T${endTime}`;
+
+      let desc = a.meta || "";
+      if (a.conf) desc += `\\nConf: ${a.conf}`;
+
+      const uid = `${dayId}-${a.title.replace(/[^a-zA-Z0-9]/g,"")}@KamTrip2026`;
+
+      lines.push("BEGIN:VEVENT");
+      lines.push(`UID:${uid}`);
+      lines.push(`DTSTART;TZID=UTC:${dtStart}`);
+      lines.push(`DTEND;TZID=UTC:${dtEnd}`);
+      lines.push(`SUMMARY:${a.title}`);
+      if (desc) lines.push(`DESCRIPTION:${desc.replace(/\n/g,"\\n")}`);
+      const addr = typeof addressFor === "function" ? addressFor(a) : "";
+      if (addr) lines.push(`LOCATION:${addr}`);
+      if (a.mapUrl) lines.push(`URL:${a.mapUrl}`);
+      lines.push("END:VEVENT");
+    });
+  });
+
+  lines.push("END:VCALENDAR");
+
+  const blob = new Blob([lines.join("\r\n")], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "KamFamilyTrip2026.ics";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ============================================================
+   APPLE MAPS HELPER
+============================================================ */
+function openMapsUrl(mapGoogleUrl, addrStr) {
+  const isApple = /iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) && !window.MSStream;
+  if (isApple) {
+    return `https://maps.apple.com/?q=${encodeURIComponent(addrStr || mapGoogleUrl)}`;
+  }
+  return mapGoogleUrl;
+}
 
 /* ============================================================
    APP
@@ -3763,6 +3945,7 @@ function App() {
           Trips <span style={{margin:"0 6px", color:"var(--line-2)"}}>/</span> <b>Iceland & Greenland — Jun '26</b>
         </div>
         <div className="spacer"></div>
+        <button className="iconbtn" aria-label="Export to Calendar" title="Export to Calendar" onClick={generateICS} style={{fontSize:16}}>📅</button>
         <button className="iconbtn" aria-label="Share"><Icon.share /></button>
       </header>
 
@@ -4594,7 +4777,8 @@ function ActivityDrawer({ a, onClose }) {
                 {a.mapUrl && (
                   <div className="drawer-dir-actions">
                     <a className="drawer-action-btn" href={a.mapUrl} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}><Icon.pin /> Open in Maps</a>
-                    <a className="drawer-action-btn" href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressFor(a) || a.title)}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}><Icon.car /> Get directions</a>
+                    <a className="drawer-action-btn" href={openMapsUrl(`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addressFor(a) || a.title)}`, addressFor(a))} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}><Icon.car /> Get directions</a>
+                    <a className="drawer-action-btn" href={`https://maps.apple.com/?q=${encodeURIComponent(addressFor(a) || a.title)}`} target="_blank" rel="noopener noreferrer" style={{textDecoration:"none", display:"flex", alignItems:"center", gap:6}}>🍎 Apple Maps</a>
                   </div>
                 )}
               </div>
@@ -4663,10 +4847,7 @@ function ActivityDrawer({ a, onClose }) {
           {/* Notes */}
           <div className="drawer-section">
             <div className="drawer-section-h caps">Your notes</div>
-            <div className="drawer-notes">
-              <div className="drawer-note">"Lots of reviews say to arrive 15 min early. Parking is tight."</div>
-              <div className="drawer-note muted">+ Add a note about this activity</div>
-            </div>
+            <ActivityNotes activityKey={a.title} />
           </div>
         </div>
       </aside>
@@ -4827,7 +5008,12 @@ function MapPlaceholder({ scale, cityName, cities, pins }) {
 }
 
 function NotePad({ dayId }) {
-  const [notesByDay, setNotesByDay] = useState(INITIAL_NOTES);
+  const [notesByDay, setNotesByDay] = useState(() => {
+    try {
+      const saved = localStorage.getItem('trip_notes');
+      return saved ? { ...INITIAL_NOTES, ...JSON.parse(saved) } : INITIAL_NOTES;
+    } catch { return INITIAL_NOTES; }
+  });
   const [draft, setDraft] = useState("");
   const [kind, setKind] = useState("idea");
   const notes = notesByDay[dayId] || [];
@@ -4840,12 +5026,14 @@ function NotePad({ dayId }) {
       ...(next[dayId] || []),
     ];
     setNotesByDay(next);
+    try { localStorage.setItem('trip_notes', JSON.stringify(next)); } catch {}
     setDraft("");
   };
   const remove = (id) => {
     const next = { ...notesByDay };
     next[dayId] = (next[dayId] || []).filter(n => n.id !== id);
     setNotesByDay(next);
+    try { localStorage.setItem('trip_notes', JSON.stringify(next)); } catch {}
   };
 
   return (
@@ -4888,6 +5076,60 @@ function NotePad({ dayId }) {
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function ActivityNotes({ activityKey }) {
+  const [notes, setNotes] = useState(() => {
+    try {
+      const saved = localStorage.getItem('trip_act_notes_' + activityKey);
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+  const [draft, setDraft] = useState('');
+
+  const add = () => {
+    if (!draft.trim()) return;
+    const next = [{ id: Date.now(), text: draft.trim(), when: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }, ...notes];
+    setNotes(next);
+    try { localStorage.setItem('trip_act_notes_' + activityKey, JSON.stringify(next)); } catch {}
+    setDraft('');
+  };
+  const remove = (id) => {
+    const next = notes.filter(n => n.id !== id);
+    setNotes(next);
+    try { localStorage.setItem('trip_act_notes_' + activityKey, JSON.stringify(next)); } catch {}
+  };
+
+  return (
+    <div className="drawer-notes">
+      <div style={{display:'flex', gap:8, marginBottom:8}}>
+        <input
+          style={{flex:1, border:'1.5px solid var(--line)', borderRadius:8, padding:'7px 10px', fontSize:13, fontFamily:'inherit', background:'var(--surface-2)', color:'var(--ink)', outline:'none'}}
+          placeholder="Add a note…"
+          value={draft}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') add(); }}
+        />
+        <button
+          onClick={add}
+          style={{background:'var(--accent)',color:'var(--accent-ink)',border:'none',borderRadius:8,padding:'7px 14px',fontSize:13,fontWeight:600,cursor:'pointer'}}
+        >Add</button>
+      </div>
+      {notes.length === 0 && (
+        <div style={{fontSize:12, color:'var(--ink-3)', textAlign:'center', padding:'10px 0'}}>No notes yet. Press Enter to save.</div>
+      )}
+      {notes.map(n => (
+        <div key={n.id} className="drawer-note" style={{position:'relative', paddingRight:28}}>
+          <span style={{fontSize:11, color:'var(--ink-3)', display:'block', marginBottom:4}}>{n.when}</span>
+          {n.text}
+          <button
+            onClick={() => remove(n.id)}
+            style={{position:'absolute',top:6,right:6,background:'none',border:'none',cursor:'pointer',fontSize:14,color:'var(--ink-3)',lineHeight:1}}
+          >×</button>
+        </div>
+      ))}
     </div>
   );
 }
