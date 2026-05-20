@@ -4247,7 +4247,7 @@ function App() {
       <section className="hero-module">
         <div className="hm-top">
           <div className="hm-photo-bg">
-            <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg?width=1400" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.55;" onError="this.style.display='none'" />
+            {(() => { const _s = {position:"absolute",inset:0,width:"100%",height:"100%",objectFit:"cover",opacity:0.55}; return <img src="https://commons.wikimedia.org/wiki/Special:Redirect/file/J%C3%B6kuls%C3%A1rl%C3%B3n_lagoon_in_southeastern_Iceland.jpg?width=1400" alt="" style={_s} onError={e=>e.target.style.display="none"} />; })()}
           </div>
           <div className="hm-photo-overlay"></div>
           <div className="hm-text">
