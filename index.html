@@ -4992,9 +4992,28 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
             </div>
             {/* QR placeholder — only for real confs */}
             {hotel.conf !== "NOT BOOKED" && hotel.conf !== "Airbnb — lockbox" && (
-              <div style={{margin:"0 16px 16px", borderRadius:10, background:"oklch(0.94 0.04 165)", height:72, display:"flex", alignItems:"center", justifyContent:"center", gap:8}}>
+              <div style={{margin:"0 16px 12px", borderRadius:10, background:"oklch(0.94 0.04 165)", height:72, display:"flex", alignItems:"center", justifyContent:"center", gap:8}}>
                 <Icon.q style={{width:22, height:22, color:"oklch(0.45 0.12 165)"}} />
                 <span className="caps" style={{fontSize:10, color:"oklch(0.45 0.12 165)", letterSpacing:"0.06em"}}>Tap to show at door</span>
+              </div>
+            )}
+            {/* Map */}
+            {hotel.mapUrl && (
+              <div style={{margin:"0 16px 0"}}>
+                <MapEmbed mapUrl={hotel.mapUrl} />
+              </div>
+            )}
+            {/* Maps button */}
+            {hotel.mapUrl && (
+              <div style={{padding:"10px 16px 16px"}}>
+                <a href={hotel.mapUrl} target="_blank" rel="noopener noreferrer"
+                  style={{display:"inline-flex", alignItems:"center", gap:6, padding:"7px 14px",
+                    background:"var(--surface-2)", borderRadius:8, textDecoration:"none",
+                    fontSize:11, fontWeight:700, fontFamily:'"Archivo",sans-serif',
+                    textTransform:"uppercase", letterSpacing:"0.05em", color:"var(--ink-2)"}}>
+                  <Icon.pin style={{width:13,height:13}} /> Maps
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                </a>
               </div>
             )}
           </div>
