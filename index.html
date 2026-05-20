@@ -956,19 +956,26 @@ const Icon = {
 /* ============================================================
    PLACEHOLDER IMAGE
 ============================================================ */
-function Placeholder({ label, w = 96, h = 76, hue = 220 }) {
-  const id = "stripe-" + label.replace(/\W/g, "");
+function TypeTile({ type, w = 96, h = 76 }) {
+  const CFG = {
+    eat:     { bg: "linear-gradient(135deg,#FFB800 0%,#FF4D26 50%,#FF1F6D 100%)", label: "EAT",
+               icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="21" y1="15" x2="21" y2="22"/><path d="M16 2a5 5 0 0 1 5 5v2h-5V2z"/></svg> },
+    do:      { bg: "linear-gradient(135deg,#4EF794 0%,#00E0FF 55%,#5EAEFF 100%)", label: "DO",
+               icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="5" r="2.5"/><path d="M12 8v7"/><path d="M9 11l-2 5"/><path d="M15 11l2 5"/><path d="M10 22h4"/></svg> },
+    transit: { bg: "linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)", label: "DRIVE",
+               icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="11" width="22" height="9" rx="2"/><path d="M5 11V7a7 7 0 0 1 14 0v4"/><circle cx="7" cy="20" r="1"/><circle cx="17" cy="20" r="1"/></svg> },
+    flight:  { bg: "linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)", label: "FLY",
+               icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg> },
+    stay:    { bg: "linear-gradient(135deg,#5EAEFF 0%,#8B3FFF 55%,#FF3FE0 100%)", label: "STAY",
+               icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V8l9-6 9 6v14"/><rect x="9" y="14" width="6" height="8"/><path d="M9 22V14h6v8"/></svg> },
+  };
+  const c = CFG[type] || CFG.do;
   return (
-    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ display: "block", borderRadius: 8 }}>
-      <defs>
-        <pattern id={id} width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-          <rect width="8" height="8" fill={`oklch(0.92 0.02 ${hue})`} />
-          <rect width="4" height="8" fill={`oklch(0.88 0.03 ${hue})`} />
-        </pattern>
-      </defs>
-      <rect width={w} height={h} fill={`url(#${id})`} />
-      <text x="50%" y="52%" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="9" fill="rgba(0,0,0,.55)">{label}</text>
-    </svg>
+    <div style={{width:w, height:h, borderRadius:8, background:c.bg, display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:3, flexShrink:0, position:"relative", overflow:"hidden"}}>
+      <div style={{position:"absolute", inset:0, background:"rgba(255,255,255,0.08)", borderRadius:"inherit"}} />
+      <div style={{position:"relative"}}>{c.icon}</div>
+      <div style={{fontFamily:"Archivo", fontWeight:900, fontSize:9, letterSpacing:"0.08em", color:"rgba(255,255,255,0.9)", textTransform:"uppercase", position:"relative"}}>{c.label}</div>
+    </div>
   );
 }
 
@@ -4548,6 +4555,8 @@ function App() {
       {/* ============ RIGHT PANEL ============ */}
       <aside className="rightpanel">
 
+        <MiniCalendar currentDayId={dayId} onPickDay={(id) => { setMode("day"); setDayId(id); }} />
+
         {/* FLIGHT / NEXT TRANSPORT */}
         {dayFlightAct ? (
           <div className="card">
@@ -4769,7 +4778,7 @@ function ActivityCard({ a, onOpen }) {
       <div className="time-strip"><b>{a.time}</b><span>{a.end}</span></div>
 
       <div style={{width:96, height:76, borderRadius:8, overflow:"hidden", flexShrink:0, position:"relative", background:"var(--surface-2)"}}>
-        <Placeholder label={a.img || a.type.toUpperCase()} w={96} h={76} hue={a.tone === "hot" ? 40 : a.tone === "accent" ? 235 : 165} />
+        <TypeTile type={a.type} />
         {PHOTOS[a.title] && <img src={PHOTOS[a.title]} alt="" style={{width:96, height:76, objectFit:"cover", position:"absolute", top:0, left:0, display:"block"}} onError={e => e.target.style.display="none"} />}
       </div>
 
@@ -5449,6 +5458,107 @@ function websiteFor(a) {
     try { return new URL(a.url).hostname.replace('www.', ''); } catch { return a.url; }
   }
   return null;
+}
+
+/* ============================================================
+   MINI CALENDAR
+============================================================ */
+function MiniCalendar({ currentDayId, onPickDay }) {
+  const MONTH_ABBR = { Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12 };
+  const dateMap = React.useMemo(() => {
+    const m = {};
+    TRIP.countries.forEach(c => c.cities.forEach(city => city.days.forEach(day => {
+      const parts = day.date.split(/[\s,]+/);
+      const mo = MONTH_ABBR[parts[1]];
+      const d = parseInt(parts[2]);
+      if (mo && d) m[`2026-${mo}-${d}`] = day.id;
+    })));
+    return m;
+  }, []);
+
+  const selectedDate = React.useMemo(() => {
+    const entry = Object.entries(dateMap).find(([, id]) => id === currentDayId);
+    if (entry) {
+      const [y, mo, d] = entry[0].split('-').map(Number);
+      return new Date(y, mo - 1, d);
+    }
+    return new Date();
+  }, [currentDayId, dateMap]);
+
+  const today = new Date();
+  const [viewYear, setViewYear] = React.useState(selectedDate.getFullYear());
+  const [viewMonth, setViewMonth] = React.useState(selectedDate.getMonth());
+
+  React.useEffect(() => {
+    setViewYear(selectedDate.getFullYear());
+    setViewMonth(selectedDate.getMonth());
+  }, [currentDayId]);
+
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const DOW = ["S","M","T","W","T","F","S"];
+
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+  const cells = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  while (cells.length % 7 !== 0) cells.push(null);
+
+  const goToday = () => {
+    setViewYear(today.getFullYear());
+    setViewMonth(today.getMonth());
+    const key = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+    if (dateMap[key]) onPickDay(dateMap[key]);
+  };
+  const prevMonth = () => { if (viewMonth === 0) { setViewYear(y => y-1); setViewMonth(11); } else setViewMonth(m => m-1); };
+  const nextMonth = () => { if (viewMonth === 11) { setViewYear(y => y+1); setViewMonth(0); } else setViewMonth(m => m+1); };
+
+  return (
+    <div className="card" style={{paddingBottom:10}}>
+      <div className="card-h">
+        <span className="lbl">CALENDAR</span>
+        <button style={{background:"none",border:"none",cursor:"pointer",padding:0,fontSize:11,color:"var(--ink-2)",fontFamily:"inherit",fontWeight:600,letterSpacing:"0.04em"}} onClick={goToday}>TODAY</button>
+      </div>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
+        <button onClick={prevMonth} style={{background:"none",border:"none",cursor:"pointer",padding:"2px 6px",fontSize:16,color:"var(--ink-2)",lineHeight:1,borderRadius:4}}>&#8249;</button>
+        <span style={{fontSize:12,fontWeight:700,color:"var(--ink-1)",fontFamily:"Archivo",letterSpacing:"0.01em"}}>{MONTH_NAMES[viewMonth]} {viewYear}</span>
+        <button onClick={nextMonth} style={{background:"none",border:"none",cursor:"pointer",padding:"2px 6px",fontSize:16,color:"var(--ink-2)",lineHeight:1,borderRadius:4}}>&#8250;</button>
+      </div>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:"1px 0"}}>
+        {DOW.map((d,i) => (
+          <div key={i} style={{textAlign:"center",fontSize:9,fontWeight:700,color:"var(--ink-3)",fontFamily:"Archivo",paddingBottom:4,letterSpacing:"0.05em"}}>{d}</div>
+        ))}
+        {cells.map((d, i) => {
+          if (!d) return <div key={i} />;
+          const key = `${viewYear}-${viewMonth+1}-${d}`;
+          const tripDayId = dateMap[key];
+          const isSelected = tripDayId === currentDayId;
+          const isToday = d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear();
+          const isTrip = !!tripDayId;
+          return (
+            <div key={i} style={{display:"flex",alignItems:"center",justifyContent:"center",padding:"2px 0"}}
+              onClick={() => isTrip && onPickDay(tripDayId)}
+            >
+              <div style={{
+                display:"inline-flex",alignItems:"center",justifyContent:"center",
+                width:22,height:22,borderRadius:"50%",
+                fontSize:10,fontFamily:"Archivo",
+                fontWeight: isSelected || isToday ? 700 : isTrip ? 600 : 400,
+                color: isSelected ? "#fff" : isToday ? "#E8234E" : isTrip ? "var(--ink-1)" : "var(--ink-3)",
+                background: isSelected ? "var(--ink-1)" : isToday && !isSelected ? "rgba(232,35,78,0.1)" : "transparent",
+                border: isSelected ? "2px solid var(--ink-1)" : isToday && !isSelected ? "1.5px solid rgba(232,35,78,0.35)" : isTrip && !isSelected ? "1px solid var(--line)" : "none",
+                boxShadow: isToday && !isSelected ? "0 0 7px rgba(232,35,78,0.28)" : "none",
+                cursor: isTrip ? "pointer" : "default",
+                transition:"all 0.12s",
+              }}>
+                {d}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 /* ============================================================
