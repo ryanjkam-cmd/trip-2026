@@ -3306,14 +3306,14 @@ const css = `
   }
   .drawer-action-btn {
     flex: 1; padding: 8px 12px;
-    background: var(--ink); color: white;
+    background: var(--accent); color: #fff;
     border-radius: 8px;
     font-family: "Archivo", sans-serif; font-weight: 800;
     text-transform: uppercase; letter-spacing: 0.05em;
     font-size: 11px;
     display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   }
-  .drawer-action-btn:hover { background: var(--ink-2); }
+  .drawer-action-btn:hover { opacity: 0.88; background: var(--accent); }
   .drawer-links { display: flex; flex-direction: column; gap: 10px; }
   .drawer-link {
     display: flex; align-items: center; gap: 12px;
@@ -3822,6 +3822,26 @@ function App() {
     });
     setEditingBudget(null);
   };
+  // Resolved-item overrides for "Needs decision" list
+  const [statusOverrides, setStatusOverrides] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem('trip_resolved') || '{}'); } catch { return {}; }
+  });
+  const markResolved = (key) => {
+    setStatusOverrides(prev => {
+      const next = { ...prev, [key]: true };
+      try { localStorage.setItem('trip_resolved', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+  const unmarkResolved = (key) => {
+    setStatusOverrides(prev => {
+      const next = { ...prev };
+      delete next[key];
+      try { localStorage.setItem('trip_resolved', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
+
   const [, forceWeatherRefresh] = React.useState(0);
 
   React.useEffect(() => {
@@ -3975,33 +3995,6 @@ function App() {
           </div>
           <div className="hm-photo-tag">REYKJAVÍK · 64°08'N</div>
         </div>
-        <div className="hm-stats">
-          <div className="hm-stat">
-            <span className="hm-stat-k caps">Bookings</span>
-            <div className="hm-stat-v">{health.booked}<span className="hm-stat-of">/ {health.total}</span></div>
-            <div className="hm-stat-sub"><a className="hm-link" href="#">{health.decide} to decide</a> · {health.hold} on hold</div>
-          </div>
-          <div className="hm-stat">
-            <span className="hm-stat-k caps">Unresolved</span>
-            <div className="hm-stat-v">{health.decide}</div>
-            <span className="status-badge decide"><Icon.warn /> Action needed</span>
-          </div>
-          <div className="hm-stat">
-            <span className="hm-stat-k caps">Weather watch</span>
-            <div className="hm-stat-v">{health.weatherDays}<span className="hm-stat-of"> days</span></div>
-            <div className="hm-stat-sub">D4 Vík rain · D7 swell · D8 fog</div>
-          </div>
-          <div className="hm-stat">
-            <span className="hm-stat-k caps">Move days</span>
-            <div className="hm-stat-v">{health.moveDays}</div>
-            <div className="hm-stat-sub">D4 drive · D6 fly · D8 fly</div>
-          </div>
-          <div className="hm-stat">
-            <span className="hm-stat-k caps">Budget</span>
-            <div className="hm-stat-v">${budgetSpent.toLocaleString()}<span className="hm-stat-of">/ ${budgetPlanned.toLocaleString()}</span></div>
-            <div className="hm-stat-sub">{Math.round(budgetSpent/budgetPlanned*100)}% committed</div>
-          </div>
-        </div>
       </section>
 
       {/* ============ COUNTRY TABS ============ */}
@@ -4071,7 +4064,7 @@ function App() {
 
         {(() => {
           const unresolved = allCountryActs.filter(a =>
-            (a.status === "decide" || a.status === "hold") && a.priority === "must"
+            (a.status === "decide" || a.status === "hold") && a.priority === "must" && !statusOverrides[a.title]
           );
           if (!unresolved.length) return null;
           return (
@@ -4250,7 +4243,7 @@ function App() {
         </div>
         </React.Fragment>
         )}
-        {openActivity && <ActivityDrawer a={openActivity} onClose={() => setOpenActivity(null)} />}
+        {openActivity && <ActivityDrawer a={openActivity} onClose={() => setOpenActivity(null)} onResolve={markResolved} onUnresolve={unmarkResolved} isResolved={!!(openActivity && statusOverrides[openActivity.title])} />}
       </main>
 
       {/* ============ RIGHT PANEL ============ */}
@@ -4359,20 +4352,18 @@ function App() {
               <div className="card-h"><span className="lbl">Route map</span>
                 {transitAct?.mapUrl && <a className="a" href={transitAct.mapUrl} target="_blank" rel="noopener noreferrer">Open</a>}
               </div>
-              {mapQ && (
-                <div style={{borderRadius:10, overflow:"hidden", border:"1px solid var(--line)"}}>
+              <div style={{borderRadius:10, overflow:"hidden", border:"1px solid var(--line)"}}>
                   <iframe
                     width="100%"
                     height="150"
                     frameBorder="0"
                     style={{display:"block"}}
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQ)}&output=embed&zoom=12`}
+                    src={`https://maps.google.com/maps?saddr=${encodeURIComponent(t.from)}&daddr=${encodeURIComponent(t.to)}&output=embed`}
                     allowFullScreen
                     loading="lazy"
                     title="route map"
                   />
                 </div>
-              )}
               <div style={{marginTop:8, fontSize:11.5, color:"var(--ink-2)"}}>
                 <b>{t.from} → {t.to}</b>
                 <span style={{color:"var(--ink-3)", marginLeft:8}}>{t.distance} · {t.duration}</span>
@@ -4759,7 +4750,7 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
 /* ============================================================
    ACTIVITY DRAWER
 ============================================================ */
-function ActivityDrawer({ a, onClose }) {
+function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
   const statusLabel = { booked: "Booked", hold: "On hold", decide: "Decide" }[a.status] || "";
   const StatusIcon = a.status === "booked" ? Icon.checkSm : a.status === "hold" ? Icon.clock : Icon.q;
   const gradient =
@@ -4934,6 +4925,21 @@ function ActivityDrawer({ a, onClose }) {
             <ActivityNotes activityKey={a.title} />
           </div>
         </div>
+        {(a.status === "decide" || a.status === "hold") && (
+          <div style={{padding:"10px 14px", borderTop:"1px solid var(--line)"}}>
+            {isResolved ? (
+              <button
+                onClick={() => onUnresolve && onUnresolve(a.title)}
+                style={{width:"100%", padding:"9px 12px", background:"var(--surface-2)", color:"var(--ink-2)", border:"1px solid var(--line)", borderRadius:8, fontFamily:'"Archivo",sans-serif', fontWeight:800, fontSize:11, textTransform:"uppercase", letterSpacing:"0.05em", cursor:"pointer"}}
+              >✓ Resolved — tap to reopen</button>
+            ) : (
+              <button
+                onClick={() => onResolve && onResolve(a.title)}
+                style={{width:"100%", padding:"9px 12px", background:"var(--accent)", color:"var(--accent-ink)", border:"none", borderRadius:8, fontFamily:'"Archivo",sans-serif', fontWeight:800, fontSize:11, textTransform:"uppercase", letterSpacing:"0.05em", cursor:"pointer"}}
+              >Mark as resolved</button>
+            )}
+          </div>
+        )}
       </aside>
     </React.Fragment>
   );
