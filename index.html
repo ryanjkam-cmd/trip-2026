@@ -743,6 +743,18 @@ const HOTELS = {
   amsterdam: { dates: "JUL 13 – 17", name: "Amsterdam Hotel (TBD)", phone: "TBD",            addr: "City Center · Marriott candidates",       conf: "NOT BOOKED",          mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
 };
 
+const HOTEL_PHOTOS = {
+  reykjavik: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Reykjavik_cityscape_%28cropped%29.jpg/800px-Reykjavik_cityscape_%28cropped%29.jpg",
+  hella:     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Hekla_eruption_2000.jpg/800px-Hekla_eruption_2000.jpg",
+  vik:       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Reynisfjara_2014.jpg/800px-Reynisfjara_2014.jpg",
+  helsinki:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Helsinki_Senate_Square_at_Night.jpg/800px-Helsinki_Senate_Square_at_Night.jpg",
+  tallinn:   "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Tallinn_vanalinn.jpg/800px-Tallinn_vanalinn.jpg",
+  krakow:    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Krakow_-_Rynek_Glowny.jpg/800px-Krakow_-_Rynek_Glowny.jpg",
+  prague:    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Prague_Castle_from_Mala_Strana.JPG/800px-Prague_Castle_from_Mala_Strana.JPG",
+  amsterdam: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Amsterdam_Canal_Houses.jpg/800px-Amsterdam_Canal_Houses.jpg",
+};
+
+
 const FLIGHTS = {
   iceland:     { route: "SFO → IAD → KEF", airline: "United Airlines UA433 + UA398", date: "Sun, Jun 21, 2026", depT: "12:35", arrT: "08:30 +1", depCity: "San Francisco", arrCity: "Keflavík", conf: "BK90WF" },
   finland:     { route: "KEF → HEL", airline: "Finnair AY994", date: "Tue, Jun 30, 2026", depT: "17:15", arrT: "23:40", depCity: "Keflavík", arrCity: "Helsinki", conf: "7YNJSD" },
@@ -4939,20 +4951,52 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
         </div>
 
         {hotel && (
-          <div className="co-hotel-card card">
-            <div className="card-h"><span className="lbl">Where you're staying</span><a className="a" href="#">Reservation</a></div>
-            <div className="co-hotel">
-              <div className="co-hotel-img" style={{background: CITY_TINT_STRONG[city.id]}}>
-                <div className="co-hotel-mark caps">{hotel.name.split(" ").map(w => w[0]).join("").slice(0,3)}</div>
-              </div>
-              <div>
-                <div className="co-hotel-dates caps">{hotel.dates}</div>
-                <div className="co-hotel-name caps">{hotel.name}</div>
-                <div className="co-hotel-row"><Icon.pin /> {hotel.addr}</div>
-                <div className="co-hotel-row"><Icon.phone /> {hotel.phone}</div>
-                <div className="co-hotel-row"><span className="caps" style={{fontSize:10, color:"var(--ink-3)"}}>CONF</span><span style={{fontFamily:"JetBrains Mono, monospace", fontSize:11.5}}>{hotel.conf}</span></div>
+          <div className="co-hotel-card card" style={{padding:0, overflow:"hidden"}}>
+            {/* Header */}
+            <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"14px 16px 6px"}}>
+              <span className="caps" style={{fontSize:10, color:"var(--ink-3)", letterSpacing:"0.08em"}}>Hotel</span>
+              {hotel.conf !== "NOT BOOKED" && (
+                <span className="caps" style={{fontSize:10, color:"var(--accent)", letterSpacing:"0.08em", fontWeight:800}}>Reservation</span>
+              )}
+            </div>
+            {/* Dates + name */}
+            <div style={{padding:"0 16px 12px"}}>
+              <div className="caps" style={{fontSize:11, color:"var(--ink-3)", marginBottom:5}}>{hotel.dates}</div>
+              <div className="caps" style={{fontFamily:"Archivo", fontWeight:900, fontSize:19, letterSpacing:"-0.01em", lineHeight:1.05}}>{hotel.name}</div>
+            </div>
+            {/* Photo */}
+            <div style={{position:"relative", width:"100%", height:148, overflow:"hidden", background: CITY_TINT_STRONG[city.id], flexShrink:0}}>
+              {HOTEL_PHOTOS[city.id] && (
+                <img src={HOTEL_PHOTOS[city.id]} alt="" style={{width:"100%", height:"100%", objectFit:"cover", display:"block"}}
+                  onError={e => e.target.style.display="none"} />
+              )}
+              <div style={{position:"absolute", inset:0, background:"linear-gradient(0deg, rgba(0,0,0,0.18) 0%, transparent 60%)"}} />
+            </div>
+            {/* Contact details */}
+            <div style={{padding:"14px 16px 2px"}}>
+              {hotel.phone && hotel.phone !== "TBD" && hotel.phone !== "Airbnb lockbox" && (
+                <div style={{display:"flex", alignItems:"center", gap:9, fontSize:12.5, color:"var(--ink-2)", marginBottom:10}}>
+                  <Icon.phone style={{flexShrink:0}} /> <span>{hotel.phone}</span>
+                </div>
+              )}
+              <div style={{display:"flex", alignItems:"flex-start", gap:9, fontSize:12.5, color:"var(--ink-2)", marginBottom:12}}>
+                <Icon.pin style={{flexShrink:0, marginTop:1}} /> <span style={{lineHeight:1.4}}>{hotel.addr}</span>
               </div>
             </div>
+            {/* Dashed divider */}
+            <div style={{margin:"0 16px", borderTop:"1.5px dashed var(--line)"}} />
+            {/* Confirmation row */}
+            <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", padding:"10px 16px"}}>
+              <span style={{fontSize:11, color:"var(--ink-3)"}}>Confirmation</span>
+              <span style={{fontFamily:"JetBrains Mono, monospace", fontSize:12.5, fontWeight:700, color: hotel.conf === "NOT BOOKED" ? "var(--accent)" : "var(--ink)"}}>{hotel.conf}</span>
+            </div>
+            {/* QR placeholder — only for real confs */}
+            {hotel.conf !== "NOT BOOKED" && hotel.conf !== "Airbnb — lockbox" && (
+              <div style={{margin:"0 16px 16px", borderRadius:10, background:"oklch(0.94 0.04 165)", height:72, display:"flex", alignItems:"center", justifyContent:"center", gap:8}}>
+                <Icon.q style={{width:22, height:22, color:"oklch(0.45 0.12 165)"}} />
+                <span className="caps" style={{fontSize:10, color:"oklch(0.45 0.12 165)", letterSpacing:"0.06em"}}>Tap to show at door</span>
+              </div>
+            )}
           </div>
         )}
       </div>
