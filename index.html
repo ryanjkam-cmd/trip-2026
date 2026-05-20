@@ -35,8 +35,33 @@
     --mint: #2FE0A8;
     --lavender: #8B3FFF;
 
-    --radius: 14px;
-    --radius-sm: 8px;
+    --radius-sm:   6px;
+    --radius:      8px;
+    --radius-md:  12px;
+    --radius-lg:  14px;
+    --radius-xl:  16px;
+    --radius-pill: 99px;
+
+    /* Semantic status */
+    --status-booked: #00B07A;
+    --status-hold:   #FF9500;
+    --status-decide: #FF2D55;
+    --status-must:   #1A1C1F;
+    --weather:       #5B6FFF;
+
+    /* Shadows */
+    --shadow-sm:  0 1px 0 rgba(0,0,0,0.04);
+    --shadow:     0 4px 16px rgba(20,20,30,0.05);
+    --shadow-md:  0 2px 8px rgba(0,0,0,0.15);
+    --shadow-lg: -8px 0 24px rgba(0,0,0,0.18);
+
+    /* City tint variables */
+    --tint-reykjavik:        linear-gradient(135deg, #E8DDFA 0%, #DDD9FA 50%, #E5D9F5 100%);
+    --tint-vik:              linear-gradient(135deg, #D6F0E5 0%, #D9EAFA 55%, #E5E0F5 100%);
+    --tint-hella:            linear-gradient(135deg, #EEF5D9 0%, #D9EFE0 55%, #E0E5FA 100%);
+    --tint-reykjavik-strong: linear-gradient(135deg, #9C7AE8 0%, #B86FE0 50%, #C77AC8 100%);
+    --tint-vik-strong:       linear-gradient(135deg, #5ED8A8 0%, #4FB8E8 55%, #8E92E0 100%);
+    --tint-hella-strong:     linear-gradient(135deg, #C8E060 0%, #5ED1A4 55%, #8090E5 100%);
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -800,35 +825,39 @@ const BUDGET = {
 };
 
 const CITY_TINT = {
+  // Iceland — from style guide exactly
   reykjavik: "linear-gradient(135deg, #E8DDFA 0%, #DDD9FA 50%, #E5D9F5 100%)",
-  hella:     "linear-gradient(135deg, #FAF0D9 0%, #F5E8C8 50%, #F0DEB8 100%)",
-  vik:       "linear-gradient(135deg, #D6EDF0 0%, #C8E8F0 55%, #D4E0F5 100%)",
-  helsinki:  "linear-gradient(135deg, #D9EAF5 0%, #C8DCFA 55%, #D4E8F0 100%)",
-  tallinn:   "linear-gradient(135deg, #F5EAD9 0%, #F0DEC8 55%, #EDD4B8 100%)",
-  krakow:    "linear-gradient(135deg, #EDD9F0 0%, #E4C8F0 55%, #D9C8F5 100%)",
-  prague:    "linear-gradient(135deg, #FAF0D9 0%, #F5E4C0 55%, #F0D8A8 100%)",
-  amsterdam: "linear-gradient(135deg, #D9EDF5 0%, #C8D9FA 55%, #D4E4F0 100%)",
+  hella:     "linear-gradient(135deg, #EEF5D9 0%, #D9EFE0 55%, #E0E5FA 100%)",
+  vik:       "linear-gradient(135deg, #D6F0E5 0%, #D9EAFA 55%, #E5E0F5 100%)",
+  // Europe — style-guide-consistent soft tints
+  helsinki:  "linear-gradient(135deg, #D6EDF5 0%, #D9E8FA 55%, #E5DCF5 100%)",
+  tallinn:   "linear-gradient(135deg, #FAF0D9 0%, #F5E4C0 55%, #F0DCD8 100%)",
+  krakow:    "linear-gradient(135deg, #EDD9FA 0%, #E4D0F0 55%, #F0D9E8 100%)",
+  prague:    "linear-gradient(135deg, #FAF0D9 0%, #F5E4C0 55%, #E8E0F0 100%)",
+  amsterdam: "linear-gradient(135deg, #D9E8FA 0%, #DCE0FA 55%, #E5DCF5 100%)",
 };
 
 const CITY_TINT_STRONG = {
+  // Iceland — from style guide exactly
   reykjavik: "linear-gradient(135deg, #9C7AE8 0%, #B86FE0 50%, #C77AC8 100%)",
-  hella:     "linear-gradient(135deg, #E8C060 0%, #D4A030 55%, #C08820 100%)",
-  vik:       "linear-gradient(135deg, #4090C0 0%, #3080B8 55%, #5090D0 100%)",
-  helsinki:  "linear-gradient(135deg, #4080C8 0%, #5090D8 50%, #60A0E0 100%)",
-  tallinn:   "linear-gradient(135deg, #C88040 0%, #D89050 55%, #B87030 100%)",
-  krakow:    "linear-gradient(135deg, #9040B0 0%, #A050C0 55%, #8030A0 100%)",
-  prague:    "linear-gradient(135deg, #C8A030 0%, #D8B040 55%, #B89020 100%)",
-  amsterdam: "linear-gradient(135deg, #2060C0 0%, #3070D0 55%, #4080E0 100%)",
+  hella:     "linear-gradient(135deg, #C8E060 0%, #5ED1A4 55%, #8090E5 100%)",
+  vik:       "linear-gradient(135deg, #5ED8A8 0%, #4FB8E8 55%, #8E92E0 100%)",
+  // Europe — style-guide-consistent strong accents
+  helsinki:  "linear-gradient(135deg, #5EB8E8 0%, #4F98F0 55%, #8090E0 100%)",
+  tallinn:   "linear-gradient(135deg, #E8A030 0%, #D47040 55%, #C87090 100%)",
+  krakow:    "linear-gradient(135deg, #9040B8 0%, #A050C0 55%, #C07090 100%)",
+  prague:    "linear-gradient(135deg, #C8A030 0%, #D49040 55%, #9080C0 100%)",
+  amsterdam: "linear-gradient(135deg, #2060C8 0%, #4070D8 55%, #7060B8 100%)",
 };
 
 const CITY_INK = {
   reykjavik: "#3D2670",
-  hella:     "#5A3A10",
-  vik:       "#1A3A5A",
+  hella:     "#2A4020",
+  vik:       "#1A3A30",
   helsinki:  "#1A304A",
   tallinn:   "#5A3010",
   krakow:    "#3A1050",
-  prague:    "#5A3A00",
+  prague:    "#4A3010",
   amsterdam: "#0A2A5A",
 };
 
