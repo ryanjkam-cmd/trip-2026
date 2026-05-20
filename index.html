@@ -209,9 +209,9 @@ const ACTIVITIES = {
     { time: "07:00", end: "08:30", type: "rest", title: "Wake up · final pack", meta: "1.5h · check passports + docs · confirm car service" },
     { time: "09:30", end: "10:30", type: "transit", title: "Drive to SFO", meta: "45–60 min · rideshare or park at international terminal" },
     { time: "10:30", end: "12:00", type: "rest", title: "SFO check-in + security", meta: "1.5h · United international · TSA PreCheck" },
-    { time: "12:35", end: "20:42", type: "flight", title: "UA433 SFO → IAD", meta: "United · Seats 31C/31B/31A", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: null },
+    { time: "12:35", end: "20:42", type: "flight", title: "UA433 SFO → IAD", meta: "United · Seats 31C/31B/31A", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: "https://maps.google.com/?q=San+Francisco+International+Airport&ll=37.6213,-122.3790" },
     { time: "20:42", end: "22:30", type: "rest", title: "IAD layover · find gate + food", meta: "1.75h · Dulles · grab dinner · terminal A/B · United Club if accessible" },
-    { time: "22:35", end: "08:30", type: "flight", title: "UA398 IAD → KEF (overnight)", meta: "United · Seats 7F/7D/7E · arrive Jun 22", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: null },
+    { time: "22:35", end: "08:30", type: "flight", title: "UA398 IAD → KEF (overnight)", meta: "United · Seats 7F/7D/7E · arrive Jun 22", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: "https://maps.google.com/?q=Dulles+International+Airport+Virginia&ll=38.9531,-77.4565" },
   ],
   d2: [
     { time: "08:30", end: "09:15", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · Expedia 73428089735424", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "./docs/car_rental_hertz.pdf", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
@@ -744,14 +744,14 @@ const HOTELS = {
 };
 
 const HOTEL_PHOTOS = {
-  reykjavik: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Reykjavik_cityscape_%28cropped%29.jpg/800px-Reykjavik_cityscape_%28cropped%29.jpg",
-  hella:     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Hekla_eruption_2000.jpg/800px-Hekla_eruption_2000.jpg",
-  vik:       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Reynisfjara_2014.jpg/800px-Reynisfjara_2014.jpg",
-  helsinki:  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Helsinki_Senate_Square_at_Night.jpg/800px-Helsinki_Senate_Square_at_Night.jpg",
-  tallinn:   "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/Tallinn_vanalinn.jpg/800px-Tallinn_vanalinn.jpg",
-  krakow:    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Krakow_-_Rynek_Glowny.jpg/800px-Krakow_-_Rynek_Glowny.jpg",
-  prague:    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Prague_Castle_from_Mala_Strana.JPG/800px-Prague_Castle_from_Mala_Strana.JPG",
-  amsterdam: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Amsterdam_Canal_Houses.jpg/800px-Amsterdam_Canal_Houses.jpg",
+  reykjavik: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg/800px-Reykjav%C3%ADk%2C_view_from_Hallgr%C3%ADmskirkja_%282%29.jpg",
+  hella:     "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Islande_Langjokull.jpg/800px-Islande_Langjokull.jpg",
+  vik:       "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg/800px-Reynisfjara_Beach_Looking_West_Towards_Dyrh%C3%B3laey.jpg",
+  helsinki:  "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Allas_Sea_Pool_2.jpg/800px-Allas_Sea_Pool_2.jpg",
+  tallinn:   "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Raekoja_plats_at_night.jpg/800px-Raekoja_plats_at_night.jpg",
+  krakow:    "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG/800px-Sukiennice_and_Main_Market_Square_Krakow_Poland.JPG",
+  prague:    "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg/800px-Prague_07-2016_view_from_Lesser_Town_Tower_of_Charles_Bridge_img3.jpg",
+  amsterdam: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg/800px-Amsterdam%2C_Vondelpark%2C_at_the_pond-2.jpg",
 };
 
 
@@ -5073,6 +5073,43 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
 /* ============================================================
    ACTIVITY DRAWER
 ============================================================ */
+
+function MapEmbed({ mapUrl }) {
+  const [src, setSrc] = React.useState(null);
+  const query = mapUrl.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' ');
+  const llMatch = mapUrl.match(/ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
+
+  React.useEffect(() => {
+    if (llMatch) {
+      const lat = parseFloat(llMatch[1]), lon = parseFloat(llMatch[2]);
+      const d = 0.012;
+      setSrc(`https://www.openstreetmap.org/export/embed.html?bbox=${lon-d},${lat-d},${lon+d},${lat+d}&layer=mapnik&marker=${lat},${lon}`);
+    } else {
+      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
+        headers: { 'User-Agent': 'TripPlanner2026/1.0' }
+      })
+        .then(r => r.json())
+        .then(data => {
+          if (data[0]) {
+            const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
+            const d = 0.012;
+            setSrc(`https://www.openstreetmap.org/export/embed.html?bbox=${lon-d},${lat-d},${lon+d},${lat+d}&layer=mapnik&marker=${lat},${lon}`);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [mapUrl]);
+
+  if (!src) return (
+    <div style={{height:140, borderRadius:10, background:"var(--surface-2)", display:"flex", alignItems:"center", justifyContent:"center", color:"var(--ink-3)", fontSize:12, border:"1px solid var(--line)"}}>Loading map…</div>
+  );
+  return (
+    <iframe width="100%" height="180" frameBorder="0"
+      style={{borderRadius:10, display:"block", border:"1px solid var(--line)"}}
+      src={src} loading="lazy" title="map" />
+  );
+}
+
 function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
   const statusLabel = { booked: "Booked", hold: "On hold", decide: "Decide" }[a.status] || "";
   const StatusIcon = a.status === "booked" ? Icon.checkSm : a.status === "hold" ? Icon.clock : Icon.q;
@@ -5152,18 +5189,7 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
             <div className="drawer-section">
               <div className="drawer-section-h caps">Location</div>
               <div className="drawer-map">
-                {a.mapUrl && (
-                  <iframe
-                    width="100%"
-                    height="180"
-                    frameBorder="0"
-                    style={{borderRadius:10, display:"block", border:"1px solid var(--line)"}}
-                    src={`https://maps.google.com/maps?q=${encodeURIComponent(a.mapUrl.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' '))}&output=embed&zoom=14`}
-                    allowFullScreen
-                    loading="lazy"
-                    title="map"
-                  />
-                )}
+                {a.mapUrl && <MapEmbed mapUrl={a.mapUrl} />}
                 {addressFor(a) && (
                   <div className="drawer-address">
                     <Icon.pin />
@@ -5187,39 +5213,41 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
           {/* Website / Tickets */}
           {!isFlight && (websiteFor(a) || a.url?.startsWith('./docs/') || (a.status === "booked" && a.conf)) && (
             <div className="drawer-section">
-              <div className="drawer-section-h caps">{isEat ? "Reservation & website" : "Booking & links"}</div>
+              <div className="drawer-section-h caps">Tickets &amp; Website</div>
               <div className="drawer-links">
                 {/* Website link */}
                 {websiteFor(a) && (
                   <a className="drawer-link" href={a.url} target="_blank" rel="noopener noreferrer">
-                    <div className="drawer-link-icon"><Icon.ext /></div>
+                    <div className="drawer-link-icon" style={{background:"#EEF2FF", color:"#3B6FFF"}}>
+                      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
                     <div style={{minWidth:0, flex:1}}>
-                      <div style={{fontWeight:600, fontSize:13}}>{websiteFor(a)}</div>
-                      <div style={{fontSize:11, color:"var(--ink-3)"}}>{isEat ? "Menu & reservations" : "Official site · tickets"}</div>
+                      <div style={{fontWeight:700, fontSize:13}}>{websiteFor(a)}</div>
+                      <div style={{fontSize:11, color:"var(--ink-3)"}}>{isEat ? "Menu & reservations" : "Official site · book direct"}</div>
                     </div>
                     <Icon.chevR />
                   </a>
                 )}
                 {/* PDF offline doc */}
-                {a.url?.startsWith('./docs/') && (
+                {a.url?.startsWith('./docs/') && !websiteFor(a) && (
                   <a className="drawer-link" href={a.url} target="_blank" rel="noopener noreferrer">
-                    <div className="drawer-link-icon" style={{background:"oklch(0.92 0.04 235)", color:"oklch(0.4 0.14 235)"}}>📄</div>
+                    <div className="drawer-link-icon" style={{background:"#EEF2FF", color:"#3B6FFF"}}>📄</div>
                     <div style={{minWidth:0, flex:1}}>
-                      <div style={{fontWeight:600, fontSize:13}}>Booking confirmation PDF</div>
+                      <div style={{fontWeight:700, fontSize:13}}>Confirmation PDF</div>
                       <div style={{fontSize:11, color:"var(--ink-3)"}}>Offline · works without internet</div>
                     </div>
                     <Icon.chevR />
                   </a>
                 )}
-                {/* Confirmation number */}
+                {/* Ticket block — matches Image #19 */}
                 {a.status === "booked" && a.conf && a.conf !== "NOT BOOKED" && (
                   <div className="drawer-ticket">
                     <div className="drawer-ticket-l">
-                      <div className="caps" style={{fontSize:9.5, color:"rgba(255,255,255,0.7)"}}>Confirmation</div>
-                      <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:14, color:"white", marginTop:4}}>{a.conf}</div>
-                      <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.6)", marginTop:6}}>Show at check-in</div>
+                      <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.55)", letterSpacing:"0.1em"}}>Ticket</div>
+                      <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:17, fontWeight:700, color:"white", marginTop:5, letterSpacing:"0.02em"}}>{a.conf}</div>
+                      <div className="caps" style={{fontSize:8.5, color:"rgba(255,255,255,0.45)", marginTop:8, letterSpacing:"0.08em"}}>Tap to show at door</div>
                     </div>
-                    <div className="drawer-ticket-qr"></div>
+                    <div className="drawer-ticket-qr" style={{background:"repeating-conic-gradient(#3a3a3a 0% 25%, #222 0% 50%) 0 0 / 8px 8px", borderRadius:6, opacity:0.7}}></div>
                   </div>
                 )}
                 {a.cancelBy && (
