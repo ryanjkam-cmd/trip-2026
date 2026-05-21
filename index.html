@@ -604,6 +604,20 @@ const TRANSPORT = {
 
 // Wikimedia Commons photo lookup keyed by activity title
 // Format: Special:FilePath redirect — gracefully 404s if filename wrong (img onError hides it)
+
+const ACTIVITY_PDF = {
+  "Blue Lagoon":                       { pdf: "docs/pdfs/BlueLagoon_WBL05587130.pdf",            qr: "qr_bluelagoon", barcode: true,  conf: "WBL05587130" },
+  "⭐ INTO THE GLACIER — Langjökull":  { pdf: "docs/pdfs/IntoTheGlacier_Ticket_ARC-T127971879.pdf", qr: "glacier_qr", barcode: false, conf: "ARC-T127971879" },
+  "Hertz pickup — KEF Airport":        { pdf: "docs/pdfs/Hertz_Car_Rental_KEF.pdf",               qr: "qr_hertz",     barcode: false, conf: "L5663893739" },
+  "Check-in: Reykjavík EDITION":       { pdf: "docs/pdfs/Marriott_EDITION_Reykjavik_78962273.pdf", qr: null,           barcode: false, conf: "#78962273" },
+  "Check-in: Farmer's Guest House":    { pdf: "docs/pdfs/BookingCom_FarmersGuestHouse_Hella_5150979042.pdf", qr: null, barcode: false, conf: "#5150979042" },
+  "Check-in: Hotel Vík í Mýrdal":      { pdf: "docs/pdfs/Expedia_Hotel_Vik_Myrdal_79476041.pdf", qr: null,            barcode: false, conf: "#79476041" },
+  "Check-in: Crowne Plaza Helsinki":   { pdf: "docs/pdfs/Expedia_CrownePlaza_Helsinki_73422231915860.pdf", qr: null,   barcode: false, conf: "73422231915860" },
+  "Check-in: Novotel Tallinn":         { pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", qr: null,        barcode: false, conf: "73422280565429" },
+  "Check-in: AC Hotel Kraków":         { pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf",  qr: null,            barcode: false, conf: "72331300" },
+  "Check-in: Almanac X Alcron":        { pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", qr: null,   barcode: false, conf: "ZO-AX1043-36815" },
+};
+
 const PHOTOS = {
   // ── ICELAND ────────────────────────────────────────────────────────────────
   "Blue Lagoon":
@@ -1193,49 +1207,36 @@ const css = `
   .country-tabs {
     grid-column: 1 / -1;
     display: flex;
-    align-items: flex-end;
-    padding: 22px 24px 0;
+    align-items: center;
+    padding: 10px 20px;
     gap: 4px;
     border-bottom: 1px solid var(--line);
     background: var(--bg);
   }
   .country-tab {
-    padding: 10px 16px 12px;
-    border-radius: 8px 8px 0 0;
+    padding: 7px 14px;
+    border-radius: var(--radius-pill);
     color: var(--ink-3);
-    font-size: 13px; font-weight: 500;
-    display: inline-flex; align-items: center; gap: 8px;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: color .15s, border-color .15s;
+    font-size: 13px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+    border: 1.5px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, background .15s, border-color .15s;
   }
-  .country-tab:hover { color: var(--ink-2); }
+  .country-tab:hover { color: var(--ink-2); border-color: var(--line-2); }
   .country-tab.active {
-    color: var(--ink);
-    border-bottom-color: var(--ink);
-    background: var(--bg);
+    background: linear-gradient(135deg, #9B3FE8 0%, #E83F9B 100%);
+    color: white !important;
+    border-color: transparent;
   }
-  .country-tab .flag {
-    width: 20px; height: 14px; border-radius: 2px;
-    font-family: "Inter Tight"; font-size: 9px; font-weight: 700;
-    color: white; display: grid; place-items: center;
-    letter-spacing: 0.05em;
-  }
-  .country-tab .flag.is { background: linear-gradient(135deg, #02529c 50%, #dc1e35 50%); }
-  .country-tab .flag.gl { background: linear-gradient(180deg, #ffffff 50%, #d00c33 50%); color: #d00c33; border: 1px solid var(--line-2); }
-  .country-tab .flag.fi { background: linear-gradient(180deg, #ffffff 50%, #003580 50%); }
-  .country-tab .flag.ee { background: linear-gradient(135deg, #0072CE 33%, #000000 33% 66%, #FFFFFF 66%); }
-  .country-tab .flag.pl { background: linear-gradient(180deg, #ffffff 50%, #DC143C 50%); }
-  .country-tab .flag.cz { background: linear-gradient(135deg, #d7141a 50%, transparent 50%), linear-gradient(180deg, #ffffff 50%, #11457e 50%); }
-  .country-tab .flag.nl { background: linear-gradient(180deg, #AE1C28 33%, #FFFFFF 33% 66%, #21468B 66%); }
   .country-tab .badge {
-    background: var(--line);
-    color: var(--ink-2);
     font-size: 11px; padding: 1px 7px; border-radius: 99px;
     font-variant-numeric: tabular-nums;
+    background: var(--line); color: var(--ink-2);
   }
-  .country-tab.active .badge { background: var(--ink); color: white; }
-  .country-tab.add { color: var(--ink-3); padding: 10px 12px 12px; }
+  .country-tab.active .badge { background: rgba(255,255,255,0.25); color: white; }
+  .nav-divider { width: 1px; height: 20px; background: var(--line-2); margin: 0 6px; flex-shrink: 0; }
+  .country-tab.add { color: var(--ink-3); padding: 7px 10px; }
 
   /* LEFT NAV */
   .leftnav {
@@ -2426,32 +2427,26 @@ const css = `
   }
   .health-pill.warn { background: var(--grad-warm); color: white; }
 
-  /* Country tabs */
-  .country-tabs { gap: 6px; padding: 8px 24px 0; background: transparent; }
+  /* Country tabs — pill style */
+  .country-tabs { gap: 4px; padding: 10px 20px; background: transparent; }
   .country-tab {
     font-family: "Archivo", sans-serif;
-    font-weight: 900;
+    font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-size: 12px;
-    padding: 12px 14px 14px;
-    border-bottom: 3px solid transparent;
+    letter-spacing: 0.05em;
+    font-size: 11.5px;
+    padding: 7px 14px;
+    border: 1.5px solid transparent;
+    border-radius: 99px;
   }
-  .country-tab.active { border-bottom: 3px solid transparent; position: relative; }
-  .country-tab.active::after {
-    content: "";
-    position: absolute;
-    left: 14px; right: 14px; bottom: -1px;
-    height: 3px;
-    background: var(--grad-warm);
-    border-radius: 2px;
-  }
+  .country-tab.active { background: linear-gradient(135deg, #9B3FE8 0%, #E83F9B 100%); color: white !important; }
+  .country-tab.active::after { display: none; }
   .country-tab .badge {
     font-family: "JetBrains Mono", monospace;
     font-weight: 600;
     letter-spacing: 0;
   }
-  .country-tab.active .badge { background: var(--ink); color: white; }
+  .country-tab.active .badge { background: rgba(255,255,255,0.25); color: white; }
 
   /* Left nav */
   .leftnav { background: transparent; border-right: 1px solid var(--line); }
@@ -4447,47 +4442,48 @@ function App() {
         </div>
       </section>
 
-      {/* ============ COUNTRY TABS ============ */}
-      <nav className="country-tabs" aria-label="Countries">
+      {/* ============ TOP NAV ============ */}
+      <nav className="country-tabs" aria-label="Navigation">
+        {/* Trip Overview pill */}
+        <button
+          className={"country-tab trip-nav-btn " + (mode === "trip" ? "active overview-active" : "")}
+          onClick={() => setMode("trip")}
+        >
+          <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style={{flexShrink:0}}>
+            <circle cx="8" cy="8" r="6.5" stroke="currentColor" strokeWidth="1.6"/>
+            <path d="M8 4.5v3.75L10.5 10" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+          </svg>
+          Trip Overview
+          <span className="badge">{allDays.length}d</span>
+        </button>
+        <span className="nav-divider" />
+        {/* Country tabs — no flags */}
         {TRIP.countries.map((c) => {
           const ndays = c.cities.reduce((sum, ct) => sum + ct.days.length, 0);
           return (
             <button
               key={c.id}
-              className={"country-tab " + (countryId === c.id ? "active" : "")}
+              className={"country-tab " + (countryId === c.id && mode !== "trip" && mode !== "wallet" ? "active" : "")}
               onClick={() => handleCountry(c.id)}
             >
-              <span className={"flag " + c.id.slice(0,2)}>{c.flag}</span>
               {c.name}
               <span className="badge">{ndays}d</span>
             </button>
           );
         })}
+        {/* Wallet pill */}
+        <button
+          className={"country-tab wallet-nav-btn " + (mode === "wallet" ? "active" : "")}
+          onClick={() => setMode("wallet")}
+          style={{marginLeft:"auto"}}
+        >
+          🎫 Docs
+        </button>
       </nav>
 
       {/* ============ LEFT NAV ============ */}
       <aside className="leftnav">
-        <button
-          className={"trip-overview-btn " + (mode === "trip" ? "active" : "")}
-          onClick={() => setMode("trip")}
-        >
-          <span className="lo-thumb"><Icon.pin /></span>
-          <div className="lo-info">
-            <div className="lo-title">Trip overview</div>
-            <div className="lo-meta">8 days · 4 cities · 2 countries</div>
-          </div>
-        </button>
-        <button
-          className={"trip-overview-btn " + (mode === "wallet" ? "active" : "")}
-          onClick={() => setMode("wallet")}
-          style={{marginTop:6}}
-        >
-          <span className="lo-thumb" style={{fontSize:16}}>🎫</span>
-          <div className="lo-info">
-            <div className="lo-title">Documents & Wallet</div>
-            <div className="lo-meta">Conf codes · QR · PDFs</div>
-          </div>
-        </button>
+
         <div className="nav-section">
           <div className="nav-section-title">
             <span>{country.name}</span>
@@ -5453,17 +5449,42 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
                     <Icon.chevR />
                   </a>
                 )}
-                {/* Ticket block — matches Image #19 */}
-                {a.status === "booked" && a.conf && a.conf !== "NOT BOOKED" && (
-                  <div className="drawer-ticket">
-                    <div className="drawer-ticket-l">
-                      <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.55)", letterSpacing:"0.1em"}}>Ticket</div>
-                      <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:17, fontWeight:700, color:"white", marginTop:5, letterSpacing:"0.02em"}}>{a.conf}</div>
-                      <div className="caps" style={{fontSize:8.5, color:"rgba(255,255,255,0.45)", marginTop:8, letterSpacing:"0.08em"}}>Tap to show at door</div>
+                {/* Ticket block — with real QR/barcode from ACTIVITY_PDF */}
+                {(() => {
+                  const pdfEntry = ACTIVITY_PDF[a.title];
+                  const confCode = pdfEntry ? pdfEntry.conf : (a.conf && a.conf !== "NOT BOOKED" ? a.conf : null);
+                  return confCode ? (
+                    <div className="drawer-ticket" onClick={() => {
+                      try { navigator.clipboard.writeText(confCode); } catch(e) {}
+                    }}>
+                      <div className="drawer-ticket-l">
+                        <div className="caps" style={{fontSize:9, color:"rgba(255,255,255,0.55)", letterSpacing:"0.1em"}}>Confirmation</div>
+                        <div style={{fontFamily:"JetBrains Mono, monospace", fontSize:15, fontWeight:700, color:"white", marginTop:5, letterSpacing:"0.02em"}}>{confCode}</div>
+                        {pdfEntry && pdfEntry.pdf && (
+                          <a href={pdfEntry.pdf} target="_blank" rel="noopener noreferrer"
+                            style={{display:"inline-flex", alignItems:"center", gap:4, marginTop:8, fontSize:10.5, fontWeight:700, color:"rgba(255,255,255,0.75)", textDecoration:"none", letterSpacing:"0.04em"}}
+                            onClick={e => e.stopPropagation()}>
+                            <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><path d="M3 4h10v8H3z" stroke="currentColor" strokeWidth="1.5"/><path d="M6 4V2h4v2" stroke="currentColor" strokeWidth="1.5"/><path d="M6 9h4M8 7v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+                            VIEW PDF
+                          </a>
+                        )}
+                        {!pdfEntry && <div className="caps" style={{fontSize:8.5, color:"rgba(255,255,255,0.45)", marginTop:8, letterSpacing:"0.08em"}}>Tap to copy</div>}
+                      </div>
+                      <div style={{display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", gap:4}}>
+                        {pdfEntry && pdfEntry.qr && QR[pdfEntry.qr] ? (
+                          <img src={QR[pdfEntry.qr]} alt={pdfEntry.barcode ? "Barcode" : "QR code"}
+                            style={{width: pdfEntry.barcode ? 96 : 72, height: pdfEntry.barcode ? 36 : 72,
+                              borderRadius:4, background:"white", padding:4, objectFit:"contain"}} />
+                        ) : (
+                          <div className="drawer-ticket-qr" style={{background:"repeating-conic-gradient(#3a3a3a 0% 25%, #222 0% 50%) 0 0 / 8px 8px", borderRadius:6, opacity:0.5}}></div>
+                        )}
+                        <div style={{fontSize:9, color:"rgba(255,255,255,0.45)", letterSpacing:"0.06em", marginTop:2}}>
+                          {pdfEntry && pdfEntry.barcode ? "BARCODE" : "QR"}
+                        </div>
+                      </div>
                     </div>
-                    <div className="drawer-ticket-qr" style={{background:"repeating-conic-gradient(#3a3a3a 0% 25%, #222 0% 50%) 0 0 / 8px 8px", borderRadius:6, opacity:0.7}}></div>
-                  </div>
-                )}
+                  ) : null;
+                })()}
                 {a.cancelBy && (
                   <div className="drawer-cancel">
                     <span className="caps" style={{fontSize:10, color:"var(--ink-3)"}}>Cancel by</span>
