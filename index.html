@@ -1383,6 +1383,103 @@ const css = `
     min-height: 64px;
   }
 
+
+  /* ── Event editing UI ───────────────────────────────────────────────── */
+  .cal-add-btn {
+    position: sticky; bottom: 0;
+    margin: 12px 8px 0;
+    padding: 10px 16px;
+    background: var(--accent); color: var(--accent-ink);
+    border: none; border-radius: 99px;
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    width: calc(100% - 16px);
+    justify-content: center;
+    transition: opacity .15s;
+  }
+  .cal-add-btn:hover { opacity: 0.88; }
+
+  .event-sheet-backdrop {
+    position: fixed; inset: 0; background: rgba(20,20,30,.35);
+    z-index: 50; display: flex; align-items: flex-end; justify-content: center;
+  }
+  .event-sheet {
+    background: white; border-radius: 18px 18px 0 0;
+    padding: 20px 20px 36px;
+    width: 100%; max-width: 480px;
+    box-shadow: 0 -4px 32px rgba(20,20,30,.12);
+    animation: slideUp .2s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .event-sheet-handle {
+    width: 36px; height: 4px; background: var(--line-2);
+    border-radius: 2px; margin: 0 auto 16px;
+  }
+  .event-sheet-title {
+    font-family: "Archivo", sans-serif; font-weight: 900;
+    font-size: 16px; letter-spacing: -0.01em; margin-bottom: 16px;
+    text-transform: uppercase;
+  }
+  .event-field {
+    margin-bottom: 12px;
+  }
+  .event-field label {
+    display: block; font-size: 10.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--ink-3); margin-bottom: 4px;
+  }
+  .event-field input, .event-field select {
+    width: 100%; padding: 9px 12px; border-radius: 8px;
+    border: 1.5px solid var(--line-2); background: var(--bg);
+    font-family: "Inter Tight", sans-serif; font-size: 14px;
+    color: var(--ink); outline: none; box-sizing: border-box;
+    transition: border-color .15s;
+  }
+  .event-field input:focus, .event-field select:focus { border-color: var(--accent); }
+  .event-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .event-sheet-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .event-sheet-actions button {
+    flex: 1; padding: 11px; border-radius: 99px;
+    font-family: "Archivo", sans-serif; font-weight: 800;
+    font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase;
+    cursor: pointer; transition: opacity .15s;
+  }
+  .event-sheet-actions .save-btn {
+    background: var(--accent); color: var(--accent-ink); border: none;
+  }
+  .event-sheet-actions .cancel-btn {
+    background: transparent; color: var(--ink-2);
+    border: 1.5px solid var(--line-2);
+  }
+  .event-sheet-actions button:hover { opacity: 0.85; }
+
+  /* Status cycle button on cal-event */
+  .cal-status-btn {
+    position: absolute; top: 4px; right: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; font-size: 9px; font-weight: 800;
+    z-index: 2; opacity: 0; transition: opacity .12s;
+    flex-shrink: 0;
+  }
+  .cal-event:hover .cal-status-btn { opacity: 1; }
+  .cal-status-btn.booked { background: oklch(0.85 0.10 155); color: oklch(0.28 0.12 155); }
+  .cal-status-btn.decide { background: oklch(0.90 0.10 50); color: oklch(0.34 0.14 50); }
+  .cal-status-btn.hold   { background: var(--line-2); color: var(--ink-2); }
+  .cal-status-btn.none   { background: var(--line); color: var(--ink-3); }
+
+  /* User-added event delete button */
+  .cal-del-btn {
+    position: absolute; top: 4px; right: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: oklch(0.88 0.10 25); color: oklch(0.40 0.15 25);
+    display: flex; align-items: center; justify-content: center;
+    border: none; cursor: pointer; font-size: 11px; font-weight: 700;
+    z-index: 4; opacity: 0; transition: opacity .12s;
+  }
+  .cal-event:hover .cal-del-btn { opacity: 1; }
+
   /* ── Calendar timeline ───────────────────────────────────────────────── */
   .cal-timeline { display: grid; grid-template-columns: 52px 1fr; border-top: 1px solid var(--line); }
   .cal-hours { display: flex; flex-direction: column; }
@@ -4392,7 +4489,73 @@ function App() {
   const allDays = useMemo(() => country.cities.flatMap((c) => c.days.map((d) => ({ ...d, cityId: c.id, cityName: c.name }))), [country]);
   const currentDay = allDays.find((d) => d.id === dayId) || allDays[0];
   const currentCity = country.cities.find((c) => c.id === currentDay.cityId);
-  const activities = ACTIVITIES[currentDay.id] || [];
+  // ── Firebase-backed status overrides & user-added events ──────────────
+  const [fbStatus, setFbStatus] = React.useState({});
+  const [fbUserActs, setFbUserActs] = React.useState({});
+
+  React.useEffect(() => {
+    if (!fbdb) return;
+    const sRef = fbdb.ref('trip2026/status');
+    const uRef = fbdb.ref('trip2026/userActivities');
+    sRef.on('value', snap => { const v = snap.val(); if (v) setFbStatus(v); });
+    uRef.on('value', snap => { const v = snap.val(); if (v) setFbUserActs(v); });
+    return () => { sRef.off(); uRef.off(); };
+  }, []);
+
+  const cycleStatus = React.useCallback((title, currentStatus) => {
+    const cycle = { booked: 'decide', decide: 'hold', hold: 'booked', default: 'booked' };
+    const next = cycle[currentStatus] || cycle.default;
+    setFbStatus(prev => {
+      const updated = { ...prev, [title]: next };
+      if (fbdb) fbdb.ref('trip2026/status').set(updated).catch(() => {});
+      return updated;
+    });
+  }, []);
+
+  const addUserActivity = React.useCallback((dayId, act) => {
+    setFbUserActs(prev => {
+      const existing = prev[dayId] || [];
+      const updated = { ...prev, [dayId]: [...existing, act] };
+      if (fbdb) fbdb.ref('trip2026/userActivities').set(updated).catch(() => {});
+      return updated;
+    });
+  }, []);
+
+  const deleteUserActivity = React.useCallback((dayId, idx) => {
+    setFbUserActs(prev => {
+      const existing = [...(prev[dayId] || [])];
+      existing.splice(idx, 1);
+      const updated = { ...prev, [dayId]: existing };
+      if (fbdb) fbdb.ref('trip2026/userActivities').set(updated).catch(() => {});
+      return updated;
+    });
+  }, []);
+
+  const activities = React.useMemo(() => {
+    const base = (ACTIVITIES[currentDay.id] || []).map(a => ({
+      ...a,
+      status: fbStatus[a.title] !== undefined ? fbStatus[a.title] : a.status,
+    }));
+    const userAdded = (fbUserActs[currentDay.id] || []).map((a, i) => ({
+      ...a, _userAdded: true, _userIdx: i,
+    }));
+    return [...base, ...userAdded];
+  }, [currentDay.id, fbStatus, fbUserActs]);
+
+  const [showAddSheet, setShowAddSheet] = React.useState(false);
+  const [newAct, setNewAct] = React.useState({ title: "", time: "", end: "", type: "do", meta: "", status: "booked" });
+
+  const saveNewAct = () => {
+    if (!newAct.title.trim() || !newAct.time) return;
+    const toneMap = { do: "mint", eat: "hot", transit: "accent", flight: "accent", stay: "lav" };
+    addUserActivity(currentDay.id, {
+      ...newAct,
+      title: newAct.title.trim(),
+      tone: toneMap[newAct.type] || "lav",
+    });
+    setNewAct({ title: "", time: "", end: "", type: "do", meta: "", status: "booked" });
+    setShowAddSheet(false);
+  };
   const hotel = HOTELS[currentCity.id];
 
   // Find flight activity on current day, or next upcoming flight day
@@ -4766,8 +4929,15 @@ function App() {
                   left={"calc(" + (ev.lane / ev.maxLanes * 100) + "% + 8px)"}
                   width={"calc(" + (100 / ev.maxLanes * 100 / 100) + "% - 16px)"}
                   onOpen={() => setOpenActivity({...ev.a, dayId: currentDay.id, cityId: currentCity.id})}
+                  onCycleStatus={ev.a._userAdded ? null : (e) => { e.stopPropagation(); cycleStatus(ev.a.title, ev.a.status); }}
+                  onDelete={ev.a._userAdded ? (e) => { e.stopPropagation(); deleteUserActivity(currentDay.id, ev.a._userIdx); } : null}
                 />
               ))}
+              {/* Add event button */}
+              <button className="cal-add-btn" style={{position:"absolute", bottom:12, left:8, right:8, width:"auto"}}
+                onClick={() => setShowAddSheet(true)}>
+                + Add to this day
+              </button>
             </div>
           </div>
         </div>
@@ -4817,6 +4987,61 @@ function App() {
         </React.Fragment>
         )}
         {openActivity && <ActivityDrawer a={openActivity} onClose={() => setOpenActivity(null)} onResolve={markResolved} onUnresolve={unmarkResolved} isResolved={!!(openActivity && statusOverrides[openActivity.title])} />}
+        {showAddSheet && (
+          <div className="event-sheet-backdrop" onClick={() => setShowAddSheet(false)}>
+            <div className="event-sheet" onClick={e => e.stopPropagation()}>
+              <div className="event-sheet-handle" />
+              <div className="event-sheet-title">Add to {currentDay.label || currentDay.id}</div>
+              <div className="event-field">
+                <label>What</label>
+                <input placeholder="Activity name" value={newAct.title}
+                  onChange={e => setNewAct(p => ({...p, title: e.target.value}))}
+                  autoFocus />
+              </div>
+              <div className="event-row">
+                <div className="event-field">
+                  <label>Start</label>
+                  <input type="time" value={newAct.time}
+                    onChange={e => setNewAct(p => ({...p, time: e.target.value}))} />
+                </div>
+                <div className="event-field">
+                  <label>End</label>
+                  <input type="time" value={newAct.end}
+                    onChange={e => setNewAct(p => ({...p, end: e.target.value}))} />
+                </div>
+              </div>
+              <div className="event-row">
+                <div className="event-field">
+                  <label>Type</label>
+                  <select value={newAct.type} onChange={e => setNewAct(p => ({...p, type: e.target.value}))}>
+                    <option value="do">Activity</option>
+                    <option value="eat">Dining</option>
+                    <option value="transit">Transit</option>
+                    <option value="flight">Flight</option>
+                    <option value="stay">Hotel</option>
+                  </select>
+                </div>
+                <div className="event-field">
+                  <label>Status</label>
+                  <select value={newAct.status} onChange={e => setNewAct(p => ({...p, status: e.target.value}))}>
+                    <option value="booked">Booked</option>
+                    <option value="decide">Decide</option>
+                    <option value="hold">On hold</option>
+                  </select>
+                </div>
+              </div>
+              <div className="event-field">
+                <label>Note (optional)</label>
+                <input placeholder="e.g. reservation at 7pm, meet at lobby" value={newAct.meta}
+                  onChange={e => setNewAct(p => ({...p, meta: e.target.value}))} />
+              </div>
+              <div className="event-sheet-actions">
+                <button className="cancel-btn" onClick={() => setShowAddSheet(false)}>Cancel</button>
+                <button className="save-btn" onClick={saveNewAct}>Save</button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* ============ RIGHT PANEL ============ */}
@@ -5022,7 +5247,7 @@ function Task({ r, index, done, onToggle }) {
   );
 }
 
-function ActivityCalCard({ a, top, height, left, width, onOpen }) {
+function ActivityCalCard({ a, top, height, left, width, onOpen, onCycleStatus, onDelete }) {
   const gradient =
     a.tone === "mint"   ? "var(--grad-do)" :
     a.tone === "hot"    ? "var(--grad-eat)" :
@@ -5044,6 +5269,15 @@ function ActivityCalCard({ a, top, height, left, width, onOpen }) {
           <span className={"cal-event-badge " + statusBadge[0]}>{statusBadge[1]}</span>
         )}
       </div>
+      {onCycleStatus && (
+        <button className={"cal-status-btn " + (a.status || "none")} onClick={onCycleStatus}
+          title={"Status: " + (a.status || "none") + " — click to cycle"}>
+          {a.status === "booked" ? "✓" : a.status === "decide" ? "?" : a.status === "hold" ? "⏸" : "+"}
+        </button>
+      )}
+      {onDelete && (
+        <button className="cal-del-btn" onClick={onDelete} title="Remove">×</button>
+      )}
     </div>
   );
 }
