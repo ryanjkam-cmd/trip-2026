@@ -4612,6 +4612,7 @@ function App() {
     setCountryId(id);
     const c = TRIP.countries.find((x) => x.id === id);
     setDayId(c.cities[0].days[0].id);
+    setMode("day");
   };
 
   const goPrevDay = () => {
