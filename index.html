@@ -85,6 +85,24 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script src="image-slot.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDYj25rZFEYl6V4LhBVPEwpgDG1-veAY4k",
+  authDomain: "iceland-2026-3bea5.firebaseapp.com",
+  databaseURL: "https://iceland-2026-3bea5-default-rtdb.firebaseio.com",
+  projectId: "iceland-2026-3bea5",
+  storageBucket: "iceland-2026-3bea5.firebasestorage.app",
+  messagingSenderId: "607576485969",
+  appId: "1:607576485969:web:d86000ffd06a746b4b0870",
+};
+let fbdb = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  fbdb = firebase.database();
+} catch(e) { console.warn("Firebase init failed, offline mode:", e); }
+</script>
 </head>
 <body>
 <div id="root"></div>
@@ -5747,37 +5765,70 @@ function MapPlaceholder({ scale, cityName, cities, pins }) {
 }
 
 function NotePad({ dayId }) {
-  const [notesByDay, setNotesByDay] = useState(() => {
-    try {
-      const saved = localStorage.getItem('trip_notes');
-      return saved ? { ...INITIAL_NOTES, ...JSON.parse(saved) } : INITIAL_NOTES;
-    } catch { return INITIAL_NOTES; }
-  });
-  const [draft, setDraft] = useState("");
-  const [kind, setKind] = useState("idea");
+  const [notesByDay, setNotesByDay] = React.useState(INITIAL_NOTES);
+  const [draft, setDraft] = React.useState("");
+  const [kind, setKind] = React.useState("idea");
+  const [synced, setSynced] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState(
+    () => localStorage.getItem('trip_user') || 'RK'
+  );
   const notes = notesByDay[dayId] || [];
+
+  React.useEffect(() => {
+    if (!fbdb) {
+      try {
+        const saved = localStorage.getItem('trip_notes');
+        if (saved) setNotesByDay({ ...INITIAL_NOTES, ...JSON.parse(saved) });
+      } catch {}
+      return;
+    }
+    const ref = fbdb.ref('trip2026/notes');
+    ref.on('value', (snap) => {
+      const val = snap.val();
+      setNotesByDay(val ? { ...INITIAL_NOTES, ...val } : INITIAL_NOTES);
+      setSynced(true);
+    });
+    return () => ref.off();
+  }, []);
+
+  const write = (next) => {
+    if (fbdb) fbdb.ref('trip2026/notes').set(next).catch(()=>{});
+    try { localStorage.setItem('trip_notes', JSON.stringify(next)); } catch {}
+  };
 
   const add = () => {
     if (!draft.trim()) return;
+    const now = new Date();
+    const when = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
     const next = { ...notesByDay };
     next[dayId] = [
-      { id: Date.now(), kind, by: "EH", when: "now", text: draft.trim() },
+      { id: Date.now(), kind, by: currentUser, when, text: draft.trim() },
       ...(next[dayId] || []),
     ];
     setNotesByDay(next);
-    try { localStorage.setItem('trip_notes', JSON.stringify(next)); } catch {}
+    write(next);
     setDraft("");
   };
+
   const remove = (id) => {
     const next = { ...notesByDay };
     next[dayId] = (next[dayId] || []).filter(n => n.id !== id);
     setNotesByDay(next);
-    try { localStorage.setItem('trip_notes', JSON.stringify(next)); } catch {}
+    write(next);
   };
+
+  const cycleUser = () => {
+    const ids = TRAVELERS.map(t => t.id);
+    const next = ids[(ids.indexOf(currentUser) + 1) % ids.length];
+    setCurrentUser(next);
+    localStorage.setItem('trip_user', next);
+  };
+
+  const me = TRAVELERS.find(t => t.id === currentUser) || TRAVELERS[0];
 
   return (
     <div className="notes">
-      <div className="note-kinds">
+      <div className="note-kinds" style={{display:"flex", alignItems:"center", gap:6, flexWrap:"wrap"}}>
         {NOTE_KINDS.map(k => (
           <button
             key={k.id}
@@ -5785,6 +5836,15 @@ function NotePad({ dayId }) {
             onClick={() => setKind(k.id)}
           >{k.label}</button>
         ))}
+        <button
+          onClick={cycleUser}
+          title="Switch author"
+          style={{marginLeft:"auto", display:"flex", alignItems:"center", gap:5, background:"var(--line-2)", border:"1px solid var(--line)", borderRadius:99, padding:"3px 9px 3px 5px", cursor:"pointer", fontSize:11, fontWeight:600, color:"var(--ink)"}}
+        >
+          <span style={{width:18, height:18, borderRadius:"50%", background:me.color, display:"inline-flex", alignItems:"center", justifyContent:"center", fontSize:9, fontWeight:700, color:"white"}}>{me.id}</span>
+          {me.name.split(" ")[0]}
+        </button>
+        {synced && <span style={{fontSize:9, color:"oklch(0.6 0.14 145)", letterSpacing:"0.04em"}}>●&nbsp;LIVE</span>}
       </div>
       <div className="note-input-row">
         <textarea
@@ -5820,25 +5880,43 @@ function NotePad({ dayId }) {
 }
 
 function ActivityNotes({ activityKey }) {
-  const [notes, setNotes] = useState(() => {
-    try {
-      const saved = localStorage.getItem('trip_act_notes_' + activityKey);
-      return saved ? JSON.parse(saved) : [];
-    } catch { return []; }
-  });
+  const [notes, setNotes] = useState([]);
   const [draft, setDraft] = useState('');
+  const safeKey = activityKey.replace(/[^a-zA-Z0-9_-]/g, '_');
+
+  React.useEffect(() => {
+    if (!fbdb) {
+      try {
+        const saved = localStorage.getItem('trip_act_notes_' + activityKey);
+        if (saved) setNotes(JSON.parse(saved));
+      } catch {}
+      return;
+    }
+    const ref = fbdb.ref('trip2026/actNotes/' + safeKey);
+    ref.on('value', (snap) => {
+      const val = snap.val();
+      setNotes(val ? val : []);
+    });
+    return () => ref.off();
+  }, [activityKey]);
+
+  const write = (next) => {
+    const safeK = activityKey.replace(/[^a-zA-Z0-9_-]/g, '_');
+    if (fbdb) fbdb.ref('trip2026/actNotes/' + safeK).set(next).catch(()=>{});
+    try { localStorage.setItem('trip_act_notes_' + activityKey, JSON.stringify(next)); } catch {}
+  };
 
   const add = () => {
     if (!draft.trim()) return;
     const next = [{ id: Date.now(), text: draft.trim(), when: new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) }, ...notes];
     setNotes(next);
-    try { localStorage.setItem('trip_act_notes_' + activityKey, JSON.stringify(next)); } catch {}
+    write(next);
     setDraft('');
   };
   const remove = (id) => {
     const next = notes.filter(n => n.id !== id);
     setNotes(next);
-    try { localStorage.setItem('trip_act_notes_' + activityKey, JSON.stringify(next)); } catch {}
+    write(next);
   };
 
   return (
