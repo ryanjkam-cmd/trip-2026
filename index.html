@@ -1435,7 +1435,7 @@ const css = `
 
   .event-sheet-backdrop {
     position: fixed; inset: 0; background: rgba(20,20,30,.35);
-    z-index: 50; display: flex; align-items: flex-end; justify-content: center;
+    z-index: 9999; display: flex; align-items: flex-end; justify-content: center;
   }
   .event-sheet {
     background: white; border-radius: 18px 18px 0 0;
@@ -3481,7 +3481,7 @@ const css = `
     color: var(--ink); line-height: 1; margin-top: 4px;
   }
   .to-map {
-    border-radius: 10px; overflow: hidden; min-height: 220px; position: relative;
+    border-radius: 10px; overflow: hidden; height: 280px; position: relative;
   }
   .to-country { margin-bottom: 24px; }
   .to-country-h {
