@@ -1560,6 +1560,65 @@ const css = `
   .cal-event-badge.booked { background: oklch(0.93 0.06 155); color: oklch(0.34 0.1 155); }
   .cal-event-badge.decide { background: oklch(0.94 0.05 50); color: oklch(0.40 0.12 50); }
   .cal-event-badge.hold   { background: var(--line); color: var(--ink-2); }
+  /* ── Redesigned cal event card ── */
+  .cal-event { overflow: hidden; }
+  .cal-event-icon {
+    width: 42px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; padding: 4px 2px;
+  }
+  .cal-event-info {
+    flex: 1; padding: 5px 7px; min-width: 0;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .cal-event-time-row {
+    font-family: "JetBrains Mono", monospace; font-size: 10px;
+    color: var(--ink-3); line-height: 1.2;
+  }
+  .cal-event-name {
+    font-size: 12.5px; font-weight: 700; color: var(--ink);
+    line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 1px;
+  }
+  .cal-event-place {
+    font-size: 10px; color: var(--ink-3); overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap; margin-top: 1px;
+  }
+  .cal-status-pill {
+    display: inline-flex; align-items: center; gap: 3px;
+    border-radius: 20px; padding: 3px 10px; font-size: 11px; font-weight: 700;
+    cursor: pointer; border: none; margin-top: 3px; line-height: 1;
+  }
+  .cal-status-pill.booked { background: oklch(0.85 0.10 155); color: oklch(0.25 0.12 155); }
+  .cal-status-pill.decide { background: oklch(0.92 0.10 50);  color: oklch(0.34 0.14 50);  }
+  .cal-status-pill.hold   { background: var(--line-2);        color: var(--ink-2);          }
+  .cal-resize-handle {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
+    cursor: ns-resize; z-index: 5;
+    background: linear-gradient(transparent, rgba(0,0,0,0.14));
+    border-radius: 0 0 8px 8px;
+    opacity: 0; transition: opacity 0.1s;
+  }
+  .cal-event:hover .cal-resize-handle { opacity: 1; }
+  .cal-event.is-dragging { opacity: 0.45; cursor: grabbing; }
+  .cal-event-url-btn {
+    position: absolute; top: 5px; right: 22px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(0,0,0,0.06); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.12s; color: var(--ink-3);
+    font-size: 10px; text-decoration: none;
+  }
+  .cal-event:hover .cal-event-url-btn { opacity: 1; }
+  /* Editable time in drawer */
+  .drawer-time-input {
+    font-family: "Archivo", sans-serif; font-weight: 900; font-size: 22px;
+    letter-spacing: -0.02em; border: none; background: transparent;
+    outline: none; cursor: pointer; color: var(--ink); width: 80px;
+    padding: 0;
+  }
+  .drawer-time-input:focus {
+    background: var(--line); border-radius: 6px; padding: 2px 4px;
+  }
   .cal-rest-banner {
     display: flex; align-items: center; gap: 8px;
     padding: 5px 14px; border-bottom: 1px dashed var(--line);
@@ -4525,15 +4584,28 @@ function App() {
   // ── Firebase-backed status overrides & user-added events ──────────────
   const [fbStatus, setFbStatus] = React.useState({});
   const [fbUserActs, setFbUserActs] = React.useState({});
+  const [fbTimeOvr, setFbTimeOvr] = React.useState({});
+  const [dragState, setDragState] = React.useState(null);
+  // dragState: { activity, dayId, startY, origTime, origEnd, isResize }
+  const [dragPreview, setDragPreview] = React.useState(null);
+  // dragPreview: { title, time, end }
+  const calTrackRef = React.useRef(null);
 
   React.useEffect(() => {
     if (!fbdb) return;
     const sRef = fbdb.ref('trip2026/status');
     const uRef = fbdb.ref('trip2026/userActivities');
+    const tRef = fbdb.ref('trip2026/timeOvr');
     sRef.on('value', snap => { const v = snap.val(); if (v) setFbStatus(v); });
     uRef.on('value', snap => { const v = snap.val(); if (v) setFbUserActs(v); });
-    return () => { sRef.off(); uRef.off(); };
+    tRef.on('value', snap => { const v = snap.val(); if (v) setFbTimeOvr(v); });
+    return () => { sRef.off(); uRef.off(); tRef.off(); };
   }, []);
+
+  function minsToTime(m) {
+    m = Math.max(0, Math.min(Math.round(m), 23*60+59));
+    return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
+  }
 
   const cycleStatus = React.useCallback((title, currentStatus) => {
     const cycle = { booked: 'decide', decide: 'hold', hold: 'booked', default: 'booked' };
@@ -4565,18 +4637,72 @@ function App() {
   }, []);
 
   const activities = React.useMemo(() => {
-    const base = (ACTIVITIES[currentDay.id] || []).map(a => ({
-      ...a,
-      status: fbStatus[a.title] !== undefined ? fbStatus[a.title] : a.status,
-    }));
+    const base = (ACTIVITIES[currentDay.id] || []).map(a => {
+      const ov = fbTimeOvr[a.title];
+      return {
+        ...a,
+        status: fbStatus[a.title] !== undefined ? fbStatus[a.title] : a.status,
+        ...(ov ? { time: ov.time, end: ov.end } : {}),
+      };
+    });
     const userAdded = (fbUserActs[currentDay.id] || []).map((a, i) => ({
       ...a, _userAdded: true, _userIdx: i,
     }));
     return [...base, ...userAdded];
-  }, [currentDay.id, fbStatus, fbUserActs]);
+  }, [currentDay.id, fbStatus, fbUserActs, fbTimeOvr]);
+
+  const displayActivities = React.useMemo(() => {
+    if (!dragPreview) return activities;
+    return activities.map(a => a.title === dragPreview.title ? {...a, time: dragPreview.time, end: dragPreview.end} : a);
+  }, [activities, dragPreview]);
 
   const [showAddSheet, setShowAddSheet] = React.useState(false);
   const [newAct, setNewAct] = React.useState({ title: "", time: "", end: "", type: "do", meta: "", status: "booked" });
+
+  const handleDragStart = React.useCallback((e, act) => {
+    e.preventDefault();
+    setDragState({ activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || '', isResize: false });
+  }, [currentDay.id]);
+
+  const handleResizeStart = React.useCallback((e, act) => {
+    e.preventDefault(); e.stopPropagation();
+    setDragState({ activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || minsToTime((parseMins(act.time)||0)+60), isResize: true });
+  }, [currentDay.id]);
+
+  const handleCalMouseMove = React.useCallback((e) => {
+    if (!dragState) return;
+    const DAY_START = 6*60;
+    const dy = e.clientY - dragState.startY;
+    const deltaMins = Math.round(dy / CAL_HOUR_H * 60 / 15) * 15;
+    if (dragState.isResize) {
+      const origEnd = parseMins(dragState.origEnd) || ((parseMins(dragState.origTime)||0)+60);
+      const newEnd = Math.max(origEnd + deltaMins, (parseMins(dragState.origTime)||0) + 15);
+      setDragPreview({ title: dragState.activity.title, time: dragState.origTime, end: minsToTime(newEnd) });
+    } else {
+      const origStart = parseMins(dragState.origTime) || DAY_START;
+      const origEnd = parseMins(dragState.origEnd) || (origStart+60);
+      const dur = origEnd - origStart;
+      const newStart = Math.max(DAY_START, Math.min(origStart + deltaMins, 23*60 - dur));
+      setDragPreview({ title: dragState.activity.title, time: minsToTime(newStart), end: minsToTime(newStart+dur) });
+    }
+  }, [dragState]);
+
+  const handleCalMouseUp = React.useCallback((e) => {
+    if (!dragState) { setDragState(null); setDragPreview(null); return; }
+    if (dragPreview) {
+      const a = dragState.activity;
+      if (a._userAdded) {
+        const dayActs = [...(fbUserActs[dragState.dayId] || [])];
+        if (dayActs[a._userIdx]) {
+          dayActs[a._userIdx] = { ...dayActs[a._userIdx], time: dragPreview.time, end: dragPreview.end };
+          if (fbdb) fbdb.ref('trip2026/userActivities/' + dragState.dayId).set(dayActs).catch(()=>{});
+        }
+      } else {
+        if (fbdb) fbdb.ref('trip2026/timeOvr/' + encodeURIComponent(a.title)).set({ time: dragPreview.time, end: dragPreview.end }).catch(()=>{});
+      }
+    }
+    setDragState(null); setDragPreview(null);
+  }, [dragState, dragPreview, fbUserActs]);
 
   const saveNewAct = () => {
     if (!newAct.title.trim() || !newAct.time) return;
@@ -4952,29 +5078,35 @@ function App() {
                 <div key={h} className="cal-hour-label">{String(h).padStart(2,"0")}:00</div>
               ))}
             </div>
-            <div className="cal-track" style={{height: hours.length * CAL_HOUR_H + "px"}}>
+            <div ref={calTrackRef} className="cal-track" style={{height: hours.length * CAL_HOUR_H + "px"}}
+              onMouseMove={handleCalMouseMove}
+              onMouseUp={handleCalMouseUp}
+              onMouseLeave={handleCalMouseUp}>
               {hours.map((h, i) => (
                 <div key={h} className="cal-grid-line" style={{top: i * CAL_HOUR_H + "px"}} />
               ))}
-              {calLayout(activities.filter(a => a.type !== "rest" && parseMins(a.time) !== null)).map((ev, idx) => (
+              {calLayout(displayActivities.filter(a => a.type !== "rest" && parseMins(a.time) !== null)).map((ev, idx) => (
                 <ActivityCalCard
-                  key={idx}
+                  key={ev.a.title + idx}
                   a={ev.a}
                   top={ev.top}
                   height={ev.displayHeight}
-                  left={"calc(" + (ev.lane / ev.maxLanes * 100) + "% + 8px)"}
-                  width={"calc(" + (100 / ev.maxLanes * 100 / 100) + "% - 16px)"}
+                  left={"calc(" + (ev.lane / ev.maxLanes * 100) + "% + 2px)"}
+                  width={"calc(" + (100 / ev.maxLanes) + "% - 4px)"}
                   onOpen={() => setOpenActivity({...ev.a, dayId: currentDay.id, cityId: currentCity.id})}
                   onCycleStatus={ev.a._userAdded ? null : (e) => { e.stopPropagation(); cycleStatus(ev.a.title, ev.a.status); }}
                   onDelete={ev.a._userAdded ? (e) => { e.stopPropagation(); deleteUserActivity(currentDay.id, ev.a._userIdx); } : null}
+                  onDragStart={(e) => handleDragStart(e, ev.a)}
+                  onResizeStart={(e) => handleResizeStart(e, ev.a)}
+                  isDragging={!!(dragPreview && dragPreview.title === ev.a.title && dragState && !dragState.isResize)}
                 />
               ))}
-              {/* Add event button */}
-              <button className="cal-add-btn" style={{position:"absolute", bottom:12, left:8, right:8, width:"auto"}}
-                onClick={() => setShowAddSheet(true)}>
-                + Add to this day
-              </button>
             </div>
+            {/* Add event button — below last time slot */}
+            <button className="cal-add-btn" style={{margin:"8px 0 0", position:"relative", width:"100%", display:"block"}}
+              onClick={() => setShowAddSheet(true)}>
+              + Add to this day
+            </button>
           </div>
         </div>
 
@@ -5310,37 +5442,75 @@ function Task({ r, index, done, onToggle }) {
   );
 }
 
-function ActivityCalCard({ a, top, height, left, width, onOpen, onCycleStatus, onDelete }) {
-  const gradient =
-    a.tone === "mint"   ? "var(--grad-do)" :
-    a.tone === "hot"    ? "var(--grad-eat)" :
-    a.tone === "accent" ? "var(--grad-travel)" :
-                          "var(--grad-warm)";
-  const isShort = height < 52;
-  const statusBadge = { booked: ["booked","✓ Booked"], decide: ["decide","? Decide"], hold: ["hold","⏸ Hold"] }[a.status];
+function ActivityCalCard({ a, top, height, left, width, onOpen, onCycleStatus, onDelete, onDragStart, onResizeStart, isDragging }) {
+  const TYPE_BG = {
+    eat:     "linear-gradient(135deg,#FFB800 0%,#FF4D26 50%,#FF1F6D 100%)",
+    do:      "linear-gradient(135deg,#4EF794 0%,#00E0FF 55%,#5EAEFF 100%)",
+    transit: "linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)",
+    flight:  "linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)",
+    stay:    "linear-gradient(135deg,#5EAEFF 0%,#8B3FFF 55%,#FF3FE0 100%)",
+  };
+  const TYPE_EMOJI = { eat:"🍴", do:"🚶", transit:"🚗", flight:"✈️", stay:"🏨" };
+  const TYPE_LABEL = { eat:"EAT", do:"DO", transit:"GO", flight:"FLY", stay:"STAY" };
+  const isShort = height < 58;
+  const iconBg = TYPE_BG[a.type] || TYPE_BG.do;
+  const statusInfo = {
+    booked: { bg:"oklch(0.85 0.10 155)", text:"oklch(0.25 0.12 155)", label:"✓ Booked" },
+    decide: { bg:"oklch(0.92 0.10 50)",  text:"oklch(0.34 0.14 50)",  label:"? Decide" },
+    hold:   { bg:"var(--line-2)",        text:"var(--ink-2)",          label:"⏸ Hold"   },
+  }[a.status];
+  const place = (() => { try { const d = distanceFor(a); return d ? d.split('·')[0].trim() : ''; } catch { return ''; } })();
+  const hasUrl = a.url && (a.url.startsWith('http') || a.url.startsWith('./docs/'));
+
   return (
-    <div className="cal-event"
-      style={{top: top+"px", height: Math.max(height,32)+"px", left, width}}
-      onClick={onOpen}>
-      <div className="cal-event-bar" style={{background: gradient}} />
-      <div className="cal-event-body">
-        {!isShort && (
-          <div className="cal-event-time">{a.time}{a.end ? " – " + a.end : ""}</div>
-        )}
-        <div className="cal-event-title">{a.title}</div>
-        {!isShort && statusBadge && (
-          <span className={"cal-event-badge " + statusBadge[0]}>{statusBadge[1]}</span>
+    <div
+      className={"cal-event" + (isDragging ? " is-dragging" : "")}
+      style={{top:top+"px", height:Math.max(height,42)+"px", left, width,
+              display:"flex", alignItems:"stretch", padding:0, overflow:"hidden",
+              cursor: onDragStart ? "grab" : "pointer", position:"absolute"}}
+      onClick={onOpen}
+      onMouseDown={(e) => {
+        if (e.target.classList.contains('cal-del-btn') || e.target.dataset.resize) return;
+        onDragStart && onDragStart(e);
+      }}>
+
+      {/* Left: Type Icon */}
+      <div className="cal-event-icon" style={{background: iconBg}}>
+        <span style={{fontSize: isShort ? 16 : 14, lineHeight:1}}>{TYPE_EMOJI[a.type] || "📍"}</span>
+        {!isShort && <span style={{fontSize:7, color:"white", fontWeight:800, letterSpacing:"0.06em", opacity:0.88}}>{TYPE_LABEL[a.type] || "DO"}</span>}
+      </div>
+
+      {/* Content */}
+      <div className="cal-event-info">
+        <div style={{minWidth:0}}>
+          <div className="cal-event-time-row">{a.time}{a.end ? " – " + a.end : ""}</div>
+          <div className="cal-event-name">{a.title}</div>
+          {!isShort && place && <div className="cal-event-place">📍 {place}</div>}
+        </div>
+        {!isShort && statusInfo && (
+          <button
+            className={"cal-status-pill " + (a.status||"")}
+            style={{background:statusInfo.bg, color:statusInfo.text}}
+            onClick={(e) => { e.stopPropagation(); onCycleStatus && onCycleStatus(e); }}>
+            {statusInfo.label}
+          </button>
         )}
       </div>
-      {onCycleStatus && (
-        <button className={"cal-status-btn " + (a.status || "none")} onClick={onCycleStatus}
-          title={"Status: " + (a.status || "none") + " — click to cycle"}>
-          {a.status === "booked" ? "✓" : a.status === "decide" ? "?" : a.status === "hold" ? "⏸" : "+"}
-        </button>
+
+      {/* URL link */}
+      {hasUrl && !isShort && (
+        <a className="cal-event-url-btn" href={a.url} target="_blank" rel="noopener noreferrer"
+          onClick={e => e.stopPropagation()} title="Open website">↗</a>
       )}
+
+      {/* Delete */}
       {onDelete && (
-        <button className="cal-del-btn" onClick={onDelete} title="Remove">×</button>
+        <button className="cal-del-btn" onClick={(e) => { e.stopPropagation(); onDelete(e); }} title="Remove">×</button>
       )}
+
+      {/* Resize handle */}
+      <div className="cal-resize-handle" data-resize="1"
+        onMouseDown={(e) => { e.stopPropagation(); e.preventDefault(); onResizeStart && onResizeStart(e); }} />
     </div>
   );
 }
@@ -5764,6 +5934,8 @@ function MapEmbed({ mapUrl }) {
 }
 
 function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
+  const [editTime, setEditTime] = React.useState(a.time || '');
+  const [editEnd, setEditEnd] = React.useState(a.end || '');
   const statusLabel = { booked: "Booked", hold: "On hold", decide: "Decide" }[a.status] || "";
   const StatusIcon = a.status === "booked" ? Icon.checkSm : a.status === "hold" ? Icon.clock : Icon.q;
   const gradient =
@@ -5772,6 +5944,19 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
     a.tone === "accent" ? "var(--grad-travel)" : "var(--grad-warm)";
   const isFlight = a.type === "flight";
   const isEat = a.type === "eat";
+  const TYPE_BG = {
+    eat:"linear-gradient(135deg,#FFB800 0%,#FF4D26 50%,#FF1F6D 100%)",
+    do:"linear-gradient(135deg,#4EF794 0%,#00E0FF 55%,#5EAEFF 100%)",
+    transit:"linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)",
+    flight:"linear-gradient(135deg,#FF3FE0 0%,#8B3FFF 60%,#3F4DFF 100%)",
+    stay:"linear-gradient(135deg,#5EAEFF 0%,#8B3FFF 55%,#FF3FE0 100%)",
+  };
+  const TYPE_EMOJI = { eat:"🍴", do:"🚶", transit:"🚗", flight:"✈️", stay:"🏨" };
+  const TYPE_LABEL = { eat:"Dining", do:"Activity", transit:"Transit", flight:"Flight", stay:"Hotel" };
+
+  const saveTime = (t, en) => {
+    if (fbdb && a.title) fbdb.ref('trip2026/timeOvr/' + encodeURIComponent(a.title)).set({time:t||editTime, end:en||editEnd}).catch(()=>{});
+  };
 
   return (
     <React.Fragment>
@@ -5782,7 +5967,20 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
         <div className="drawer-hero" style={{background: gradient}}>
           {PHOTOS[a.title] && <img src={PHOTOS[a.title]} alt="" style={{width:"100%", height:"100%", objectFit:"cover", position:"absolute", top:0, left:0, display:"block"}} onError={e => e.target.style.display="none"} />}
           <div className="drawer-hero-overlay">
-            <div className="caps" style={{color:"white", fontSize:10, opacity:0.9, textShadow:"0 1px 3px rgba(0,0,0,0.6)"}}>{a.type === "do" ? "Activity" : a.type === "eat" ? "Dining" : a.type === "stay" ? "Hotel" : a.type === "transit" ? "Transit" : a.type === "flight" ? "Flight" : a.type}</div>
+            <div style={{display:"flex", alignItems:"center", gap:10}}>
+              {/* Type icon tile */}
+              <div style={{width:52, height:52, borderRadius:12, background:TYPE_BG[a.type]||TYPE_BG.do,
+                display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
+                gap:3, flexShrink:0, boxShadow:"0 2px 10px rgba(0,0,0,0.25)"}}>
+                <span style={{fontSize:20, lineHeight:1}}>{TYPE_EMOJI[a.type]||"📍"}</span>
+                <span style={{fontSize:8, color:"white", fontWeight:800, letterSpacing:"0.07em", opacity:0.9}}>
+                  {(TYPE_LABEL[a.type]||"DO").toUpperCase()}
+                </span>
+              </div>
+              <div className="caps" style={{color:"white", fontSize:11, opacity:0.95, textShadow:"0 1px 3px rgba(0,0,0,0.6)", fontWeight:700}}>
+                {TYPE_LABEL[a.type] || a.type}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -5813,18 +6011,22 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
             </div>
           )}
 
-          {/* Time block */}
+          {/* Time block — editable */}
           <div className="drawer-section">
-            <div className="drawer-section-h caps">When</div>
+            <div className="drawer-section-h caps">When <span style={{fontWeight:400, fontSize:9, color:"var(--ink-3)", textTransform:"none", marginLeft:4}}>tap to edit</span></div>
             <div className="drawer-time">
               <div>
                 <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)"}}>Start</div>
-                <div style={{fontFamily:"Archivo", fontWeight:900, fontSize:22, letterSpacing:"-0.02em"}}>{a.time}</div>
+                <input type="time" className="drawer-time-input" value={editTime}
+                  onChange={e => setEditTime(e.target.value)}
+                  onBlur={e => saveTime(e.target.value, editEnd)} />
               </div>
               <div style={{flex:1, height:1, background:"var(--line)", margin:"0 12px"}}></div>
               <div>
                 <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)"}}>End</div>
-                <div style={{fontFamily:"Archivo", fontWeight:900, fontSize:22, letterSpacing:"-0.02em"}}>{a.end}</div>
+                <input type="time" className="drawer-time-input" value={editEnd}
+                  onChange={e => setEditEnd(e.target.value)}
+                  onBlur={e => saveTime(editTime, e.target.value)} />
               </div>
             </div>
           </div>
@@ -5864,7 +6066,7 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
           )}
 
           {/* Website / Tickets */}
-          {!isFlight && (websiteFor(a) || a.url?.startsWith('./docs/') || (a.status === "booked" && a.conf)) && (
+          {!isFlight && (websiteFor(a) || a.url?.startsWith('./docs/') || a.conf) && (
             <div className="drawer-section">
               <div className="drawer-section-h caps">Tickets &amp; Website</div>
               <div className="drawer-links">
