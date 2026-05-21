@@ -1420,7 +1420,7 @@ const css = `
   /* ── Event editing UI ───────────────────────────────────────────────── */
   .cal-add-btn {
     display: flex; align-items: center; justify-content: center; gap: 6px;
-    width: 100%; margin: 8px 0 0; padding: 11px 16px;
+    width: 50%; margin: 10px auto 0; padding: 11px 16px;
     background: #1B72E8; color: white;
     border: none; border-radius: 8px;
     font-family: "Archivo", sans-serif; font-weight: 800;
@@ -1583,11 +1583,12 @@ const css = `
     display: flex; align-items: center; justify-content: center; gap: 4px;
     width: 100%; padding: 5px 10px;
     font-size: 11.5px; font-weight: 800; cursor: pointer; border: none;
-    letter-spacing: 0.03em; line-height: 1; flex-shrink: 0;
+    letter-spacing: 0.06em; line-height: 1; flex-shrink: 0;
+    text-transform: uppercase; font-family: "Archivo", sans-serif;
   }
-  .cal-status-bar.booked { background: oklch(0.80 0.13 155); color: oklch(0.22 0.12 155); }
-  .cal-status-bar.decide { background: oklch(0.88 0.13 50);  color: oklch(0.30 0.14 50);  }
-  .cal-status-bar.hold   { background: var(--line-2);        color: var(--ink-2);          }
+  .cal-status-bar.booked { background: #00B07A; color: white; }
+  .cal-status-bar.decide { background: #FF2D55; color: white; }
+  .cal-status-bar.hold   { background: #FF9500; color: white; }
   .cal-resize-handle {
     position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
     cursor: ns-resize; z-index: 5;
@@ -4601,6 +4602,11 @@ function App() {
     return () => { sRef.off(); uRef.off(); tRef.off(); };
   }, []);
 
+  // Firebase keys can't contain . # $ / [ ]
+  function fbKey(title) {
+    return title.replace(/[.#$\[\]/]/g, '_');
+  }
+
   function minsToTime(m) {
     m = Math.max(0, Math.min(Math.round(m), 23*60+59));
     return String(Math.floor(m/60)).padStart(2,'0') + ':' + String(m%60).padStart(2,'0');
@@ -4637,7 +4643,7 @@ function App() {
 
   const activities = React.useMemo(() => {
     const base = (ACTIVITIES[currentDay.id] || []).map(a => {
-      const ov = fbTimeOvr[encodeURIComponent(a.title)];
+      const ov = fbTimeOvr[fbKey(a.title)];
       return {
         ...a,
         status: fbStatus[a.title] !== undefined ? fbStatus[a.title] : a.status,
@@ -4703,7 +4709,7 @@ function App() {
           if (fbdb) fbdb.ref('trip2026/userActivities/' + dragState.dayId).set(dayActs).catch(()=>{});
         }
       } else {
-        if (fbdb) fbdb.ref('trip2026/timeOvr/' + encodeURIComponent(a.title)).set({ time: dragPreview.time, end: dragPreview.end }).catch(()=>{});
+        if (fbdb) fbdb.ref('trip2026/timeOvr/' + fbKey(a.title)).set({ time: dragPreview.time, end: dragPreview.end }).catch(()=>{});
       }
     }
     setDragState(null); setDragPreview(null);
@@ -5109,8 +5115,7 @@ function App() {
               ))}
             </div>
             {/* Add event button — below last time slot */}
-            <button className="cal-add-btn" style={{margin:"8px 0 0", position:"relative", width:"100%", display:"block"}}
-              onClick={() => setShowAddSheet(true)}>
+            <button className="cal-add-btn" onClick={() => setShowAddSheet(true)}>
               + Add to this day
             </button>
           </div>
@@ -5909,39 +5914,58 @@ function CityOverview({ city, country, onPickDay, onOpenActivity }) {
 ============================================================ */
 
 function MapEmbed({ mapUrl }) {
-  const [src, setSrc] = React.useState(null);
-  const query = mapUrl.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' ');
-  const llMatch = mapUrl.match(/ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
+  const mapRef = React.useRef(null);
+  const instanceRef = React.useRef(null);
+  const [coords, setCoords] = React.useState(null);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
+    const llMatch = mapUrl.match(/[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/);
     if (llMatch) {
-      const lat = parseFloat(llMatch[1]), lon = parseFloat(llMatch[2]);
-      const d = 0.012;
-      setSrc(`https://www.openstreetmap.org/export/embed.html?bbox=${lon-d},${lat-d},${lon+d},${lat+d}&layer=mapnik&marker=${lat},${lon}`);
-    } else {
-      fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`, {
-        headers: { 'User-Agent': 'TripPlanner2026/1.0' }
-      })
-        .then(r => r.json())
-        .then(data => {
-          if (data[0]) {
-            const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
-            const d = 0.012;
-            setSrc(`https://www.openstreetmap.org/export/embed.html?bbox=${lon-d},${lat-d},${lon+d},${lat+d}&layer=mapnik&marker=${lat},${lon}`);
-          }
-        })
-        .catch(() => {});
+      setCoords({ lat: parseFloat(llMatch[1]), lon: parseFloat(llMatch[2]) });
+      setLoading(false);
+      return;
     }
+    const query = mapUrl.replace('https://maps.google.com/?q=','').split('&')[0].replace(/\+/g,' ');
+    fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+      { headers: { 'User-Agent': 'TripPlanner2026/1.0' } })
+      .then(r => r.json())
+      .then(data => {
+        if (data && data[0]) setCoords({ lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) });
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, [mapUrl]);
 
-  if (!src) return (
-    <div style={{height:140, borderRadius:10, background:"var(--surface-2)", display:"flex", alignItems:"center", justifyContent:"center", color:"var(--ink-3)", fontSize:12, border:"1px solid var(--line)"}}>Loading map…</div>
+  React.useEffect(() => {
+    if (!coords || !mapRef.current || !window.L) return;
+    if (instanceRef.current) { instanceRef.current.remove(); instanceRef.current = null; }
+    const map = window.L.map(mapRef.current, {
+      center: [coords.lat, coords.lon], zoom: 15,
+      zoomControl: false, scrollWheelZoom: false, attributionControl: false,
+    });
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    const icon = window.L.divIcon({
+      className: '',
+      html: '<div style="width:14px;height:14px;border-radius:50%;background:#1B72E8;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>',
+      iconSize: [14, 14], iconAnchor: [7, 7],
+    });
+    window.L.marker([coords.lat, coords.lon], { icon }).addTo(map);
+    instanceRef.current = map;
+    return () => { if (instanceRef.current) { instanceRef.current.remove(); instanceRef.current = null; } };
+  }, [coords]);
+
+  if (loading) return (
+    <div style={{height:160, borderRadius:10, background:"var(--line)", display:"flex", alignItems:"center", justifyContent:"center", color:"var(--ink-3)", fontSize:12}}>Loading map…</div>
   );
-  return (
-    <iframe width="100%" height="180" frameBorder="0"
-      style={{borderRadius:10, display:"block", border:"1px solid var(--line)"}}
-      src={src} loading="lazy" title="map" />
+  if (!coords) return (
+    <a href={mapUrl} target="_blank" rel="noopener noreferrer"
+      style={{display:"flex", alignItems:"center", gap:6, padding:"12px 14px", color:"#1B72E8", fontSize:13, fontWeight:600, textDecoration:"none"}}>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 10c0 7-8 13-8 13s-8-6-8-13a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      Open in Maps
+    </a>
   );
+  return <div ref={mapRef} style={{height:160, borderRadius:10, overflow:"hidden"}} />;
 }
 
 function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
@@ -5966,7 +5990,7 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
   };
 
   const saveTime = (t, en) => {
-    if (fbdb && a.title) fbdb.ref('trip2026/timeOvr/' + encodeURIComponent(a.title)).set({time:t||editTime, end:en||editEnd}).catch(()=>{});
+    if (fbdb && a.title) fbdb.ref('trip2026/timeOvr/' + fbKey(a.title)).set({time:t||editTime, end:en||editEnd}).catch(()=>{});
   };
 
   return (
@@ -6024,20 +6048,26 @@ function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
 
           {/* Time block — editable */}
           <div className="drawer-section">
-            <div className="drawer-section-h caps">When <span style={{fontWeight:400, fontSize:9, color:"var(--ink-3)", textTransform:"none", marginLeft:4}}>tap to edit</span></div>
+            <div className="drawer-section-h caps">When</div>
             <div className="drawer-time">
               <div>
-                <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)"}}>Start</div>
-                <input type="time" className="drawer-time-input" value={editTime}
+                <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)", marginBottom:4}}>Start</div>
+                <input type="text" className="drawer-time-input" value={editTime}
+                  placeholder="HH:MM"
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  inputMode="numeric"
                   onChange={e => setEditTime(e.target.value)}
-                  onBlur={e => saveTime(e.target.value, editEnd)} />
+                  onBlur={e => { const v = e.target.value; if (/^\d{2}:\d{2}$/.test(v)) saveTime(v, editEnd); }} />
               </div>
-              <div style={{flex:1, height:1, background:"var(--line)", margin:"0 12px"}}></div>
+              <div style={{flex:1, height:1, background:"var(--line)", margin:"0 16px"}}></div>
               <div>
-                <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)"}}>End</div>
-                <input type="time" className="drawer-time-input" value={editEnd}
+                <div className="caps" style={{fontSize:9.5, color:"var(--ink-3)", marginBottom:4}}>End</div>
+                <input type="text" className="drawer-time-input" value={editEnd}
+                  placeholder="HH:MM"
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  inputMode="numeric"
                   onChange={e => setEditEnd(e.target.value)}
-                  onBlur={e => saveTime(editTime, e.target.value)} />
+                  onBlur={e => { const v = e.target.value; if (/^\d{2}:\d{2}$/.test(v)) saveTime(editTime, v); }} />
               </div>
             </div>
           </div>
