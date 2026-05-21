@@ -869,6 +869,46 @@ const TRAVELERS = [
 
 const SHARE_LINK = "ryanjkam-cmd.github.io/trip-2026/";
 
+const QR = {
+  bl_barcode: "data:image/png;base64,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",
+  glacier_qr: "data:image/png;base64,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",
+  qr_bluelagoon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADISURBVEiJ7dZLDoUgDAXQJiyAJbH1LokFkPT1tkJ86tjrgMYonhHpRxR7DNm8+cqCaFKtdKwKj/HsbYDb8criLg55+U75bGrfYAc+R9Fs3omcjRxFu/f3q5wxpK01i31TFl3sU3UqGoGtCyYb5dJxStX7HI0sA3ULYzLSg6mqOqoWHvvnHxnqvsaXhsgZ/ha7UyLncONEit4h8jwYVY6E8TgOAR+sNVtczqLZdYMU1vXnQuMoGlo4UkXkeTAK/lxw0fghNm/+ix/j/NDdKBYjcAAAAABJRU5ErkJggg==",
+  qr_glacier:    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADMSURBVEiJ7ZVBDsQgDAMj5QE8qV/nSTwAKeskq61KOcd7wAeKphcLGyK2lRx88IrFddm4dPhOedi/4/JNrkQ8RN2de4RTOk6D/4Bn63wcoU0R22RZirPIuu93KU5lbl+RMNy5r0gsT4uGURzrWBeD9RgVnrBmfTb0SIhYWnj07sRp8XBca/QXBvvTdzVOaaZ1GyTg3+W+G0TC+eAhuuk/lxFdi3MwxkujrxFdj/1itY5DMzaWGEfpkYYjtHjzkJsQcRb5ZZCANzr44Ic+qtu1cdPqxvwAAAAASUVORK5CYII=",
+  qr_hertz:      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADNSURBVEiJ7ZXLDcQgDERHooCUROuURAGWvP4EZbNwZvbAHBJ4yWFkjwG6FA4++BfDVeVqpfuq8LC/exXAnveWhTtKr3CD1ZzSsZVK/wMbWxnci6Np8X3u5VacQS5ucM73Vpzy+DwbDjZ34RGCmjVjYT9gtMllrYOkTRK2Ipk1iQh763jYfKm2XJhTJtaW+c3hViZ2Fe+Yvgxux2O4p3xvx3ngWYhivhsTxyXgU4XxFxVHnWwBZeN7rJ/hZuBs2jBIxF8X47BJwgsdfPBLHyB8qq8VFwvOAAAAAElFTkSuQmCC",
+  qr_united_out: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADSSURBVEiJ7ZVRDsQgCERJOIBH8uoeyQOYuAO4Xbf12+mHpKn6/JkwgNKXIQcffMdikVsqWm2nPGxrzU0E/3Fk4Spas5jADKV0jFT1d2CwlcC92E3z+6eXW3EUsprAZ31vxRFWPr8DB0Oda5QmOXLGwtoL1HW3rqXJy+1YUseMMdN8T8QQqNfYC6UkbOmJtnaNysMRkAl17d5SW/Fo7m5sLp/9OOyyGZPKlCoG/j6M9kq/ANuAqRI3XBxJmpubgN00AAjER8TTwzj6m4UXcfDBf/EB106md9y/3J4AAAAASUVORK5CYII=",
+  qr_united_ret: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADGSURBVEiJ7dbBDcMgDAVQSx4gI7E6IzEAkvttg9KknPk9YKVK8tqDZWOo2DLk8OE3i0fBR5s/KY/93orGNV5Z3MQtvkSmdEaR/oTjgc1ZpKvaopdbORdyLJ/f9b2VM3pCBonlQo6lo1RW+1feHPaOAZyNyMjOL4yUN43I3RPMvsVy5nHsu2OPwU+UyBEaNUO1jMc53FkwVIvI42C0qo+RYnAeR3Oq6GwB2GzoPIf7bhqBR9PGOfDu5UaefypLjhSRF3H48CM+BhCOa8WX1IsAAAAASUVORK5CYII=",
+  qr_finnair1:   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADOSURBVEiJ7ZZRDsQgCEQn8QAcyat7JA9Awgq4aXftt9MPSdPWx89EBhT2GDj44H8Mj6rSSve/wsP+7VWB8Z5LFu4ovcIF1qGUjsdW2TvwYE8C9+IoWuTXWm7FaeTiAld/b8UZbp9rwcFDXWiEouae0bA0FUsHeYaHwz7wTJiaiDXKNceeGBWbRk/PscfD07vDPjHzjIezucPI0GvgEXCWy3PSIMbE34PRBb4Ax4yB3TqNhXOTynpt2YmzaGKhrhHxPBijuf3h4Yc4+OCf+AAwxKUzTmtiFgAAAABJRU5ErkJggg==",
+  qr_finnair2:   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADTSURBVEiJ7ZZBDsUgCERJOECP5NU9Ug9gwmfANKl1zfyFLCy+lYEZqNg25OCDVyyINq6uNzLlYXzvJlf3c15Z+BYFNpzS6HjEA/8Bq20fWIujaWoun28vS3EKGW/c6LsUTz8nmBcODjPJkGbonhBxaKe7pdLcRJy2zsSsM3HMXW+a5ygYD6en4ao0Fg/PPrmI4O9HPgT8mNsL9qpgOc6BZ9By/4zeWpzryOXjA+/qdKwwE+YNHY8okq6/LbU4mgaLxx4g4hRyriNZ9V2KN3Hwwa/4ARFJqP8QeHsEAAAAAElFTkSuQmCC",
+  qr_klm:        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuAQMAAACVwqStAAAABlBMVEUAAAD///+l2Z/dAAAAAnRSTlP//8i138cAAAAJcEhZcwAACxIAAAsSAdLdfvwAAADVSURBVEiJ7ZZBDsQgCEVJOECP5NU9kgcgYfhgZmzrGmYhC6tvRfz/Y0m3RQcf/MSEanJ1HthxHcZ3NLq6rfNYhQcxsGKlVo7FG/wHzLptMBe7aKxmn7eWqTiMjB43/k7FM88B5qEGe5hIqCnUo0IsaM0VMztTK8SYdoQGLd9yLfZJx4zbUoQb1QuxbSGXhztSXodRbpy+jJkCHOGOt1EXf+fjGHjmIMsWP+dgLv49R7efhSps+f76qBaLG+d9VanYReOpWyWeD6MPGFpHbzre1MEH3+oDp7OmCypKt+AAAAAASUVORK5CYII=",
+};
+
+const WALLET = [
+  { cat: "Flights", icon: "✈", items: [
+    { name: "United SFO→KEF", dates: "Jun 21", conf: "BK90WF", sub: "UA433+UA398 · outbound", qr: "qr_united_out", pdf: "docs/pdfs/United_Outbound_SFO-IAD-KEF.pdf", note: "Add to Apple Wallet via united.com/boarding" },
+    { name: "Finnair KEF→HEL", dates: "Jun 30", conf: "7YNJSD", sub: "AY994 · 17:15→23:40", qr: "qr_finnair1", pdf: "docs/pdfs/Finnair_KEF-HEL_7YNJSD.pdf", note: "Add to Apple Wallet via finnair.com" },
+    { name: "Finnair TLL→KRK", dates: "Jul 6", conf: "8HJVGP", sub: "AY1018+AY1163 via HEL", qr: "qr_finnair2", pdf: "docs/pdfs/Finnair_TLL-HEL-KRK_8HJVGP.pdf", note: "Add to Apple Wallet via finnair.com" },
+    { name: "KLM PRG→AMS", dates: "Jul 13", conf: "YBVHUY", sub: "KL1358 · 18:35→20:10", qr: "qr_klm", pdf: "docs/pdfs/KLM_PRG-AMS_YBVHUY_KL1358.pdf", note: "Add to Apple Wallet via klm.com" },
+    { name: "United AMS→SFO", dates: "Jul 17", conf: "DDHSFM", sub: "UA969 nonstop · return", qr: "qr_united_ret", pdf: null, note: "Add to Apple Wallet via united.com/boarding" },
+  ]},
+  { cat: "Car Rental", icon: "🚗", items: [
+    { name: "Hertz Iceland", dates: "Jun 22–30", conf: "L5663893739", sub: "Hyundai Tucson PHEV AWD · pay at pickup $860", qr: "qr_hertz", pdf: "docs/pdfs/Hertz_Car_Rental_KEF.pdf", note: "Pick up KEF airport Jun 22 · drop off Jun 30 1pm" },
+  ]},
+  { cat: "Tickets", icon: "🎫", items: [
+    { name: "Blue Lagoon", dates: "Jun 22", conf: "WBL05587130", sub: "Advance booking · CODE-128 barcode", qr: "bl_barcode", barcode: true, pdf: "docs/pdfs/BlueLagoon_WBL05587130.pdf", note: "Show this barcode at entrance" },
+    { name: "Into the Glacier", dates: "Jun 24 12:30pm", conf: "ARC-T127971879", sub: "Langjökull ice cave · ticket QR", qr: "glacier_qr", pdf: "docs/pdfs/IntoTheGlacier_Ticket_ARC-T127971879.pdf", note: "Show QR at glacier entrance. Invoice: ARC-89526296" },
+  ]},
+  { cat: "Hotels", icon: "🏨", items: [
+    { name: "EDITION Reykjavík", dates: "Jun 22–25", conf: "#78962273", sub: "Marriott · Austurstræti 2", qr: null, pdf: "docs/pdfs/Marriott_EDITION_Reykjavik_78962273.pdf", note: "" },
+    { name: "Farmer's Guest House", dates: "Jun 25–27", conf: "#5150979042", sub: "Booking.com · Meiri-Tunga 1, Hella", qr: null, pdf: "docs/pdfs/BookingCom_FarmersGuestHouse_Hella_5150979042.pdf", note: "Airbnb-style lockbox check-in" },
+    { name: "Hotel Vík í Mýrdal", dates: "Jun 27–30", conf: "#79476041", sub: "Expedia · Klettsvegur 1", qr: null, pdf: "docs/pdfs/Expedia_Hotel_Vik_Myrdal_79476041.pdf", note: "" },
+    { name: "Crowne Plaza Helsinki", dates: "Jun 30–Jul 3", conf: "73422231915860", sub: "Expedia · Mannerheimintie 50", qr: null, pdf: "docs/pdfs/Expedia_CrownePlaza_Helsinki_73422231915860.pdf", note: "" },
+    { name: "Novotel Tallinn", dates: "Jul 3–6", conf: "73422280565429", sub: "Expedia · A. Lauteri 3", qr: null, pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", note: "" },
+    { name: "AC Hotel Kraków", dates: "Jul 6–9", conf: "72331300", sub: "Marriott · pl. Szczepański 3", qr: null, pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf", note: "" },
+    { name: "Almanac X Alcron Prague", dates: "Jul 9–13", conf: "ZO-AX1043-36815", sub: "Amex Fine Hotels · Štěpánská 40", qr: null, pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", note: "$100 Amex F&B credit · call to confirm Greyson" },
+  ]},
+];
+
+
 const FOOD = {
   reykjavik: [
     { name: "Bæjarins Beztu Pylsur", cuisine: "Hot dogs", price: "$", tier: "quick", rating: 4.5, dist: "0.5 km", note: "Reykjavík institution — Bill Clinton ate here. Get one with everything (eina með öllu).", hue: 25, url: "https://maps.google.com/?q=Bajarins+Beztu+Pylsur+Reykjavik" },
@@ -4081,6 +4121,92 @@ function openMapsUrl(mapGoogleUrl, addrStr) {
 /* ============================================================
    APP
 ============================================================ */
+
+/* ============================================================
+   WALLET VIEW
+============================================================ */
+function WalletView() {
+  const [copied, setCopied] = React.useState(null);
+  const copy = (text, id) => {
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(id);
+    setTimeout(() => setCopied(null), 1800);
+  };
+  return (
+    <div style={{padding:"24px 20px", maxWidth:680, margin:"0 auto"}}>
+      <div style={{marginBottom:28}}>
+        <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"var(--ink-3)", textTransform:"uppercase", marginBottom:4}}>Documents & Wallet</div>
+        <h2 style={{margin:0, fontSize:22, fontWeight:700, color:"var(--ink)"}}>Iceland & Europe 2026</h2>
+        <p style={{margin:"4px 0 0", fontSize:12, color:"var(--ink-3)"}}>Jun 21 – Jul 17 · Tap conf to copy · PDF links open the original document</p>
+      </div>
+      {WALLET.map((section) => (
+        <div key={section.cat} style={{marginBottom:28}}>
+          <div style={{fontSize:11, fontWeight:700, letterSpacing:"0.08em", color:"var(--ink-3)", textTransform:"uppercase", marginBottom:10, display:"flex", alignItems:"center", gap:6}}>
+            <span>{section.icon}</span><span>{section.cat}</span>
+          </div>
+          <div style={{display:"flex", flexDirection:"column", gap:10}}>
+            {section.items.map((item, i) => (
+              <div key={i} style={{background:"var(--bg)", border:"1px solid var(--line)", borderRadius:12, padding:"14px 16px", display:"flex", gap:14, alignItems:"flex-start"}}>
+                {/* Left: code image */}
+                {item.qr && (
+                  <div style={{flexShrink:0, display:"flex", flexDirection:"column", alignItems:"center", gap:4}}>
+                    <img
+                      src={QR[item.qr]}
+                      alt={item.conf}
+                      style={{
+                        width: item.barcode ? 180 : 72,
+                        height: item.barcode ? 58 : 72,
+                        imageRendering:"pixelated",
+                        background:"white",
+                        borderRadius:6,
+                        padding:item.barcode ? "6px 8px" : 6,
+                        border:"1px solid var(--line)",
+                        display:"block"
+                      }}
+                    />
+                    {item.barcode && <div style={{fontSize:9, color:"var(--ink-3)", letterSpacing:"0.05em"}}>CODE-128</div>}
+                    {!item.barcode && item.qr && !item.qr.startsWith("qr_united") && !item.qr.startsWith("qr_finnair") && !item.qr.startsWith("qr_klm") && !item.qr.startsWith("qr_hertz") && <div style={{fontSize:9, color:"var(--ink-3)", letterSpacing:"0.05em"}}>QR CODE</div>}
+                  </div>
+                )}
+                {!item.qr && (
+                  <div style={{flexShrink:0, width:72, height:72, background:"var(--line-2)", borderRadius:8, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22}}>
+                    {section.icon}
+                  </div>
+                )}
+                {/* Right: details */}
+                <div style={{flex:1, minWidth:0}}>
+                  <div style={{fontSize:13, fontWeight:700, color:"var(--ink)", marginBottom:2}}>{item.name}</div>
+                  <div style={{fontSize:11, color:"var(--ink-3)", marginBottom:6}}>{item.dates} · {item.sub}</div>
+                  <button
+                    onClick={() => copy(item.conf, section.cat + i)}
+                    style={{
+                      background: copied === section.cat + i ? "oklch(0.65 0.14 145)" : "var(--line-2)",
+                      color: copied === section.cat + i ? "white" : "var(--ink)",
+                      border:"none", borderRadius:6, padding:"3px 8px", fontSize:12, fontFamily:"monospace",
+                      fontWeight:600, cursor:"pointer", marginBottom:6, display:"block"
+                    }}
+                  >
+                    {copied === section.cat + i ? "Copied!" : item.conf}
+                  </button>
+                  {item.note && <div style={{fontSize:10.5, color:"oklch(0.55 0.12 50)", marginBottom:4}}>{item.note}</div>}
+                  {item.pdf && (
+                    <a href={item.pdf} target="_blank" rel="noopener" style={{fontSize:11, color:"var(--ink-3)", textDecoration:"none", display:"inline-flex", alignItems:"center", gap:4, border:"1px solid var(--line)", borderRadius:5, padding:"2px 7px"}}>
+                      📄 PDF
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+      <div style={{marginTop:16, padding:"12px 14px", background:"var(--line-2)", borderRadius:10, fontSize:11, color:"var(--ink-3)", lineHeight:1.5}}>
+        <strong style={{color:"var(--ink)"}}>Boarding passes</strong> — get from airline apps. United, Finnair, and KLM all support Add to Apple Wallet. Conf numbers above are booking references only — airlines issue the actual boarding pass with scan code 24h before departure.
+      </div>
+    </div>
+  );
+}
+
 function App() {
   const [countryId, setCountryId] = useState("iceland");
   const [dayId, setDayId] = useState("d2");
@@ -4333,6 +4459,17 @@ function App() {
             <div className="lo-meta">8 days · 4 cities · 2 countries</div>
           </div>
         </button>
+        <button
+          className={"trip-overview-btn " + (mode === "wallet" ? "active" : "")}
+          onClick={() => setMode("wallet")}
+          style={{marginTop:6}}
+        >
+          <span className="lo-thumb" style={{fontSize:16}}>🎫</span>
+          <div className="lo-info">
+            <div className="lo-title">Documents & Wallet</div>
+            <div className="lo-meta">Conf codes · QR · PDFs</div>
+          </div>
+        </button>
         <div className="nav-section">
           <div className="nav-section-title">
             <span>{country.name}</span>
@@ -4400,6 +4537,7 @@ function App() {
       {/* ============ MAIN ============ */}
       <main className="main">
         {mode === "trip" && <TripOverview onPickDay={(id) => { setMode("day"); setDayId(id); }} onPickCity={(id) => { const c = TRIP.countries.flatMap(c=>c.cities).find(c=>c.id===id); if(c){setMode("city"); setDayId(c.days[0].id);} }} />}
+        {mode === "wallet" && <WalletView />}
         {mode === "city" && <CityOverview city={currentCity} country={country} onPickDay={(id) => { setMode("day"); setDayId(id); }} onOpenActivity={(a, dayId) => setOpenActivity({...a, dayId, cityId: currentCity.id})} />}
         {mode === "day" && (
         <React.Fragment>
