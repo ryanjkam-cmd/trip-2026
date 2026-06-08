@@ -166,11 +166,12 @@ const TRIP = {
         {
           id: "helsinki",
           name: "Helsinki",
-          subtitle: "Capital · Days 10–12",
+          subtitle: "Capital · Days 10–13",
           days: [
-            { id: "d10", n: 10, date: "Tue, Jun 30", weekday: "Tuesday",   title: "Vík → Helsinki" },
-            { id: "d11", n: 11, date: "Wed, Jul 1",  weekday: "Wednesday", title: "Allas Sea Pool" },
-            { id: "d12", n: 12, date: "Thu, Jul 3",  weekday: "Thursday",  title: "Suomenlinna → Tallinn" },
+            { id: "d10",  n: 10, date: "Tue, Jun 30", weekday: "Tuesday",   title: "Vík → Helsinki" },
+            { id: "d11",  n: 11, date: "Wed, Jul 1",  weekday: "Wednesday", title: "Allas Sea Pool" },
+            { id: "d11b", n: 12, date: "Thu, Jul 2",  weekday: "Thursday",  title: "Helsinki Day" },
+            { id: "d12",  n: 13, date: "Fri, Jul 3",  weekday: "Friday",    title: "Suomenlinna → Tallinn" },
           ],
         },
       ],
@@ -183,11 +184,11 @@ const TRIP = {
         {
           id: "tallinn",
           name: "Tallinn",
-          subtitle: "Medieval City · Days 13–15",
+          subtitle: "Medieval City · Days 14–16",
           days: [
-            { id: "d13", n: 13, date: "Fri, Jul 4",  weekday: "Friday",   title: "Seaplane Harbour" },
-            { id: "d14", n: 14, date: "Sat, Jul 5",  weekday: "Saturday", title: "Waterpark + Old Town" },
-            { id: "d15", n: 15, date: "Sun, Jul 6",  weekday: "Sunday",   title: "Escape Room → Kraków" },
+            { id: "d13", n: 14, date: "Sat, Jul 4",  weekday: "Saturday", title: "Seaplane Harbour" },
+            { id: "d14", n: 15, date: "Sun, Jul 5",  weekday: "Sunday",   title: "Waterpark + Old Town" },
+            { id: "d15", n: 16, date: "Mon, Jul 6",  weekday: "Monday",   title: "Escape Room → Kraków" },
           ],
         },
       ],
@@ -200,11 +201,11 @@ const TRIP = {
         {
           id: "krakow",
           name: "Kraków",
-          subtitle: "Royal City · Days 16–18",
+          subtitle: "Royal City · Days 17–19",
           days: [
-            { id: "d16", n: 16, date: "Mon, Jul 7",  weekday: "Monday",    title: "Arrive · Old Town" },
-            { id: "d17", n: 17, date: "Tue, Jul 8",  weekday: "Tuesday",   title: "Wieliczka Salt Mine" },
-            { id: "d18", n: 18, date: "Wed, Jul 9",  weekday: "Wednesday", title: "Kraków → Prague" },
+            { id: "d16", n: 17, date: "Tue, Jul 7",  weekday: "Tuesday",   title: "Arrive · Old Town" },
+            { id: "d17", n: 18, date: "Wed, Jul 8",  weekday: "Wednesday", title: "Wieliczka Salt Mine" },
+            { id: "d18", n: 19, date: "Thu, Jul 9",  weekday: "Thursday",  title: "Kraków → Prague" },
           ],
         },
       ],
@@ -217,12 +218,12 @@ const TRIP = {
         {
           id: "prague",
           name: "Prague",
-          subtitle: "Golden City · Days 19–22",
+          subtitle: "Golden City · Days 20–23",
           days: [
-            { id: "d19", n: 19, date: "Wed, Jul 9",  weekday: "Wednesday", title: "Arrive Prague" },
-            { id: "d20", n: 20, date: "Thu, Jul 10", weekday: "Thursday",  title: "Prague Castle" },
-            { id: "d21", n: 21, date: "Fri, Jul 11", weekday: "Friday",    title: "Charles Bridge + Josefov" },
-            { id: "d22", n: 22, date: "Sat, Jul 12", weekday: "Saturday",  title: "Last Day" },
+            { id: "d19", n: 20, date: "Thu, Jul 9",  weekday: "Thursday",  title: "Arrive Prague" },
+            { id: "d20", n: 21, date: "Fri, Jul 10", weekday: "Friday",    title: "Prague Castle" },
+            { id: "d21", n: 22, date: "Sat, Jul 11", weekday: "Saturday",  title: "Charles Bridge + Josefov" },
+            { id: "d22", n: 23, date: "Sun, Jul 12", weekday: "Sunday",    title: "Last Day" },
           ],
         },
       ],
@@ -235,13 +236,13 @@ const TRIP = {
         {
           id: "amsterdam",
           name: "Amsterdam",
-          subtitle: "Final City · Days 23–27",
+          subtitle: "Final City · Days 24–28",
           days: [
-            { id: "d23", n: 23, date: "Sun, Jul 13", weekday: "Sunday",    title: "Prague → Amsterdam" },
-            { id: "d24", n: 24, date: "Mon, Jul 14", weekday: "Monday",    title: "Rijksmuseum + Canals" },
-            { id: "d25", n: 25, date: "Tue, Jul 15", weekday: "Tuesday",   title: "Anne Frank House" },
-            { id: "d26", n: 26, date: "Wed, Jul 16", weekday: "Wednesday", title: "Last Day" },
-            { id: "d27", n: 27, date: "Thu, Jul 17", weekday: "Thursday",  title: "Depart AMS → SFO" },
+            { id: "d23", n: 24, date: "Mon, Jul 13", weekday: "Monday",    title: "Prague → Amsterdam" },
+            { id: "d24", n: 25, date: "Tue, Jul 14", weekday: "Tuesday",   title: "Rijksmuseum + Canals" },
+            { id: "d25", n: 26, date: "Wed, Jul 15", weekday: "Wednesday", title: "Anne Frank House" },
+            { id: "d26", n: 27, date: "Thu, Jul 16", weekday: "Thursday",  title: "Last Day" },
+            { id: "d27", n: 28, date: "Fri, Jul 17", weekday: "Friday",    title: "Depart AMS → SFO" },
           ],
         },
       ],
@@ -254,12 +255,12 @@ const ACTIVITIES = {
     { time: "07:00", end: "08:30", type: "rest", title: "Wake up · final pack", meta: "1.5h · check passports + docs · confirm car service" },
     { time: "09:30", end: "10:30", type: "transit", title: "Drive to SFO", meta: "45–60 min · rideshare or park at international terminal" },
     { time: "10:30", end: "12:00", type: "rest", title: "SFO check-in + security", meta: "1.5h · United international · TSA PreCheck" },
-    { time: "12:35", end: "20:42", type: "flight", title: "UA433 SFO → IAD", meta: "United · Seats 31C/31B/31A", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: "https://maps.google.com/?q=San+Francisco+International+Airport&ll=37.6213,-122.3790" },
+    { time: "12:45", end: "20:52", type: "flight", title: "UA2274 SFO → IAD", meta: "United · Seats 31C/31B/31A · dep 12:45 → arr 8:52 PM IAD", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: "https://maps.google.com/?q=San+Francisco+International+Airport&ll=37.6213,-122.3790" },
     { time: "20:42", end: "22:30", type: "rest", title: "IAD layover · find gate + food", meta: "1.75h · Dulles · grab dinner · terminal A/B · United Club if accessible" },
     { time: "22:35", end: "08:30", type: "flight", title: "UA398 IAD → KEF (overnight)", meta: "United · Seats 7F/7D/7E · arrive Jun 22", tone: "accent", status: "booked", conf: "BK90WF", priority: "must", url: "./docs/united_BK90WF.pdf", mapUrl: "https://maps.google.com/?q=Dulles+International+Airport+Virginia&ll=38.9531,-77.4565" },
   ],
   d2: [
-    { time: "08:30", end: "09:15", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · Expedia 73428089735424", tone: "muted", status: "hold", conf: "#36698256US0", priority: "must", url: "./docs/car_rental_hertz.pdf", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
+    { time: "08:30", end: "09:15", type: "transit", title: "Land KEF · Pick up Hertz Car", meta: "Hertz Hyundai Tucson PHEV AWD · Pay Later · Expedia 73428089735424", tone: "muted", status: "hold", conf: "L5663893739", priority: "must", url: "./docs/car_rental_hertz.pdf", mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
     { time: "09:15", end: "09:30", type: "transit", title: "Drive KEF → Blue Lagoon", meta: "12 km · 15 min · Route 41 · blue lava fields" },
     { time: "10:00", end: "13:00", type: "do", title: "Blue Lagoon", meta: "Ramp entry · therapeutic for Janelle · LAVA Restaurant lunch", rating: 4.5, reviews: 22104, tags: ["Spa", "Geothermal", "Accessible"], tone: "mint", status: "booked", conf: "WBL05587130", priority: "must", cost: 270, url: "./docs/blue_lagoon.pdf", mapUrl: "https://maps.google.com/?q=Blue+Lagoon+Iceland&ll=63.8803,-22.4437" },
     { time: "13:00", end: "14:30", type: "eat", title: "LAVA Restaurant", meta: "At Blue Lagoon · tasting menu overlooking the lagoon", rating: 4.4, reviews: 1820, tags: ["Lunch"], tone: "hot", status: "decide", priority: "nice", cost: 180, url: "https://www.bluelagoon.com/restaurants/lava-restaurant", mapUrl: "https://maps.google.com/?q=LAVA+Restaurant+Blue+Lagoon+Iceland" },
@@ -357,8 +358,8 @@ const ACTIVITIES = {
     { time: "09:00", end: "09:30", type: "eat", title: "Final Icelandic breakfast", meta: "Skyr · rye bread · hotel or grab-and-go · pack snacks for KEF drive" },
     { time: "11:00", end: "13:30", type: "transit", title: "Check out Vík → drive KEF", meta: "~190 km · 2.5 hrs · drop Hertz car at Keflavik Airport", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
     { time: "13:30", end: "16:30", type: "rest", title: "KEF airport · check in + lunch", meta: "3h buffer · Keflavik duty-free · grab lunch · clear security · KEF is small, fast" },
-    { time: "16:30", end: "20:00", type: "flight", title: "Finnair KEF → HEL", meta: "Seats 11E/11D/11F · 116,256 ISK · meals x3 + extra bag", tone: "accent", status: "booked", conf: "7YNJSD", priority: "must", url: "./docs/finnair_7YNJSD.pdf", mapUrl: null },
-    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Crowne Plaza Helsinki", meta: "Jun 30–Jul 3 · 3 nights · Conf 73422231915860", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
+    { time: "17:15", end: "23:40", type: "flight", title: "Finnair KEF → HEL", meta: "AY994 · dep 17:15 → arr 23:40 HEL (3h25m) · Seats 11E/11D/11F · 116,256 ISK · meals x3 + extra bag", tone: "accent", status: "booked", conf: "7YNJSD", priority: "must", url: "./docs/finnair_7YNJSD.pdf", mapUrl: null },
+    { time: "23:45", end: "23:59", type: "stay", title: "Late check-in — Crowne Plaza Helsinki", meta: "Lands HEL 23:40 · taxi to hotel · Jun 30–Jul 3 · 3 nights · Conf 73422231915860", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
   ],
   d11: [
     { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Crowne Plaza breakfast · first morning of the Baltic leg" },
@@ -368,6 +369,14 @@ const ACTIVITIES = {
     { time: "14:00", end: "15:30", type: "rest", title: "Afternoon rest at hotel", meta: "1.5h · Janelle recovery · pace the Baltic cities" },
     { time: "19:00", end: "21:00", type: "eat", title: "Restaurant Story or Ravintola Kuurna", meta: "New Nordic or cozy Finnish bistro · Market Square area", rating: 4.7, reviews: 980, tags: ["Dinner"], tone: "hot", status: "decide", priority: "nice", cost: 180, url: null, mapUrl: "https://maps.google.com/?q=Market+Square+Helsinki" },
     { time: "21:30", end: "22:30", type: "do", title: "Alt: Senate Square + Helsinki Cathedral", meta: "Neo-classical dome · ramp access · 15 min walk from market · stunning at dusk in long Nordic evening", tone: "mint", isAlt: true, timeNeeded: "45 min", priority: "nice", mapUrl: "https://maps.google.com/?q=Helsinki+Cathedral+Finland" },
+  ],
+  d11b: [
+    { time: "08:30", end: "09:30", type: "rest", title: "Slow morning · hotel breakfast", meta: "1h · Crowne Plaza · restored 3rd Helsinki day (Jul 2) · activities flexible — to finalize" },
+    { time: "10:00", end: "11:30", type: "do", title: "Central Library Oodi", meta: "Flat · free · architectural landmark · Greyson-friendly · ~10 min from hotel", tags: ["Accessible", "Free"], tone: "mint", status: "decide", priority: "nice", url: "https://www.oodihelsinki.fi/en/", mapUrl: "https://maps.google.com/?q=Oodi+Helsinki+Central+Library" },
+    { time: "12:00", end: "13:00", type: "eat", title: "Lunch — Kamppi / city centre", meta: "Casual · flat walking · near Oodi", tone: "hot", status: "decide", priority: "nice", mapUrl: "https://maps.google.com/?q=Kamppi+Helsinki" },
+    { time: "13:30", end: "14:30", type: "do", title: "Temppeliaukio Rock Church", meta: "Carved into bedrock · short visit · central · ramp access", tags: ["Culture", "Accessible"], tone: "mint", status: "decide", priority: "nice", mapUrl: "https://maps.google.com/?q=Temppeliaukio+Church+Helsinki" },
+    { time: "15:00", end: "16:30", type: "rest", title: "Afternoon rest at hotel", meta: "1.5h · Janelle recovery · pace the Baltic cities" },
+    { time: "19:00", end: "21:00", type: "eat", title: "Dinner — Helsinki centre", meta: "Open pick · flexible · finalize when we plan activities", tone: "hot", status: "decide", priority: "nice", mapUrl: "https://maps.google.com/?q=Helsinki+city+centre+restaurants" },
   ],
   d12: [
     { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · ferry departs 19:00 · full day in Helsinki" },
@@ -520,7 +529,7 @@ const ACTIVITIES = {
     { time: "09:00", end: "09:30", type: "eat", title: "Last breakfast in Europe", meta: "Hotel breakfast or Café de Bakker · final stroopwafel + strong coffee" },
     { time: "10:00", end: "13:00", type: "transit", title: "Hotel → Amsterdam Schiphol (AMS)", meta: "30 min by taxi or tram · allow 3h before departure · Schiphol has excellent lounges", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Amsterdam+Airport+Schiphol" },
     { time: "13:00", end: "TBD", type: "rest", title: "Schiphol Airport — lounge + browse", meta: "3h+ buffer · Schiphol duty-free is enormous · Greyson: gaming · Janelle: seating everywhere" },
-    { time: "TBD", end: "TBD", type: "flight", title: "UA969 AMS → SFO (nonstop)", meta: "178,500 miles + $1,072 · United · check-in time TBD · conf DDHSFM", tone: "accent", status: "booked", conf: "DDHSFM", priority: "must", url: "./docs/united_DDHSFM.pdf", mapUrl: null },
+    { time: "14:50", end: "16:55", type: "flight", title: "UA969 AMS → SFO (nonstop)", meta: "dep 2:50 PM AMS → arr 4:55 PM SFO · 11h5m · 178,500 miles + $1,072 · conf DDHSFM", tone: "accent", status: "booked", conf: "DDHSFM", priority: "must", url: "./docs/united_DDHSFM.pdf", mapUrl: null },
   ],
 };
 
@@ -815,13 +824,13 @@ const HOTEL_PHOTOS = {
 
 
 const FLIGHTS = {
-  iceland:     { route: "SFO → IAD → KEF", airline: "United Airlines UA433 + UA398", date: "Sun, Jun 21, 2026", depT: "12:35", arrT: "08:30 +1", depCity: "San Francisco", arrCity: "Keflavík", conf: "BK90WF" },
+  iceland:     { route: "SFO → IAD → KEF", airline: "United Airlines UA2274 + UA398", date: "Sun, Jun 21, 2026", depT: "12:45", arrT: "08:30 +1", depCity: "San Francisco", arrCity: "Keflavík", conf: "BK90WF" },
   finland:     { route: "KEF → HEL", airline: "Finnair AY994", date: "Tue, Jun 30, 2026", depT: "17:15", arrT: "23:40", depCity: "Keflavík", arrCity: "Helsinki", conf: "7YNJSD" },
   estonia:     { route: "HEL → TLL (ferry)", airline: "Tallink Silja Line", date: "Fri, Jul 3, 2026", depT: "19:00", arrT: "21:00", depCity: "Helsinki", arrCity: "Tallinn", conf: "NOT BOOKED" },
   poland:      { route: "TLL → KRK", airline: "Finnair AY1018 + AY1163 via HEL", date: "Mon, Jul 6, 2026", depT: "15:00", arrT: "18:10", depCity: "Tallinn", arrCity: "Kraków", conf: "8HJVGP" },
   czechia:     { route: "KRK → PRG", airline: "RegioJet Bus (direct, ~7h)", date: "Thu, Jul 9, 2026", depT: "TBD", arrT: "TBD", depCity: "Kraków", arrCity: "Prague", conf: "NOT BOOKED" },
   netherlands: { route: "PRG → AMS", airline: "KLM (nonstop, decision pending)", date: "Mon, Jul 13, 2026", depT: "18:35", arrT: "20:10", depCity: "Prague", arrCity: "Amsterdam", conf: "NOT BOOKED" },
-  home:        { route: "AMS → SFO", airline: "United UA969 (nonstop)", date: "Thu, Jul 17, 2026", depT: "TBD", arrT: "TBD", depCity: "Amsterdam", arrCity: "San Francisco", conf: "DDHSFM" },
+  home:        { route: "AMS → SFO", airline: "United UA969 (nonstop)", date: "Fri, Jul 17, 2026", depT: "14:50", arrT: "16:55", depCity: "Amsterdam", arrCity: "San Francisco", conf: "DDHSFM" },
 };
 
 const REMINDERS = [
@@ -949,7 +958,7 @@ const QR = {
 
 const WALLET = [
   { cat: "Flights", icon: "✈", items: [
-    { name: "United SFO→KEF", dates: "Jun 21", conf: "BK90WF", sub: "UA433+UA398 · outbound", qr: "qr_united_out", pdf: "docs/pdfs/United_Outbound_SFO-IAD-KEF.pdf", note: "Add to Apple Wallet via united.com/boarding" },
+    { name: "United SFO→KEF", dates: "Jun 21", conf: "BK90WF", sub: "UA2274+UA398 · outbound", qr: "qr_united_out", pdf: "docs/pdfs/United_Outbound_SFO-IAD-KEF.pdf", note: "Add to Apple Wallet via united.com/boarding" },
     { name: "Finnair KEF→HEL", dates: "Jun 30", conf: "7YNJSD", sub: "AY994 · 17:15→23:40", qr: "qr_finnair1", pdf: "docs/pdfs/Finnair_KEF-HEL_7YNJSD.pdf", note: "Add to Apple Wallet via finnair.com" },
     { name: "Finnair TLL→KRK", dates: "Jul 6", conf: "8HJVGP", sub: "AY1018+AY1163 via HEL", qr: "qr_finnair2", pdf: "docs/pdfs/Finnair_TLL-HEL-KRK_8HJVGP.pdf", note: "Add to Apple Wallet via finnair.com" },
     { name: "KLM PRG→AMS", dates: "Jul 13", conf: "YBVHUY", sub: "KL1358 · 18:35→20:10", qr: "qr_klm", pdf: "docs/pdfs/KLM_PRG-AMS_YBVHUY_KL1358.pdf", note: "Add to Apple Wallet via klm.com" },
