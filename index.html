@@ -855,6 +855,61 @@ const REMINDERS = [
   { title: "Greyson RSM: confirmed — no conflict with Jun 21 departure", done: true },
 ];
 
+// Packing checklist — 30 days, two climates (Iceland cold/wet ↔ Prague heat), laundry weekly.
+const PACKING = [
+  { section: "🎒 Shared / family", items: [
+    "3 passports + 2 photocopies each (6mo validity)",
+    "Travel insurance w/ medical-evac coverage + claim phone #",
+    "2–4 EU Type-C/F adapters (all 6 countries, 230V) + power strip + USB hub",
+    "2 power banks ≥10,000mAh — carry-on only",
+    "Sunscreen SPF50 ×2 (buy more in Prague/Kraków)",
+    "Insect repellent · quick-dry towels ×2",
+    "Laundry kit: detergent sheets ×40, sink stopper, clothesline, clips",
+    "First-aid: ibuprofen, antihistamine, Imodium, ORS, Compeed blister plasters, motion-sickness tabs",
+    "Electrolyte tabs (Prague/Kraków heat) · eye masks ×3 (21h Iceland daylight)",
+  ]},
+  { section: "❄️ Iceland cold/wet/wind kit (Jun 21–30)", items: [
+    "Waterproof hard shell jacket ×3 (taped seams, 10,000mm+)",
+    "Waterproof rain pants ×3 · waterproof boots/shoes ×3",
+    "Beanie ×3 + light gloves ×3 + neck gaiter ×3",
+    "Packable puffer ×3 · merino base layers (tops + bottoms)",
+    "Swimwear ×3 (geothermal pools) · 1–2 dry bags",
+  ]},
+  { section: "🔥 Prague/Kraków heat kit (Jul 6–13)", items: [
+    "Wide-brim sun hats ×3 + sunglasses ×3",
+    "Cooling towels ×3 · travel umbrella (sun + thunderstorms)",
+    "Refillable water bottles ×3 · lightest merino tees + breathable shorts",
+  ]},
+  { section: "🧳 Clothing — merino layering, laundry weekly", items: [
+    "Ryan: 5–6 tees, 7 underwear, 6–7 merino socks, 2 pants + shorts + travel pants",
+    "Janelle: 5–6 tops, 7 underwear, compression socks ×2, soft stretch pants ×2 + loose trouser",
+    "Greyson: 6 tees, 7 underwear, 6 socks, 2 athletic shorts + jeans + joggers",
+    "Each: hoodie/fleece mid-layer + packable puffer",
+    "Janelle: 2× max-cushion walking shoes (broken in) · supportive sandals ×3",
+  ]},
+  { section: "♿ Janelle — meds / mobility / comfort", items: [
+    "⚠️ Pain meds: 30-day supply + 7–10 day buffer, CARRY-ON, original labeled bottles",
+    "⚠️ Printed prescriptions + doctor's letter (controlled-substance check for Poland/Czechia)",
+    "Typed med list (name/dose/schedule) for emergencies",
+    "Cooling towels + USB neck fan (Prague heat)",
+    "Puffer + merino cardigan in day-bag whole trip (Iceland + AC)",
+    "Collapsible cane/pole + seat cushion + topical pain relief (carry-on)",
+    "Request airport wheelchair assistance — every flight leg",
+    "Request ground-floor/elevator hotel rooms",
+  ]},
+  { section: "✈️ Carry-on essentials", items: [
+    "All meds + scripts + doctor's letter",
+    "3 passports + docs + insurance + cash/cards",
+    "One warm layer + one rain shell each (rain on Reykjavík arrival)",
+    "Phones, chargers, EU adapter, power banks, cables, headphones",
+    "One change of clothes each (lost-bag insurance) · eye masks",
+  ]},
+  { section: "🛒 Buy at destination (don't haul)", items: [
+    "Reykjavík (66°North/Bónus): beanies, gloves, hand-warmers, extra base layers",
+    "Prague/Kraków: water bottles, sun hat, more SPF50, basketball for Greyson",
+  ]},
+];
+
 const BUDGET = {
   total: 22000,
   lines: [
@@ -5439,11 +5494,20 @@ function App() {
           <div className="card-h"><span className="lbl">Pre-trip checklist</span><a className="a" href="#" onClick={clearChecks}>Clear</a></div>
           <div className="tasks">
             <div className="tasks-head">
-              <span>{doneCount} of {REMINDERS.length} done</span>
+              <span>{doneCount} of {REMINDERS.length + PACKING.reduce((n,s)=>n+s.items.length,0)} done</span>
             </div>
             <div className="tasks-section-title">Before you go</div>
             {REMINDERS.map((r, i) => (
               <Task key={i} r={r} index={i} done={checks[i] ?? r.done} onToggle={toggleCheck} />
+            ))}
+            {PACKING.map((sec, si) => (
+              <React.Fragment key={"pk" + si}>
+                <div className="tasks-section-title">{sec.section}</div>
+                {sec.items.map((title, ii) => {
+                  const gi = 1000 + PACKING.slice(0, si).reduce((n, s) => n + s.items.length, 0) + ii;
+                  return <Task key={gi} r={{ title, done: false }} index={gi} done={checks[gi] ?? false} onToggle={toggleCheck} />;
+                })}
+              </React.Fragment>
             ))}
           </div>
         </div>
