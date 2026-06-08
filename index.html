@@ -756,6 +756,7 @@ const WEATHER = {
   d9:  { hi: 50, lo: 43, summary: "Clear · cold",    wind: "11 mph", icon: "sun",   risk: "ok" },
   d10: { hi: 50, lo: 43, summary: "Partly cloudy",   wind: "9 mph",  icon: "cloud", risk: "ok" },
   d11: { hi: 72, lo: 59, summary: "Warm · sunny",    wind: "7 mph",  icon: "sun",   risk: "ok" },
+  d11b:{ hi: 69, lo: 56, summary: "Mild · light showers", wind: "8 mph", icon: "cloud", risk: "ok" },
   d12: { hi: 70, lo: 57, summary: "Partly sunny",    wind: "9 mph",  icon: "sun",   risk: "ok" },
   d13: { hi: 72, lo: 59, summary: "Sun & cloud",     wind: "7 mph",  icon: "sun",   risk: "ok" },
   d14: { hi: 70, lo: 57, summary: "Mostly sunny",    wind: "6 mph",  icon: "sun",   risk: "ok" },
@@ -838,7 +839,7 @@ const REMINDERS = [
   { title: "Hertz Iceland rental — verify confirmation email (Pay Later booking)", done: false },
   { title: "⚠️ CANCEL Courtyard Prague (conf 72354492) — deadline Jul 8", done: false },
   { title: "⚠️ CANCEL LJU award flight (PCM8ZH / CD5ZR8) — cancel ASAP at united.com", done: false },
-  { title: "⚠️ CANCEL Farmer's Guest House (Booking.com #5150979042) — switched to Stracta, avoid double-charge", done: false },
+  { title: "CANCEL Farmer's Guest House (#5150979042) — done, switched to Stracta", done: true },
   { title: "Into the Glacier — BOOKED Jun 24 12:30pm (voucher in ryanjkam@gmail.com)", done: true },
   { title: "Jökulsárlón boat — walk-up only · Jun 28 9am–7pm · no booking needed", done: true },
   { title: "Book Helsinki → Tallinn ferry Jul 3 — tallink.com (flex ticket)", done: false },
@@ -5728,8 +5729,8 @@ function TripOverview({ onPickDay, onPickCity }) {
       <div className="to-hero">
         <div className="to-hero-left">
           <div className="to-pretitle">Trip overview</div>
-          <h2 className="to-h2">8 Days · 2 Countries · 4 Cities</h2>
-          <div className="to-meta">JUN 14 – JUN 21, 2026 · Ellis + Riley Howe</div>
+          <h2 className="to-h2">27 Days · 6 Countries · 8 Cities</h2>
+          <div className="to-meta">JUN 21 – JUL 17, 2026 · Ryan, Janelle &amp; Greyson</div>
           <div className="to-stats">
             <div className="to-stat"><div className="k">Booked</div><div className="v">{tripBooked}</div></div>
             <div className="to-stat"><div className="k">To decide</div><div className="v">{tripDecide}</div></div>
@@ -5763,7 +5764,7 @@ function TripOverview({ onPickDay, onPickCity }) {
               {city.days.map(d => {
                 const acts = ACTIVITIES[d.id] || [];
                 const must = acts.filter(a => a.priority === "must");
-                const w = WEATHER[d.id];
+                const w = WEATHER[d.id] || { hi: "–", lo: "–", icon: "cloud" };
                 const hotel = HOTELS[city.id];
                 return (
                   <button className="to-day-row" key={d.id} onClick={() => onPickDay(d.id)}>
