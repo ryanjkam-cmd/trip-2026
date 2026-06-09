@@ -149,11 +149,12 @@ const TRIP = {
         {
           id: "vik",
           name: "Vík í Mýrdal",
-          subtitle: "South Coast · Jun 27 – 29",
+          subtitle: "South Coast · Jun 27 – 30",
           days: [
             { id: "d7",  n: 7,  date: "Sat, Jun 27", weekday: "Saturday", title: "Hella → Vík" },
             { id: "d8",  n: 8,  date: "Sun, Jun 28", weekday: "Sunday",   title: "⭐ Jökulsárlón" },
             { id: "d9",  n: 9,  date: "Mon, Jun 29", weekday: "Monday",   title: "Katla Ice Cave" },
+            { id: "d10", n: 10, date: "Tue, Jun 30", weekday: "Tuesday",  title: "Vík → Helsinki" },
           ],
         },
       ],
@@ -166,11 +167,12 @@ const TRIP = {
         {
           id: "helsinki",
           name: "Helsinki",
-          subtitle: "Capital · Jun 30 – Jul 2",
+          subtitle: "Capital · Jun 30 – Jul 3",
           days: [
             { id: "d10",  n: 10, date: "Tue, Jun 30", weekday: "Tuesday",   title: "Vík → Helsinki" },
             { id: "d11",  n: 11, date: "Wed, Jul 1",  weekday: "Wednesday", title: "Allas Sea Pool" },
             { id: "d11b", n: 12, date: "Thu, Jul 2",  weekday: "Thursday",  title: "Helsinki Day" },
+            { id: "d12",  n: 13, date: "Fri, Jul 3",  weekday: "Friday",    title: "Suomenlinna → Tallinn" },
           ],
         },
       ],
@@ -183,11 +185,12 @@ const TRIP = {
         {
           id: "tallinn",
           name: "Tallinn",
-          subtitle: "Medieval City · Jul 3 – 5",
+          subtitle: "Medieval City · Jul 3 – 6",
           days: [
             { id: "d12", n: 13, date: "Fri, Jul 3",  weekday: "Friday",   title: "Suomenlinna → Tallinn" },
             { id: "d13", n: 14, date: "Sat, Jul 4",  weekday: "Saturday", title: "Seaplane Harbour" },
             { id: "d14", n: 15, date: "Sun, Jul 5",  weekday: "Sunday",   title: "Waterpark + Old Town" },
+            { id: "d15", n: 16, date: "Mon, Jul 6",  weekday: "Monday",   title: "Tallinn → Kraków" },
           ],
         },
       ],
@@ -218,12 +221,13 @@ const TRIP = {
         {
           id: "prague",
           name: "Prague",
-          subtitle: "Golden City · Jul 9 – 12",
+          subtitle: "Golden City · Jul 9 – 13",
           days: [
             { id: "d19", n: 20, date: "Thu, Jul 9",  weekday: "Thursday",  title: "Arrive Prague" },
             { id: "d20", n: 21, date: "Fri, Jul 10", weekday: "Friday",    title: "Prague Castle" },
             { id: "d21", n: 22, date: "Sat, Jul 11", weekday: "Saturday",  title: "Charles Bridge + Josefov" },
             { id: "d22", n: 23, date: "Sun, Jul 12", weekday: "Sunday",    title: "Last Day" },
+            { id: "d23", n: 24, date: "Mon, Jul 13", weekday: "Monday",    title: "Prague → Amsterdam" },
           ],
         },
       ],
@@ -5722,11 +5726,13 @@ const INITIAL_NOTES = {
    TRIP OVERVIEW
 ============================================================ */
 function TripOverview({ onPickDay, onPickCity }) {
-  const allDays = TRIP.countries.flatMap(c =>
+  const allDaysRaw = TRIP.countries.flatMap(c =>
     c.cities.flatMap(city =>
       city.days.map(d => ({...d, country: c, city }))
     )
   );
+  // transition days are listed in both adjacent cities — dedupe by id so trip stats count each day once
+  const allDays = allDaysRaw.filter((d, i) => allDaysRaw.findIndex(x => x.id === d.id) === i);
 
   const tripBooked = allDays.reduce((s, d) => s + (ACTIVITIES[d.id] || []).filter(a => a.status === "booked").length, 0);
   const tripDecide = allDays.reduce((s, d) => s + (ACTIVITIES[d.id] || []).filter(a => a.status === "decide").length, 0);
