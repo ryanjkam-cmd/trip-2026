@@ -129,21 +129,23 @@ const TRIP = {
         {
           id: "reykjavik",
           name: "Reykjavík",
-          subtitle: "Capital · Jun 21 – 24",
+          subtitle: "Capital · Jun 21 – 25",
           days: [
             { id: "d1", n: 1, date: "Sun, Jun 21", weekday: "Sunday",    title: "Depart SFO" },
             { id: "d2", n: 2, date: "Mon, Jun 22", weekday: "Monday",    title: "Arrive · Blue Lagoon" },
             { id: "d3", n: 3, date: "Tue, Jun 23", weekday: "Tuesday",   title: "Reykjavík City" },
             { id: "d4", n: 4, date: "Wed, Jun 24", weekday: "Wednesday", title: "⭐ Into the Glacier" },
+            { id: "d5", n: 5, date: "Thu, Jun 25", weekday: "Thursday",  title: "Drive South" },
           ],
         },
         {
           id: "hella",
           name: "Hella",
-          subtitle: "South Coast · Jun 25 – 26",
+          subtitle: "South Coast · Jun 25 – 27",
           days: [
             { id: "d5", n: 5, date: "Thu, Jun 25", weekday: "Thursday", title: "Drive South" },
             { id: "d6", n: 6, date: "Fri, Jun 26", weekday: "Friday",   title: "Rest Day" },
+            { id: "d7", n: 7, date: "Sat, Jun 27", weekday: "Saturday", title: "Hella → Vík" },
           ],
         },
         {
@@ -4657,7 +4659,10 @@ function App() {
   }, []);
 
   const country = TRIP.countries.find((c) => c.id === countryId);
-  const allDays = useMemo(() => country.cities.flatMap((c) => c.days.map((d) => ({ ...d, cityId: c.id, cityName: c.name }))), [country]);
+  const allDays = useMemo(() => {
+    const raw = country.cities.flatMap((c) => c.days.map((d) => ({ ...d, cityId: c.id, cityName: c.name })));
+    return raw.filter((d, i) => raw.findIndex((x) => x.id === d.id) === i); // dedupe transition days shown in two cities
+  }, [country]);
   const currentDay = allDays.find((d) => d.id === dayId) || allDays[0];
   const currentCity = country.cities.find((c) => c.id === currentDay.cityId);
   // ── Firebase-backed status overrides & user-added events ──────────────
@@ -4885,7 +4890,7 @@ function App() {
 
   // Trip health: aggregate over all activities in current country
   const allCountryActs = useMemo(() => {
-    const ids = country.cities.flatMap(c => c.days.map(d => d.id));
+    const ids = [...new Set(country.cities.flatMap(c => c.days.map(d => d.id)))];
     return ids.flatMap(id => (ACTIVITIES[id] || []).map(a => ({ ...a, _dayId: id })));
   }, [country]);
   const health = useMemo(() => {
