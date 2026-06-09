@@ -489,9 +489,9 @@ const ACTIVITIES = {
     { time: "17:00", end: "18:00", type: "transit", title: "Head to Václav Havel Airport", meta: "PRG → AMS departs 18:35 · allow 2h for airport · 30 min taxi from center", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
   ],
   d23: [
-    { time: "18:35", end: "20:10", type: "flight", title: "KLM PRG → AMS", meta: "KLM nonstop · 6:35pm Prague → 8:10pm Amsterdam · NOT BOOKED · Basic $299 / Flex $740 for 3", tone: "accent", status: "decide", priority: "must", url: "https://www.klm.com", mapUrl: null },
+    { time: "18:35", end: "20:10", type: "flight", title: "KLM PRG → AMS", meta: "KL1358 nonstop · 6:35pm Prague → 8:10pm Amsterdam · Conf YBVHUY", tone: "accent", status: "booked", conf: "YBVHUY", priority: "must", url: "./docs/pdfs/KLM_PRG-AMS_YBVHUY_KL1358.pdf", mapUrl: null },
     { time: "20:30", end: "21:15", type: "transit", title: "Schiphol → Amsterdam hotel", meta: "Train or taxi from Schiphol · 15–30 min · Amsterdam Centraal or direct" },
-    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Amsterdam Hotel", meta: "4 nights Jul 13–17 · NOT BOOKED · Marriott Apollo (~$394/nt) · Amsterdam Marriott (~$439/nt)", tone: "muted", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.marriott.com", mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+    { time: "21:00", end: "22:00", type: "stay", title: "Check in — Amsterdam Marriott", meta: "Jul 13–17 · 4 nights · Family Room (2 doubles) · breakfast incl · valet parking · Stadhouderskade 12 · Conf 30152492", tone: "muted", status: "booked", conf: "30152492", priority: "must", url: "./docs/pdfs/Marriott_Amsterdam_30152492.pdf", mapUrl: "https://maps.google.com/?q=Amsterdam+Marriott+Hotel+Stadhouderskade" },
   ],
   d24: [
     { time: "08:30", end: "09:30", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Amsterdam day 1 · big museum day" },
@@ -627,6 +627,7 @@ const ACTIVITY_PDF = {
   "Check-in: Novotel Tallinn":         { pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", qr: null,        barcode: false, conf: "73422280565429" },
   "Check-in: AC Hotel Kraków":         { pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf",  qr: null,            barcode: false, conf: "72331300" },
   "Check-in: Almanac X Alcron":        { pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", qr: null,   barcode: false, conf: "ZO-AX1043-36815" },
+  "Check-in: Amsterdam Marriott":      { pdf: "docs/pdfs/Marriott_Amsterdam_30152492.pdf",       qr: null,            barcode: false, conf: "30152492" },
 };
 
 const PHOTOS = {
@@ -809,7 +810,7 @@ const HOTELS = {
   tallinn:   { dates: "JUL 3 – 6",   name: "Novotel Tallinn",      phone: "+372 669 0000",   addr: "A. Lauteri 3, 10114 Tallinn",            conf: "73422280565429",      mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
   krakow:    { dates: "JUL 6 – 9",   name: "AC Hotel Kraków",      phone: "+48 12 384 7800", addr: "pl. Szczepański 3, 31-011 Kraków",       conf: "72331300",            mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
   prague:    { dates: "JUL 9 – 13",  name: "Almanac X Alcron",     phone: "+420 222 820 000",addr: "Štěpánská 40, 110 00 Prague 1",          conf: "ZO-AX1043-36815",     mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague" },
-  amsterdam: { dates: "JUL 13 – 17", name: "Amsterdam Hotel (TBD)", phone: "TBD",            addr: "City Center · Marriott candidates",       conf: "NOT BOOKED",          mapUrl: "https://maps.google.com/?q=Amsterdam+Netherlands" },
+  amsterdam: { dates: "JUL 13 – 17", name: "Amsterdam Marriott Hotel", phone: "+31 20 607 5555", addr: "Stadhouderskade 12, 1054 ES Amsterdam", conf: "30152492",            mapUrl: "https://maps.google.com/?q=Amsterdam+Marriott+Hotel+Stadhouderskade" },
 };
 
 const HOTEL_PHOTOS = {
@@ -830,7 +831,7 @@ const FLIGHTS = {
   estonia:     { route: "HEL → TLL (ferry)", airline: "Tallink Silja Line", date: "Fri, Jul 3, 2026", depT: "19:00", arrT: "21:00", depCity: "Helsinki", arrCity: "Tallinn", conf: "NOT BOOKED" },
   poland:      { route: "TLL → KRK", airline: "Finnair AY1018 + AY1163 via HEL", date: "Mon, Jul 6, 2026", depT: "15:00", arrT: "18:10", depCity: "Tallinn", arrCity: "Kraków", conf: "8HJVGP" },
   czechia:     { route: "KRK → PRG", airline: "RegioJet Bus (direct, ~7h)", date: "Thu, Jul 9, 2026", depT: "TBD", arrT: "TBD", depCity: "Kraków", arrCity: "Prague", conf: "NOT BOOKED" },
-  netherlands: { route: "PRG → AMS", airline: "KLM (nonstop, decision pending)", date: "Mon, Jul 13, 2026", depT: "18:35", arrT: "20:10", depCity: "Prague", arrCity: "Amsterdam", conf: "NOT BOOKED" },
+  netherlands: { route: "PRG → AMS", airline: "KLM KL1358 (nonstop)", date: "Mon, Jul 13, 2026", depT: "18:35", arrT: "20:10", depCity: "Prague", arrCity: "Amsterdam", conf: "YBVHUY" },
   home:        { route: "AMS → SFO", airline: "United UA969 (nonstop)", date: "Fri, Jul 17, 2026", depT: "14:50", arrT: "16:55", depCity: "Amsterdam", arrCity: "San Francisco", conf: "DDHSFM" },
 };
 
@@ -844,7 +845,7 @@ const REMINDERS = [
   { title: "Jökulsárlón boat — walk-up only · Jun 28 9am–7pm · no booking needed", done: true },
   { title: "Book Helsinki → Tallinn ferry Jul 3 — tallink.com (flex ticket)", done: false },
   { title: "Book PRG → AMS flight Jul 13 — KLM nonstop klm.com (Basic $299 / Flex $740)", done: false },
-  { title: "Book Amsterdam hotel Jul 13–17 — marriott.com (Apollo ~$394/nt or AMS Marriott ~$439/nt)", done: false },
+  { title: "Amsterdam hotel — BOOKED: Amsterdam Marriott (Conf 30152492, Jul 13–17, €2,135.99)", done: true },
   { title: "Book RegioJet bus KRK → PRG Jul 9 — regiojet.com (~$17/person)", done: false },
   { title: "Call Almanac X Alcron — add Greyson to reservation + confirm $100 Amex credit", done: false },
   { title: "Reserve NOA Chef's Hall Tallinn — noaresto.ee (fills weeks ahead)", done: false },
@@ -1036,6 +1037,7 @@ const WALLET = [
     { name: "Novotel Tallinn", dates: "Jul 3–6", conf: "73422280565429", sub: "Expedia · A. Lauteri 3", qr: null, pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", note: "" },
     { name: "AC Hotel Kraków", dates: "Jul 6–9", conf: "72331300", sub: "Marriott · pl. Szczepański 3", qr: null, pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf", note: "" },
     { name: "Almanac X Alcron Prague", dates: "Jul 9–13", conf: "ZO-AX1043-36815", sub: "Amex Fine Hotels · Štěpánská 40", qr: null, pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", note: "$100 Amex F&B credit · call to confirm Greyson" },
+    { name: "Amsterdam Marriott Hotel", dates: "Jul 13–17", conf: "30152492", sub: "Marriott · Stadhouderskade 12 · Family Room (2 doubles) · breakfast incl", qr: null, pdf: "docs/pdfs/Marriott_Amsterdam_30152492.pdf", note: "€2,135.99 · free cancel until Jul 12 · complimentary valet parking" },
   ]},
 ];
 
