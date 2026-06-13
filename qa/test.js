@@ -110,6 +110,7 @@ async function run() {
   // ── 10. Drag threshold: large move (>5px) should move event ──────────────
   const box2 = await page.locator('.cal-event').first().boundingBox();
   if (box2) {
+    const firstDragTitle = await page.locator('.cal-event').first().locator('.cal-event-name').textContent().catch(() => '');
     const timeBefore2 = await page.locator('.cal-event').first().locator('.cal-event-time-row').textContent().catch(() => '');
     const cx = box2.x + box2.width * 0.4;
     const cy = box2.y + box2.height / 2;
@@ -125,6 +126,16 @@ async function run() {
     log('Large drag does NOT open drawer', !drawerAfterDrag, drawerAfterDrag ? 'drawer opened (bug)' : 'no drawer ✓');
     log('Large drag changes event time', timeBefore2 !== timeAfterDrag, `before="${timeBefore2}" after="${timeAfterDrag}"`);
     await ss('10_after_drag');
+    // Cleanup: the drag persists a timeOvr to the SHARED production Firebase.
+    // Remove the key this test created so QA runs don't corrupt the real
+    // itinerary times. fbKey() in the app replaces [.#$[]/] with _.
+    if (firstDragTitle) {
+      try {
+        const key = encodeURIComponent(firstDragTitle.replace(/[.#$\[\]\/]/g, '_'));
+        await page.evaluate((k) => fetch('https://iceland-2026-3bea5-default-rtdb.firebaseio.com/trip2026/timeOvr/' + k + '.json', { method: 'DELETE' }), key);
+        await page.waitForTimeout(300);
+      } catch {}
+    }
   }
 
   // ── 11. White text on active city nav ─────────────────────────────────────
