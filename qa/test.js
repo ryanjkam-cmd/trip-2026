@@ -152,6 +152,10 @@ async function run() {
   }
 
   // ── 13. Resize handle visible on hover ───────────────────────────────────
+  // Test 11 clicks a city pill, which switches to city-overview mode (no
+  // calendar). Reload to return to the default day view so a .cal-event exists.
+  await page.goto(URL, { waitUntil: 'networkidle' });
+  await page.waitForTimeout(800);
   const firstCal = page.locator('.cal-event').first();
   await firstCal.hover();
   await page.waitForTimeout(200);

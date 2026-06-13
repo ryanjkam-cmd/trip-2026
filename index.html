@@ -371,7 +371,7 @@ const ACTIVITIES = {
     { time: "11:00", end: "13:30", type: "transit", title: "Check out Vík → drive KEF", meta: "~190 km · 2.5 hrs · drop Hertz car at Keflavik Airport", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Keflavik+International+Airport+Iceland" },
     { time: "13:30", end: "16:30", type: "rest", title: "KEF airport · check in + lunch", meta: "3h buffer · Keflavik duty-free · grab lunch · clear security · KEF is small, fast" },
     { time: "17:15", end: "23:40", type: "flight", title: "Finnair KEF → HEL", meta: "AY994 · dep 17:15 → arr 23:40 HEL (3h25m) · Seats 11E/11D/11F · 116,256 ISK · meals x3 + extra bag", tone: "accent", status: "booked", conf: "7YNJSD", priority: "must", url: "./docs/finnair_7YNJSD.pdf", mapUrl: null },
-    { time: "23:45", end: "23:59", type: "stay", title: "Late check-in — Crowne Plaza Helsinki", meta: "Lands HEL 23:40 · taxi to hotel · Jun 30–Jul 3 · 3 nights · Conf 73422231915860", tone: "muted", status: "booked", conf: "73422231915860", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
+    { time: "23:45", end: "23:59", type: "stay", title: "Late check-in — Crowne Plaza Helsinki", meta: "Lands HEL 23:40 · taxi to hotel · Jun 30–Jul 3 · 3 nights · Amex conf 84269020 · 85,184 pts (Expedia dup 73422231915860 CANCELLED)", tone: "muted", status: "booked", conf: "84269020", priority: "must", url: "./docs/crowne_plaza_helsinki.pdf", mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
   ],
   d11: [
     { time: "08:00", end: "09:00", type: "rest", title: "Wake up · hotel breakfast", meta: "1h · Crowne Plaza breakfast · first morning of the Baltic leg" },
@@ -461,9 +461,9 @@ const ACTIVITIES = {
     { time: "08:00", end: "08:30", type: "eat", title: "Quick breakfast · Kraków station", meta: "Grab-and-go · pastry + coffee · Dworzec Główny station café" },
     { time: "09:00", end: "16:00", type: "transit", title: "RegioJet KRK → PRG (direct bus ~7h)", meta: "RegioJet direct bus · ~7h · comfortable coaches · seat reservation · regiojet.com · NOT BOOKED", tone: "accent", status: "decide", conf: "NOT BOOKED", priority: "must", url: "https://www.regiojet.com", mapUrl: "https://maps.google.com/?q=Krakow+Main+Station+Poland" },
     { time: "12:30", end: "13:00", type: "rest", title: "Bus rest stop (midway Czech Republic)", meta: "30 min · stretch · vending machines · Greyson: walk around" },
-    { time: "16:00", end: "17:00", type: "transit", title: "Prague Florenc station → Almanac Hotel", meta: "30 min taxi · check into Almanac X Alcron" },
-    { time: "15:00", end: "16:00", type: "stay", title: "Check in — Almanac X Alcron Prague", meta: "Jul 9–13 · 4 nights · CONFIRMED", tone: "muted", status: "booked", conf: "AmEx 9092094862438", priority: "must", cost: 724, url: "./docs/almanac_prague.pdf", mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague&ll=50.0808,14.4303" },
-    { time: "17:00", end: "19:00", type: "rest", title: "Settle in · explore Wenceslas Square", meta: "2h · Almanac is right on Wenceslas · Greyson: street food · Janelle: rest" },
+    { time: "16:00", end: "17:00", type: "transit", title: "Prague bus station → Prague Marriott", meta: "~15 min taxi · check into Prague Marriott Hotel (V Celnici 8, by Náměstí Republiky)" },
+    { time: "15:00", end: "16:00", type: "stay", title: "Check in — Prague Marriott Hotel", meta: "Jul 9–13 · 4 nights · Deluxe Room, 2 Queen Beds · Conf 91600785 (Expedia 73473615157812) · Greyson on booking · V Celnici 8", tone: "muted", status: "booked", conf: "91600785", priority: "must", cost: 1354, url: "./docs/prague_marriott.pdf", mapUrl: "https://maps.google.com/?q=Prague+Marriott+Hotel+V+Celnici+8&ll=50.0890,14.4300" },
+    { time: "17:00", end: "19:00", type: "rest", title: "Settle in · explore Náměstí Republiky", meta: "2h · Prague Marriott is by Náměstí Republiky / Old Town · Greyson: street food · Janelle: rest" },
     { time: "19:00", end: "21:00", type: "eat", title: "First Prague dinner — Lokál Dlouhááá", meta: "Best Czech pub · unfiltered Pilsner Urquell · svíčková · Greyson: fried cheese", tone: "hot", status: "decide", priority: "nice", cost: 90, mapUrl: "https://maps.google.com/?q=Lokal+Dlouhaaa+Prague" },
   ],
   d19: [
@@ -499,7 +499,7 @@ const ACTIVITIES = {
     { time: "08:00", end: "09:00", type: "rest", title: "Wake up · final Prague morning", meta: "1h · checkout 11am · pack night before · airport 18:35 departure" },
     { time: "09:00", end: "09:30", type: "eat", title: "Last Prague breakfast", meta: "Café Savoy or Eska · artisan bread + coffee · treat yourself" },
     { time: "10:00", end: "12:00", type: "do", title: "Last morning — Malá Strana", meta: "Lesser Town · John Lennon Wall · riverside walk · cafes · no cobblestones at river level", rating: 4.6, reviews: 7200, tags: ["Walking"], tone: "mint", status: "decide", priority: "nice", url: null, mapUrl: "https://maps.google.com/?q=Mala+Strana+Prague" },
-    { time: "12:00", end: "13:00", type: "rest", title: "Return to hotel · final checkout", meta: "1h · luggage storage at Almanac · flight departs 18:35 · airport by 16:30" },
+    { time: "12:00", end: "13:00", type: "rest", title: "Return to hotel · final checkout", meta: "1h · luggage storage at Prague Marriott · flight departs 18:35 · airport by 16:30" },
     { time: "13:00", end: "16:30", type: "rest", title: "Afternoon buffer — café or hotel lobby", meta: "3.5h · Café Imperial or Obecní dům · Greyson: final Czech ice cream" },
     { time: "17:00", end: "18:00", type: "transit", title: "Head to Václav Havel Airport", meta: "PRG → AMS departs 18:35 · allow 2h for airport · 30 min taxi from center", tone: "muted", status: "decide", priority: "must", url: null, mapUrl: "https://maps.google.com/?q=Vaclav+Havel+Airport+Prague" },
   ],
@@ -640,10 +640,10 @@ const ACTIVITY_PDF = {
   "Check-in: Reykjavík EDITION":       { pdf: "docs/pdfs/Marriott_EDITION_Reykjavik_78962273.pdf", qr: null,           barcode: false, conf: "#78962273" },
   "Check-in: Stracta Hotel Hella":     { pdf: "docs/pdfs/Expedia_Stracta_Hella_73469424072052.pdf", qr: null, barcode: false, conf: "73469424072052" },
   "Check-in: Hotel Vík í Mýrdal":      { pdf: "docs/pdfs/Expedia_Hotel_Vik_Myrdal_79476041.pdf", qr: null,            barcode: false, conf: "#79476041" },
-  "Check-in: Crowne Plaza Helsinki":   { pdf: "docs/pdfs/Expedia_CrownePlaza_Helsinki_73422231915860.pdf", qr: null,   barcode: false, conf: "73422231915860" },
+  "Check-in: Crowne Plaza Helsinki":   { pdf: "docs/pdfs/Amex_CrownePlaza_Helsinki_84269020.pdf", qr: null,   barcode: false, conf: "84269020" },
   "Check-in: Novotel Tallinn":         { pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", qr: null,        barcode: false, conf: "73460771709014" },
   "Check-in: AC Hotel Kraków":         { pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf",  qr: null,            barcode: false, conf: "72331300" },
-  "Check-in: Almanac X Alcron":        { pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", qr: null,   barcode: false, conf: "ZO-AX1043-36815" },
+  "Check-in: Prague Marriott Hotel":   { pdf: "docs/pdfs/Expedia_PragueMarriott_73473615157812.pdf", qr: null,   barcode: false, conf: "91600785" },
   "Check-in: Amsterdam Marriott":      { pdf: "docs/pdfs/Marriott_Amsterdam_30152492.pdf",       qr: null,            barcode: false, conf: "30152492" },
 };
 
@@ -820,13 +820,13 @@ const GEAR = {
 };
 
 const HOTELS = {
-  reykjavik: { dates: "JUN 22 – 25", name: "Reykjavík EDITION",    phone: "+354 528 1700",  addr: "Austurstræti 2, 101 Reykjavík",          conf: "#78962273",           mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel" },
+  reykjavik: { dates: "JUN 22 – 25", name: "Reykjavík EDITION",    phone: "+354 582 0000",  addr: "Austurbakki 2, 101 Reykjavík",           conf: "#78962273",           mapUrl: "https://maps.google.com/?q=Reykjavik+EDITION+Hotel+Austurbakki" },
   hella:     { dates: "JUN 25 – 27", name: "Stracta Hotel",        phone: "+354 531 8010",  addr: "Rangárflatir 4, 850 Hella, Iceland",     conf: "73469424072052",      mapUrl: "https://maps.google.com/?q=Stracta+Hotel+Hella+Iceland" },
   vik:       { dates: "JUN 27 – 30", name: "Hotel Vík í Mýrdal",   phone: "+354 487 1480",   addr: "Klettsvegur 1, 870 Vík í Mýrdal",        conf: "#79476041",           mapUrl: "https://maps.google.com/?q=Hotel+Vik+i+Myrdal+Iceland" },
-  helsinki:  { dates: "JUN 30 – JUL 3", name: "Crowne Plaza Helsinki", phone: "+358 9 2521 0000", addr: "Mannerheimintie 50, 00260 Helsinki", conf: "73422231915860",      mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
+  helsinki:  { dates: "JUN 30 – JUL 3", name: "Crowne Plaza Helsinki", phone: "+358 9 2521 0000", addr: "Mannerheimintie 50, 00260 Helsinki", conf: "84269020",            mapUrl: "https://maps.google.com/?q=Crowne+Plaza+Helsinki" },
   tallinn:   { dates: "JUL 3 – 6",   name: "Novotel Tallinn",      phone: "+372 669 0000",   addr: "A. Lauteri 3, 10114 Tallinn",            conf: "73460771709014",      mapUrl: "https://maps.google.com/?q=Novotel+Tallinn+Estonia" },
   krakow:    { dates: "JUL 6 – 9",   name: "AC Hotel Kraków",      phone: "+48 12 384 7800", addr: "pl. Szczepański 3, 31-011 Kraków",       conf: "72331300",            mapUrl: "https://maps.google.com/?q=AC+Hotel+Krakow+Poland" },
-  prague:    { dates: "JUL 9 – 13",  name: "Almanac X Alcron",     phone: "+420 222 820 000",addr: "Štěpánská 40, 110 00 Prague 1",          conf: "ZO-AX1043-36815",     mapUrl: "https://maps.google.com/?q=Almanac+X+Alcron+Prague" },
+  prague:    { dates: "JUL 9 – 13",  name: "Prague Marriott Hotel", phone: "+420 222 888 888",addr: "V Celnici 8, 110 00 Prague 1",            conf: "91600785",            mapUrl: "https://maps.google.com/?q=Prague+Marriott+Hotel+V+Celnici+8" },
   amsterdam: { dates: "JUL 13 – 17", name: "Amsterdam Marriott Hotel", phone: "+31 20 607 5555", addr: "Stadhouderskade 12, 1054 ES Amsterdam", conf: "30152492",            mapUrl: "https://maps.google.com/?q=Amsterdam+Marriott+Hotel+Stadhouderskade" },
 };
 
@@ -864,7 +864,7 @@ const REMINDERS = [
   { title: "Book PRG → AMS flight Jul 13 — KLM nonstop klm.com (Basic $299 / Flex $740)", done: false },
   { title: "Amsterdam hotel — BOOKED: Amsterdam Marriott (Conf 30152492, Jul 13–17, €2,135.99)", done: true },
   { title: "Book RegioJet bus KRK → PRG Jul 9 — regiojet.com (~$17/person)", done: false },
-  { title: "Call Almanac X Alcron — add Greyson to reservation + confirm $100 Amex credit", done: false },
+  { title: "Cancel duplicate Prague bookings — Almanac X Alcron (ZO-AX1043-36815) + Courtyard Marriott (72354492). Prague Marriott 91600785 is the keeper.", done: false },
   { title: "Reserve NOA Chef's Hall Tallinn — noaresto.ee (fills weeks ahead)", done: false },
   { title: "Reserve Restaurant Salt Tallinn — before Jul 3", done: false },
   { title: "Book Anne Frank House — annefrank.org (sells out weeks ahead)", done: false },
@@ -1047,13 +1047,13 @@ const WALLET = [
     { name: "Into the Glacier", dates: "Jun 24 12:30pm", conf: "ARC-T127971879", sub: "Langjökull ice cave · ticket QR", qr: "glacier_qr", pdf: "docs/pdfs/IntoTheGlacier_Ticket_ARC-T127971879.pdf", note: "Show QR at glacier entrance. Invoice: ARC-89526296" },
   ]},
   { cat: "Hotels", icon: "🏨", items: [
-    { name: "EDITION Reykjavík", dates: "Jun 22–25", conf: "#78962273", sub: "Marriott · Austurstræti 2", qr: null, pdf: "docs/pdfs/Marriott_EDITION_Reykjavik_78962273.pdf", note: "" },
+    { name: "EDITION Reykjavík", dates: "Jun 22–25", conf: "#78962273", sub: "Marriott · Austurbakki 2", qr: null, pdf: "docs/pdfs/Marriott_EDITION_Reykjavik_78962273.pdf", note: "" },
     { name: "Stracta Hotel", dates: "Jun 25–27", conf: "73469424072052", sub: "Expedia · Rangárflatir 4, Hella · Superior + hot tub/sauna · breakfast incl", qr: null, pdf: "docs/pdfs/Expedia_Stracta_Hella_73469424072052.pdf", note: "Front-desk check-in 3pm · request ground-floor room near dining/tubs for Janelle" },
     { name: "Hotel Vík í Mýrdal", dates: "Jun 27–30", conf: "#79476041", sub: "Expedia · Klettsvegur 1", qr: null, pdf: "docs/pdfs/Expedia_Hotel_Vik_Myrdal_79476041.pdf", note: "" },
-    { name: "Crowne Plaza Helsinki", dates: "Jun 30–Jul 3", conf: "73422231915860", sub: "Expedia · Mannerheimintie 50", qr: null, pdf: "docs/pdfs/Expedia_CrownePlaza_Helsinki_73422231915860.pdf", note: "" },
+    { name: "Crowne Plaza Helsinki", dates: "Jun 30–Jul 3", conf: "84269020", sub: "Amex Travel · Mannerheimintie 50", qr: null, pdf: "docs/pdfs/Amex_CrownePlaza_Helsinki_84269020.pdf", note: "Expedia dup 73422231915860 cancelled" },
     { name: "Novotel Tallinn", dates: "Jul 3–6", conf: "73422280565429", sub: "Expedia · A. Lauteri 3", qr: null, pdf: "docs/pdfs/Expedia_Novotel_Tallinn_73422280565429.pdf", note: "" },
     { name: "AC Hotel Kraków", dates: "Jul 6–9", conf: "72331300", sub: "Marriott · pl. Szczepański 3", qr: null, pdf: "docs/pdfs/Marriott_ACHotel_Krakow_72331300.pdf", note: "" },
-    { name: "Almanac X Alcron Prague", dates: "Jul 9–13", conf: "ZO-AX1043-36815", sub: "Amex Fine Hotels · Štěpánská 40", qr: null, pdf: "docs/pdfs/Amex_Almanac_Alcron_Prague_ZO-AX1043-36815.pdf", note: "$100 Amex F&B credit · call to confirm Greyson" },
+    { name: "Prague Marriott Hotel", dates: "Jul 9–13", conf: "91600785", sub: "Expedia · V Celnici 8", qr: null, pdf: "docs/pdfs/Expedia_PragueMarriott_73473615157812.pdf", note: "Greyson on booking · cancel Almanac + Courtyard dups" },
     { name: "Amsterdam Marriott Hotel", dates: "Jul 13–17", conf: "30152492", sub: "Marriott · Stadhouderskade 12 · Family Room (2 doubles) · breakfast incl", qr: null, pdf: "docs/pdfs/Marriott_Amsterdam_30152492.pdf", note: "€2,135.99 · free cancel until Jul 12 · complimentary valet parking" },
   ]},
 ];
@@ -4753,56 +4753,80 @@ function App() {
   const [newAct, setNewAct] = React.useState({ title: "", time: "", end: "", type: "do", meta: "", status: "booked" });
 
   const dragMovedRef = React.useRef(false);
+  const dragStateRef = React.useRef(null);
+  const dragPreviewRef = React.useRef(null);
   const DRAG_THRESHOLD = 5;
 
   const handleDragStart = React.useCallback((e, act) => {
     if (e.button !== 0) return;
     dragMovedRef.current = false;
-    setDragState({ activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || '', isResize: false });
+    const ds = { activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || '', isResize: false };
+    dragStateRef.current = ds;
+    setDragState(ds);
   }, [currentDay.id]);
 
   const handleResizeStart = React.useCallback((e, act) => {
     e.preventDefault(); e.stopPropagation();
-    setDragState({ activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || minsToTime((parseMins(act.time)||0)+60), isResize: true });
+    const ds = { activity: act, dayId: currentDay.id, startY: e.clientY, origTime: act.time, origEnd: act.end || minsToTime((parseMins(act.time)||0)+60), isResize: true };
+    dragStateRef.current = ds;
+    setDragState(ds);
   }, [currentDay.id]);
 
+  // Read drag state from refs (not closure) so synchronously-dispatched move/up
+  // events never see a stale value between mousedown and the next re-render.
   const handleCalMouseMove = React.useCallback((e) => {
-    if (!dragState) return;
+    const ds = dragStateRef.current;
+    if (!ds) return;
     const DAY_START = 6*60;
-    const dy = e.clientY - dragState.startY;
+    const dy = e.clientY - ds.startY;
     if (Math.abs(dy) < DRAG_THRESHOLD && !dragMovedRef.current) return;
     dragMovedRef.current = true;
     const deltaMins = Math.round(dy / CAL_HOUR_H * 60 / 15) * 15;
-    if (dragState.isResize) {
-      const origEnd = parseMins(dragState.origEnd) || ((parseMins(dragState.origTime)||0)+60);
-      const newEnd = Math.max(origEnd + deltaMins, (parseMins(dragState.origTime)||0) + 15);
-      setDragPreview({ title: dragState.activity.title, time: dragState.origTime, end: minsToTime(newEnd) });
+    let preview;
+    if (ds.isResize) {
+      const origEnd = parseMins(ds.origEnd) || ((parseMins(ds.origTime)||0)+60);
+      const newEnd = Math.max(origEnd + deltaMins, (parseMins(ds.origTime)||0) + 15);
+      preview = { title: ds.activity.title, time: ds.origTime, end: minsToTime(newEnd) };
     } else {
-      const origStart = parseMins(dragState.origTime) || DAY_START;
-      const origEnd = parseMins(dragState.origEnd) || (origStart+60);
+      const origStart = parseMins(ds.origTime) || DAY_START;
+      const origEnd = parseMins(ds.origEnd) || (origStart+60);
       const dur = origEnd - origStart;
       const newStart = Math.max(DAY_START, Math.min(origStart + deltaMins, 23*60 - dur));
-      setDragPreview({ title: dragState.activity.title, time: minsToTime(newStart), end: minsToTime(newStart+dur) });
+      preview = { title: ds.activity.title, time: minsToTime(newStart), end: minsToTime(newStart+dur) };
     }
-  }, [dragState]);
+    dragPreviewRef.current = preview;
+    setDragPreview(preview);
+  }, []);
 
   const handleCalMouseUp = React.useCallback((e) => {
-    if (!dragState) { setDragState(null); setDragPreview(null); return; }
-    if (dragMovedRef.current && dragPreview) {
-      const a = dragState.activity;
+    const ds = dragStateRef.current;
+    const preview = dragPreviewRef.current;
+    dragStateRef.current = null;
+    dragPreviewRef.current = null;
+    // Persist optimistically to local state (so the move sticks with or without
+    // Firebase) and write through to Firebase when available — matches the
+    // pattern used by cycleStatus / addUserActivity / deleteUserActivity.
+    if (ds && dragMovedRef.current && preview) {
+      const a = ds.activity;
       if (a._userAdded) {
-        const dayActs = [...(fbUserActs[dragState.dayId] || [])];
-        if (dayActs[a._userIdx]) {
-          dayActs[a._userIdx] = { ...dayActs[a._userIdx], time: dragPreview.time, end: dragPreview.end };
-          if (fbdb) fbdb.ref('trip2026/userActivities/' + dragState.dayId).set(dayActs).catch(()=>{});
-        }
+        setFbUserActs(prev => {
+          const dayActs = [...(prev[ds.dayId] || [])];
+          if (dayActs[a._userIdx]) dayActs[a._userIdx] = { ...dayActs[a._userIdx], time: preview.time, end: preview.end };
+          const updated = { ...prev, [ds.dayId]: dayActs };
+          if (fbdb) fbdb.ref('trip2026/userActivities').set(updated).catch(()=>{});
+          return updated;
+        });
       } else {
-        if (fbdb) fbdb.ref('trip2026/timeOvr/' + fbKey(a.title)).set({ time: dragPreview.time, end: dragPreview.end }).catch(()=>{});
+        setFbTimeOvr(prev => {
+          const updated = { ...prev, [fbKey(a.title)]: { time: preview.time, end: preview.end } };
+          if (fbdb) fbdb.ref('trip2026/timeOvr/' + fbKey(a.title)).set({ time: preview.time, end: preview.end }).catch(()=>{});
+          return updated;
+        });
       }
     }
     setDragState(null); setDragPreview(null);
-    // dragMovedRef intentionally NOT reset here — onClick fires next and reads it
-  }, [dragState, dragPreview, fbUserActs]);
+    // dragMovedRef intentionally NOT reset here — the click that fires next reads it, then resets it
+  }, []);
 
   const saveNewAct = () => {
     if (!newAct.title.trim() || !newAct.time) return;
@@ -6070,6 +6094,13 @@ function MapEmbed({ mapUrl }) {
 function ActivityDrawer({ a, onClose, onResolve, onUnresolve, isResolved }) {
   const [editTime, setEditTime] = React.useState(a.time || '');
   const [editEnd, setEditEnd] = React.useState(a.end || '');
+  // Close on Escape — without this the drawer stays open and its full-screen
+  // overlay intercepts pointer events over the calendar (blocks drag + nav).
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [onClose]);
   const statusLabel = { booked: "Booked", hold: "On hold", decide: "Decide" }[a.status] || "";
   const StatusIcon = a.status === "booked" ? Icon.checkSm : a.status === "hold" ? Icon.clock : Icon.q;
   const gradient =
