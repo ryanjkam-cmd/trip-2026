@@ -1,0 +1,26 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//trip-2026//Iceland d3 events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:trip2026-d3-whale-watching@trip-2026
+DTSTAMP:20260615T210000Z
+DTSTART:20260623T090000
+DTEND:20260623T123000
+SUMMARY:🧳 Whale watching — Elding (Classic)
+LOCATION:Elding, Ægisgarður 5c, Reykjavík Old Harbour
+DESCRIPTION:Classic 09:00 departure · ~3.5h · arrive 15 min early · BOOK AHEAD
+STATUS:TENTATIVE
+END:VEVENT
+BEGIN:VEVENT
+UID:trip2026-d3-volcano-superjeep@trip-2026
+DTSTAMP:20260615T210000Z
+DTSTART:20260623T134500
+DTEND:20260623T180000
+SUMMARY:🧳 Reykjanes volcano super-jeep tour
+LOCATION:Reykjavík hotel pickup
+DESCRIPTION:Guided super-jeep · hotel pickup ~13:45 / drop-off ~18:00 (CONFIRM operator afternoon slot) · Tröll or Arctic Adventures · BOOK AHEAD · check safetravel.is day-of
+STATUS:TENTATIVE
+END:VEVENT
+END:VCALENDAR
