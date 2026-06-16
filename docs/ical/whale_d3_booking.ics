@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//trip-2026//Whale d3 booking//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+COLOR:green
+BEGIN:VEVENT
+UID:trip2026-whale-elding@trip-2026
+DTSTAMP:20260615T230000Z
+DTSTART:20260623T090000
+DTEND:20260623T123000
+SUMMARY:🐋 Whale watching — Elding Classic (2A+1Y)
+LOCATION:Ægisgarður 5c, Reykjavík Old Harbour
+DESCRIPTION:Elding Classic · conf ELN-94609716 · 09:00 · ~10 min walk from EDITION, no pickup · fully refundable to Jun 22 · 36,250 ISK
+COLOR:green
+END:VEVENT
+END:VCALENDAR
