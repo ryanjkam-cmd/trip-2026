@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//trip-2026//Amphibian d8 booking//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+COLOR:green
+BEGIN:VEVENT
+UID:trip2026-amphibian-jokulsarlon@trip-2026
+DTSTAMP:20260615T230000Z
+DTSTART:20260628T131000
+DTEND:20260628T135000
+SUMMARY:🧊 Jökulsárlón Amphibian boat (2A+1C)
+LOCATION:Jökulsárlón Glacier Lagoon Boat Tours & Cafe, Höfn
+DESCRIPTION:conf JOK-00030443 · 13:10 (40 min) · check in by 12:50 at the ticket office · free cancellation · 17,700 ISK
+COLOR:green
+END:VEVENT
+END:VCALENDAR
