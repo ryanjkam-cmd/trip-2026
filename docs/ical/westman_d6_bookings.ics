@@ -1,0 +1,37 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//trip-2026//Westman d6 bookings//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+COLOR:green
+BEGIN:VEVENT
+UID:trip2026-westman-ferry-out@trip-2026
+DTSTAMP:20260615T230000Z
+DTSTART:20260626T100000
+DTEND:20260626T104000
+SUMMARY:⛴️ Ferry Landeyjahöfn → Heimaey (with car)
+LOCATION:Landeyjahöfn ferry terminal
+DESCRIPTION:Herjólfur #2501243 · 10:00, with car · boarding passes in Apple Wallet · leave Hella ~09:00
+COLOR:green
+END:VEVENT
+BEGIN:VEVENT
+UID:trip2026-westman-ribsafari@trip-2026
+DTSTAMP:20260615T230000Z
+DTSTART:20260626T130000
+DTEND:20260626T140000
+SUMMARY:🐦 Ribsafari Puffin/Island/Volcano boat (2A+1C)
+LOCATION:Tangagata 7, 900 Vestmannaeyjabær (white/yellow house by the harbor)
+DESCRIPTION:GetYourGuide GYG32L5NLRNB · 1:00 PM · arrive 12:40 · 1h passenger boat · 24h free cancellation
+COLOR:green
+END:VEVENT
+BEGIN:VEVENT
+UID:trip2026-westman-ferry-back@trip-2026
+DTSTAMP:20260615T230000Z
+DTSTART:20260626T180000
+DTEND:20260626T184000
+SUMMARY:⛴️ Ferry Heimaey → Landeyjahöfn (with car)
+LOCATION:Vestmannaeyjar (Heimaey) ferry terminal
+DESCRIPTION:Herjólfur #2501243 · 18:00, with car · back to Hella ~19:15
+COLOR:green
+END:VEVENT
+END:VCALENDAR
