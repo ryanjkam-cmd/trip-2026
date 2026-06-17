@@ -4644,30 +4644,60 @@ function App() {
       80:{s:"Rain showers",i:"rain"}, 81:{s:"Showers",i:"rain"}, 82:{s:"Heavy showers",i:"rain"},
       95:{s:"Thunderstorm",i:"rain"},
     };
-    const queries = [
-      { lat:64.15, lon:-21.94, start:"2025-06-21", end:"2025-06-24", ids:["d1","d2","d3","d4"] },
-      { lat:63.83, lon:-20.39, start:"2025-06-25", end:"2025-06-26", ids:["d5","d6"] },
-      { lat:63.42, lon:-19.01, start:"2025-06-27", end:"2025-06-29", ids:["d7","d8","d9"] },
-      { lat:60.17, lon:24.94,  start:"2025-06-30", end:"2025-07-02", ids:["d10","d11","d12"] },
-      { lat:59.44, lon:24.75,  start:"2025-07-03", end:"2025-07-05", ids:["d13","d14","d15"] },
-      { lat:50.06, lon:19.94,  start:"2025-07-06", end:"2025-07-08", ids:["d16","d17","d18"] },
-      { lat:50.08, lon:14.44,  start:"2025-07-09", end:"2025-07-12", ids:["d19","d20","d21","d22"] },
-      { lat:52.37, lon:4.90,   start:"2025-07-13", end:"2025-07-17", ids:["d23","d24","d25","d26","d27"] },
+    // Each leg: coords + [dayId, real-2026-date, same-date-2025 fallback].
+    // In-range dates (≤15 days out) hit the live FORECAST API; dates beyond the
+    // forecast horizon fall back to last-year's actuals (ERA5 archive) as a
+    // seasonal proxy. As each leg comes within range it auto-upgrades to a real
+    // forecast. Wind is fetched too (matters for Iceland).
+    const LEGS = [
+      { lat:64.15, lon:-21.94, days:[["d1","2026-06-21"],["d2","2026-06-22"],["d3","2026-06-23"],["d4","2026-06-24"]] },
+      { lat:63.83, lon:-20.39, days:[["d5","2026-06-25"],["d6","2026-06-26"]] },
+      { lat:63.42, lon:-19.01, days:[["d7","2026-06-27"],["d8","2026-06-28"],["d9","2026-06-29"]] },
+      { lat:60.17, lon:24.94,  days:[["d10","2026-06-30"],["d11","2026-07-01"],["d11b","2026-07-02"],["d12","2026-07-03"]] },
+      { lat:59.44, lon:24.75,  days:[["d13","2026-07-04"],["d14","2026-07-05"],["d15","2026-07-06"]] },
+      { lat:50.06, lon:19.94,  days:[["d16","2026-07-07"],["d17","2026-07-08"],["d18","2026-07-09"]] },
+      { lat:50.08, lon:14.44,  days:[["d19","2026-07-10"],["d20","2026-07-11"],["d21","2026-07-12"],["d22","2026-07-13"]] },
+      { lat:52.37, lon:4.90,   days:[["d23","2026-07-13"],["d24","2026-07-14"],["d25","2026-07-15"],["d26","2026-07-16"],["d27","2026-07-17"]] },
     ];
-    Promise.allSettled(queries.map(q =>
-      fetch(`https://archive-api.open-meteo.com/v1/archive?latitude=${q.lat}&longitude=${q.lon}&start_date=${q.start}&end_date=${q.end}&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto&temperature_unit=fahrenheit`)
-        .then(r => r.json()).then(d => ({ q, d }))
+    const today = new Date(); today.setHours(0,0,0,0);
+    const horizon = new Date(today); horizon.setDate(horizon.getDate() + 15);
+    const DAILY = "temperature_2m_max,temperature_2m_min,weathercode,wind_speed_10m_max";
+    const fetches = [];
+    LEGS.forEach(leg => {
+      const near = [], far = [];
+      leg.days.forEach(([id, d26]) => {
+        const dt = new Date(d26 + "T00:00:00");
+        (dt >= today && dt <= horizon ? near : far).push([id, d26]);
+      });
+      if (near.length) {
+        const ds = near.map(x => x[1]).sort();
+        fetches.push({ live: true, map: Object.fromEntries(near.map(x => [x[1], x[0]])),
+          url: `https://api.open-meteo.com/v1/forecast?latitude=${leg.lat}&longitude=${leg.lon}&daily=${DAILY}&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph&start_date=${ds[0]}&end_date=${ds[ds.length-1]}` });
+      }
+      if (far.length) {
+        const hist = far.map(([id, d26]) => [id, "2025" + d26.slice(4)]);
+        const ds = hist.map(x => x[1]).sort();
+        fetches.push({ live: false, map: Object.fromEntries(hist.map(x => [x[1], x[0]])),
+          url: `https://archive-api.open-meteo.com/v1/archive?latitude=${leg.lat}&longitude=${leg.lon}&daily=${DAILY}&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph&start_date=${ds[0]}&end_date=${ds[ds.length-1]}` });
+      }
+    });
+    Promise.allSettled(fetches.map(f =>
+      fetch(f.url).then(r => r.json()).then(d => ({ f, d }))
     )).then(results => {
       let changed = false;
       results.forEach(res => {
         if (res.status !== "fulfilled") return;
-        const { q, d } = res.value;
+        const { f, d } = res.value;
         if (!d.daily?.time) return;
-        d.daily.time.forEach((_, i) => {
-          const id = q.ids[i]; if (!id) return;
+        d.daily.time.forEach((dateStr, i) => {
+          const id = f.map[dateStr]; if (!id) return;
+          const hi = d.daily.temperature_2m_max[i], lo = d.daily.temperature_2m_min[i];
+          if (hi == null || lo == null) return;
           const code = d.daily.weathercode[i] ?? 2;
           const m = WMO[code] || { s:"Variable", i:"cloud" };
-          WEATHER[id] = { ...WEATHER[id], hi: Math.round(d.daily.temperature_2m_max[i]), lo: Math.round(d.daily.temperature_2m_min[i]), summary: m.s, icon: m.i, live: true };
+          const wind = d.daily.wind_speed_10m_max?.[i];
+          WEATHER[id] = { ...WEATHER[id], hi: Math.round(hi), lo: Math.round(lo), summary: m.s, icon: m.i, live: f.live,
+            ...(wind != null ? { wind: Math.round(wind) + " mph", risk: wind >= 30 ? "watch" : "ok" } : {}) };
           changed = true;
         });
       });
